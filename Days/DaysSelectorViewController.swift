@@ -10,16 +10,27 @@ import UIKit
 
 class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    var days = Array(1...100)
-    
+    let secondsPerDay = 60 * 60 * 24
+    var days = Array(0...100)
+    var selectedDate = Date()
+    var dateFormatter = DateFormatter()
     
     @IBOutlet weak var picker: UIPickerView!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var countdownLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         picker.delegate = self
         picker.dataSource = self
+        
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+    }
+    
+    func titleForRow(_ row: Int) -> String {
+        return String(days[row])
     }
 
     // MARK: - UIPickerViewDataSource
@@ -28,7 +39,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         return 1
     }
     
-    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return days.count
     }
@@ -36,11 +46,21 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - UIPickerViewDelegate
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return String(days[row])
+        return titleForRow(row)
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print("selected")
+        
+        let seconds = Double(row * secondsPerDay)
+        selectedDate = Date(timeIntervalSinceNow: seconds)
+        
+        dateLabel.isHidden = false
+        dateLabel.text = dateFormatter.string(from: selectedDate)
+    }
+    
+    @IBAction func startButton(_ sender: UIButton) {
+        countdownLabel.isHidden = false
+        countdownLabel.text = "Started"
     }
 }
 
