@@ -14,6 +14,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     var days = Array(0...100)
     var selectedDate = Date()
     var dateFormatter = DateFormatter()
+    var loopTimer: Timer? = nil
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var dateLabel: UILabel!
@@ -27,10 +28,20 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
+        
+        loopTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (t: Timer) -> Void in
+            let remaining = Int(self.selectedDate.timeIntervalSinceNow)
+            self.countdownLabel.text = "\(remaining) seconds remain"
+        })
     }
     
     func titleForRow(_ row: Int) -> String {
         return String(days[row])
+    }
+    
+    @IBAction func startButton(_ sender: UIButton) {
+        countdownLabel.isHidden = false
+        countdownLabel.text = "Started"
     }
 
     // MARK: - UIPickerViewDataSource
@@ -56,11 +67,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         
         dateLabel.isHidden = false
         dateLabel.text = dateFormatter.string(from: selectedDate)
-    }
-    
-    @IBAction func startButton(_ sender: UIButton) {
-        countdownLabel.isHidden = false
-        countdownLabel.text = "Started"
     }
 }
 
