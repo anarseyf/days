@@ -7,14 +7,24 @@
 //
 
 import UIKit
+import UserNotifications
 
 class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
     let secondsPerDay = 60 * 60 * 24
+    let defaultInterval = 5.0 // TODO - remove
+
     var days = Array(0...100)
-    var selectedDate = Date()
+    var selectedInterval: TimeInterval = 0.0 {
+        willSet {
+            let date = Date(timeIntervalSinceNow: selectedInterval)
+            dateLabel.text = dateFormatter.string(from: date)
+        }
+    }
+    var selectedDate: Date? = Date()
     var dateFormatter = DateFormatter()
     var loopTimer: Timer? = nil
+    var scheduledTimer: Timer? = nil
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var dateLabel: UILabel!
@@ -29,10 +39,21 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
         
-        loopTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (t: Timer) -> Void in
-            let remaining = Int(self.selectedDate.timeIntervalSinceNow)
-            self.countdownLabel.text = "\(remaining) seconds remain"
-        })
+        func loopHandler(t: Timer) -> Void {
+            if let date = selectedDate {
+                let remaining = Int(date.timeIntervalSinceNow)
+                let isDone = remaining < 0
+                self.countdownLabel.text = (isDone ? "Done" : "\(remaining) seconds remain")
+                if (isDone) {
+                    selectedDate = nil
+                }
+            }
+        }
+        loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
+                                         repeats: true,
+                                         block: loopHandler)
+
+        selectedInterval = defaultInterval
     }
     
     func titleForRow(_ row: Int) -> String {
@@ -41,7 +62,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     
     @IBAction func startButton(_ sender: UIButton) {
         countdownLabel.isHidden = false
-        countdownLabel.text = "Started"
+        dateLabel.isHidden = false
+        selectedDate = Date(timeIntervalSinceNow: selectedInterval)
     }
 
     // MARK: - UIPickerViewDataSource
@@ -61,12 +83,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
-        let seconds = Double(row * secondsPerDay)
-        selectedDate = Date(timeIntervalSinceNow: seconds)
-        
-        dateLabel.isHidden = false
-        dateLabel.text = dateFormatter.string(from: selectedDate)
+        selectedInterval = Double(row * secondsPerDay) + defaultInterval
     }
 }
 
