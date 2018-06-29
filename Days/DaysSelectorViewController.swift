@@ -9,10 +9,10 @@
 import UIKit
 import UserNotifications
 
-class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UNUserNotificationCenterDelegate {
     
     let secondsPerDay = 60 * 60 * 24
-    let defaultInterval = 5.0 // TODO - remove
+    let defaultInterval = 3.0 // TODO - remove
 
     var days = Array(0...100)
     var selectedInterval: TimeInterval = 0.0 {
@@ -21,7 +21,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             dateLabel.text = dateFormatter.string(from: date)
         }
     }
-    var selectedDate: Date? = Date()
+    var selectedDate: Date? = nil
     var dateFormatter = DateFormatter()
     var loopTimer: Timer? = nil
     var scheduledTimer: Timer? = nil
@@ -38,6 +38,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
+
+        countdownLabel.text = ""
         
         func loopHandler(t: Timer) -> Void {
             if let date = selectedDate {
@@ -45,7 +47,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                 let isDone = remaining < 0
                 self.countdownLabel.text = (isDone ? "Done" : "\(remaining) seconds remain")
                 if (isDone) {
-                    selectedDate = nil
+                    notify()
                 }
             }
         }
@@ -54,13 +56,37 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                                          block: loopHandler)
 
         selectedInterval = defaultInterval
+
+        UNUserNotificationCenter.current().delegate = self
     }
     
     func titleForRow(_ row: Int) -> String {
         return String(days[row])
     }
+
+    func notify() {
+        selectedDate = nil
+
+        let content = UNMutableNotificationContent()
+        content.title = "Timer done"
+        content.body = "Now what?"
+        content.sound = UNNotificationSound.default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+
+        let request = UNNotificationRequest(identifier: "notificationId",
+                                            content: content,
+                                            trigger: trigger)
+
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.add(request) {
+            (error) in
+            print ("Completed \(error != nil ? "WITH ERRORS" : "").")
+        }
+    }
     
     @IBAction func startButton(_ sender: UIButton) {
+
         countdownLabel.isHidden = false
         dateLabel.isHidden = false
         selectedDate = Date(timeIntervalSinceNow: selectedInterval)
@@ -84,6 +110,13 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedInterval = Double(row * secondsPerDay) + defaultInterval
+    }
+
+    // MARK: - UNUserNotificationCenterDelegate
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound])
     }
 }
 
