@@ -10,43 +10,66 @@ import UIKit
 import UserNotifications
 
 class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UNUserNotificationCenterDelegate {
-    
+
+    // MARK: - Properties
+
     let secondsPerDay = 60 * 60 * 24
     let defaultInterval = 3.0 // TODO - remove
+    let userDefaultsKeyTargetDate = "targetDate"
+    let userDefaultsKeyCreatedDate = "createdDate"
 
     var days = Array(0...100)
     var selectedInterval: TimeInterval = 0.0 {
-        willSet {
+        didSet {
+            dateLabel.isHidden = false
             let date = Date(timeIntervalSinceNow: selectedInterval)
             dateLabel.text = dateFormatter.string(from: date)
         }
     }
-    var selectedDate: Date? = nil
+    var targetDate: Date? {
+        didSet {
+            if (targetDate != oldValue) {
+                save()
+            }
+        }
+    }
     var dateFormatter = DateFormatter()
     var loopTimer: Timer? = nil
     var scheduledTimer: Timer? = nil
-    
+
+    // MARK: - Outlets
+
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var countdownLabel: UILabel!
-    
+
+    // MARK: - Methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         picker.delegate = self
         picker.dataSource = self
-        
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
+        UNUserNotificationCenter.current().delegate = self
 
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
         countdownLabel.text = ""
         
+        selectedInterval = defaultInterval
+        startLoopTimer()
+        restore()
+    }
+
+    func startLoopTimer() {
+
         func loopHandler(t: Timer) -> Void {
-            if let date = selectedDate {
+            if let date = targetDate {
                 let remaining = Int(date.timeIntervalSinceNow)
                 let isDone = remaining < 0
                 self.countdownLabel.text = (isDone ? "Done" : "\(remaining) seconds remain")
                 if (isDone) {
+                    targetDate = nil
                     notify()
                 }
             }
@@ -54,10 +77,29 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
                                          repeats: true,
                                          block: loopHandler)
+    }
 
-        selectedInterval = defaultInterval
+    func save() {
+        let defaults = UserDefaults.standard
+        if (targetDate == nil) {
+            print("Removing")
+            defaults.removeObject(forKey: userDefaultsKeyTargetDate)
+            defaults.removeObject(forKey: userDefaultsKeyCreatedDate)
+        }
+        else {
+            print("Saving: \(dateFormatter.string(from: targetDate!))")
+            defaults.set(targetDate, forKey: userDefaultsKeyTargetDate)
+            defaults.set(Date(), forKey: userDefaultsKeyCreatedDate)
+        }
+    }
 
-        UNUserNotificationCenter.current().delegate = self
+    func restore() {
+        let defaults = UserDefaults.standard
+        let restoredTargetDate = defaults.object(forKey: userDefaultsKeyTargetDate)
+        if let date = restoredTargetDate as? Date {
+            print("Restored: \(dateFormatter.string(from: date))")
+            targetDate = date
+        }
     }
     
     func titleForRow(_ row: Int) -> String {
@@ -65,8 +107,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
 
     func notify() {
-        selectedDate = nil
-
         let content = UNMutableNotificationContent()
         content.title = "Timer done"
         content.body = "Now what?"
@@ -81,15 +121,19 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.add(request) {
             (error) in
-            print ("Completed \(error != nil ? "WITH ERRORS" : "").")
+            print ("Notification scheduling completed\(error != nil ? " WITH ERRORS" : "").")
         }
     }
+
+    // MARK: - User action handlers
     
     @IBAction func startButton(_ sender: UIButton) {
-
         countdownLabel.isHidden = false
-        dateLabel.isHidden = false
-        selectedDate = Date(timeIntervalSinceNow: selectedInterval)
+        targetDate = Date(timeIntervalSinceNow: selectedInterval)
+    }
+
+    @IBAction func pickerButton(_ sender: UIButton) { // TODO - remove
+        picker.selectRow(3, inComponent: 0, animated: true)
     }
 
     // MARK: - UIPickerViewDataSource
