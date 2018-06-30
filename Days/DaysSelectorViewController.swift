@@ -12,17 +12,16 @@ import UserNotifications
 class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UNUserNotificationCenterDelegate {
 
     enum State: String {
-        case notStarted, running, done
+        case notStarted = "•", running = "••", done = "•••"
     }
 
     // MARK: - Properties
 
     let secondsPerDay = 60 * 60 * 24
-    let defaultInterval = 6.0 // TODO - remove
+    let defaultInterval = 0.0 // TODO - remove, used for testing only
     let userDefaultsKeyTargetDate = "targetDate"
     let userDefaultsKeyCreatedDate = "createdDate"
 
-    var createdDate: Date?
     var dateOnlyFormatter = DateFormatter()
     var timeOnlyFormatter = DateFormatter()
     var dateTimeFormatter = DateFormatter()
@@ -34,19 +33,17 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         didSet {
             switch state {
             case .notStarted:
-                resetButton.isHidden = true
                 dayLabel.isHidden = true
                 remainingLabel.isHidden = true
-                countdownLabel.isHidden = true
+                resetButton.isHidden = true
                 startButton.isHidden = false
                 picker.isHidden = false
             case .running:
-                startButton.isHidden = true
                 picker.isHidden = true
+                startButton.isHidden = true
                 resetButton.isHidden = false
                 dayLabel.isHidden = false
                 remainingLabel.isHidden = false
-                countdownLabel.isHidden = false
             case .done:
                 break
             }
@@ -57,7 +54,14 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
             let date = Date(timeIntervalSinceNow: selectedInterval)
-            targetDateLabel.text = dateOnlyFormatter.string(from: date) + "\n" + timeOnlyFormatter.string(from: date)
+            targetDateLabel.text = dateTimeFormatter.string(from: date)
+        }
+    }
+    var createdDate: Date? {
+        didSet {
+            if (createdDate != nil) {
+            createdDateLabel.text = dateTimeFormatter.string(from: createdDate!)
+            }
         }
     }
     var targetDate: Date? {
@@ -75,11 +79,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - Outlets
 
     @IBOutlet weak var picker: UIPickerView!
+    @IBOutlet weak var expiresInLabel: UILabel!
     @IBOutlet weak var targetDateLabel: UILabel!
+    @IBOutlet weak var createdDateLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var detailsView: UIStackView!
     @IBOutlet weak var remainingLabel: UILabel!
-    @IBOutlet weak var countdownLabel: UILabel!
     @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
@@ -110,6 +115,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     @IBAction func toggleButton(_ sender: UIButton) {
         showDetails = !showDetails
+        let title = (showDetails ? "hide" : "show details")
+        sender.setTitle(title, for: .normal)
     }
 
     // MARK: - Methods
@@ -130,8 +137,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .short
-        
-        countdownLabel.text = ""
+
         dayLabel.text = ""
         remainingLabel.text = ""
 
@@ -165,7 +171,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                     notify()
                 }
                 else {
-                    countdownLabel.text = String(elapsedSeconds) + "\n" + intervalFormatter.string(from: remainingInterval)!
+                    expiresInLabel.text = intervalFormatter.string(from: remainingInterval)!
                 }
             }
         }
