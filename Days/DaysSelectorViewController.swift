@@ -50,17 +50,18 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         didSet {
             dateLabel.isHidden = false
             let date = Date(timeIntervalSinceNow: selectedInterval)
-            dateLabel.text = dateFormatter.string(from: date)
+            dateLabel.text = dateOnlyFormatter.string(from: date) + "\n" + timeOnlyFormatter.string(from: date)
         }
     }
     var targetDate: Date? {
         didSet {
-            if (targetDate != oldValue) {
-                save()
-            }
+            assert(targetDate == nil || createdDate != nil, "createdDate must be set before targetDate")
+            save()
         }
     }
-    var dateFormatter = DateFormatter()
+    var createdDate: Date?
+    var dateOnlyFormatter = DateFormatter()
+    var timeOnlyFormatter = DateFormatter()
     var intervalFormatter = DateComponentsFormatter()
     var loopTimer: Timer? = nil
     var scheduledTimer: Timer? = nil
@@ -78,12 +79,17 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - User action handlers
 
     @IBAction func startButton(_ sender: UIButton) {
+        createdDate = Date()
         targetDate = Date(timeIntervalSinceNow: selectedInterval)
         state = .running
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
         state = .notStarted
+
+        createdDate = nil
+        targetDate = nil
+
         picker.isHidden = false
     }
 
@@ -96,8 +102,10 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         picker.dataSource = self
         UNUserNotificationCenter.current().delegate = self
 
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
+        dateOnlyFormatter.dateStyle = .medium
+        dateOnlyFormatter.timeStyle = .none
+        timeOnlyFormatter.dateStyle = .none
+        timeOnlyFormatter.timeStyle = .medium
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .short
         countdownLabel.text = ""
@@ -114,10 +122,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         func loopHandler(t: Timer) -> Void {
             if let date = targetDate {
-                let interval = date.timeIntervalSinceNow
-                let remaining = Int(date.timeIntervalSinceNow)
-                let isDone = remaining < 0
-                dayLabel.text = "Day 1"
+                let remainingInterval = date.timeIntervalSinceNow
+                let remainingSeconds = Int(remainingInterval)
+                let isDone = remainingSeconds < 0
+                let elapsedSeconds = -1 * Int(createdDate!.timeIntervalSinceNow)
+                let elapsedDays = (elapsedSeconds / secondsPerDay) + 1
+                dayLabel.text = "Day \(elapsedDays)"
 
                 if (isDone) {
                     state = .done
@@ -125,7 +135,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                     notify()
                 }
                 else {
-                    countdownLabel.text = intervalFormatter.string(from: interval)
+                    countdownLabel.text = String(elapsedSeconds) + "\n" + intervalFormatter.string(from: remainingInterval)!
                 }
             }
         }
@@ -136,24 +146,29 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     func save() {
         let defaults = UserDefaults.standard
+        let cDate = createdDate ?? Date()
+
         if (targetDate == nil) {
             print("Removing")
             defaults.removeObject(forKey: userDefaultsKeyTargetDate)
             defaults.removeObject(forKey: userDefaultsKeyCreatedDate)
         }
         else {
-            print("Saving: \(dateFormatter.string(from: targetDate!))")
+            print("Saving: \(dateOnlyFormatter.string(from: targetDate!)) >> \(dateOnlyFormatter.string(from: cDate))")
             defaults.set(targetDate, forKey: userDefaultsKeyTargetDate)
-            defaults.set(Date(), forKey: userDefaultsKeyCreatedDate)
+            defaults.set(cDate, forKey: userDefaultsKeyCreatedDate)
         }
     }
 
     func restore() {
         let defaults = UserDefaults.standard
         let restoredTargetDate = defaults.object(forKey: userDefaultsKeyTargetDate)
-        if let date = restoredTargetDate as? Date {
-            print("Restored: \(dateFormatter.string(from: date))")
-            targetDate = date
+        let restoredCreatedDate = defaults.object(forKey: userDefaultsKeyCreatedDate)
+        if let tDate = restoredTargetDate as? Date,
+            let cDate = restoredCreatedDate as? Date {
+            print("Restored: \(dateOnlyFormatter.string(from: tDate)) >> \(dateOnlyFormatter.string(from: cDate))")
+            createdDate = cDate
+            targetDate = tDate
             state = .running
         }
     }
