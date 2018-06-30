@@ -18,7 +18,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - Properties
 
     let secondsPerDay = 60 * 60 * 24
-    let defaultInterval = 0.0 // TODO - remove, used for testing only
+    let defaultInterval = 3.0 // TODO - remove, used for testing only
     let userDefaultsKeyTargetDate = "targetDate"
     let userDefaultsKeyCreatedDate = "createdDate"
 
@@ -111,6 +111,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         targetDate = components.date
 
         state = .running // TODO - move to targetDate setter?
+
+        scheduleNotification(after: selectedInterval)
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
@@ -171,10 +173,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                 if (isDone) {
                     dayLabel.text = ""
                     remainingLabel.text = "TIMER DONE"
-
                     state = .done
                     targetDate = nil
-                    notify()
                 }
                 else {
                     dayLabel.text = "DAY\n\(elapsedDays)"
@@ -222,13 +222,13 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         return String(days[row])
     }
 
-    func notify() {
+    func scheduleNotification(after interval: TimeInterval) {
         let content = UNMutableNotificationContent()
         content.title = "Timer done"
         content.body = "Now what?"
         content.sound = UNNotificationSound.default
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
 
         let request = UNNotificationRequest(identifier: "notificationId",
                                             content: content,
@@ -237,7 +237,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.add(request) {
             (error) in
-            print ("Notification scheduling completed\(error != nil ? " WITH ERRORS" : "").")
+            print ("Notification scheduled\(error != nil ? " WITH ERRORS" : "").")
         }
     }
 
