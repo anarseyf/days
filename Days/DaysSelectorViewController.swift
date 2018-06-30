@@ -22,6 +22,14 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     let userDefaultsKeyTargetDate = "targetDate"
     let userDefaultsKeyCreatedDate = "createdDate"
 
+    var createdDate: Date?
+    var dateOnlyFormatter = DateFormatter()
+    var timeOnlyFormatter = DateFormatter()
+    var dateTimeFormatter = DateFormatter()
+    var intervalFormatter = DateComponentsFormatter()
+    var loopTimer: Timer? = nil
+    var scheduledTimer: Timer? = nil
+    var days = Array(0...100)
     var state: State = .notStarted {
         didSet {
             switch state {
@@ -44,8 +52,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             stateLabel.text = state.rawValue
         }
     }
-
-    var days = Array(0...100)
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
             dateLabel.isHidden = false
@@ -59,12 +65,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             save()
         }
     }
-    var createdDate: Date?
-    var dateOnlyFormatter = DateFormatter()
-    var timeOnlyFormatter = DateFormatter()
-    var intervalFormatter = DateComponentsFormatter()
-    var loopTimer: Timer? = nil
-    var scheduledTimer: Timer? = nil
 
     // MARK: - Outlets
 
@@ -79,9 +79,16 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - User action handlers
 
     @IBAction func startButton(_ sender: UIButton) {
-        createdDate = Date() - Double(secondsPerDay - 10) // TODO - remove!
-        targetDate = Date(timeIntervalSinceNow: selectedInterval)
-        state = .running
+        createdDate = Date()
+        let date = Date(timeIntervalSinceNow: selectedInterval)
+        var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
+        print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
+        components.hour = 23
+        components.minute = 59
+        components.second = 59
+        targetDate = components.date
+
+        state = .running // TODO - move to targetDate setter?
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
@@ -106,6 +113,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         dateOnlyFormatter.timeStyle = .none
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
+        dateTimeFormatter.dateStyle = .medium
+        dateTimeFormatter.timeStyle = .medium
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .short
         countdownLabel.text = ""
@@ -156,7 +165,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         else {
             let tDate = targetDate!
             let cDate = createdDate!
-            print("Saving: \(dateOnlyFormatter.string(from: tDate)) >> \(dateOnlyFormatter.string(from: cDate))")
+            print("Saving: \(dateTimeFormatter.string(from: tDate)) >> \(dateTimeFormatter.string(from: cDate))")
             defaults.set(tDate, forKey: userDefaultsKeyTargetDate)
             defaults.set(cDate, forKey: userDefaultsKeyCreatedDate)
         }
@@ -168,7 +177,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let restoredCreatedDate = defaults.object(forKey: userDefaultsKeyCreatedDate)
         if let tDate = restoredTargetDate as? Date,
             let cDate = restoredCreatedDate as? Date {
-            print("Restored: \(dateOnlyFormatter.string(from: tDate)) >> \(dateOnlyFormatter.string(from: cDate))")
+            print("Restored: \(dateTimeFormatter.string(from: tDate)) >> \(dateTimeFormatter.string(from: cDate))")
             createdDate = cDate
             targetDate = tDate
             state = .running
