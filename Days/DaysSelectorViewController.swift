@@ -11,10 +11,6 @@ import UserNotifications
 
 class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UNUserNotificationCenterDelegate {
 
-    enum State: String {
-        case notStarted = "•", running = "••", done = "•••"
-    }
-
     // MARK: - Properties
 
     let secondsPerDay = 60 * 60 * 24
@@ -27,53 +23,17 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     var dateTimeFormatter = DateFormatter()
     var intervalFormatter = DateComponentsFormatter()
     var loopTimer: Timer? = nil
-    var scheduledTimer: Timer? = nil
     var days = Array(0...100)
-    var state: State = .notStarted {
-        didSet {
-            switch state {
-            case .notStarted:
-                dayLabel.isHidden = true
-                remainingLabel.isHidden = true
-                resetButton.isHidden = true
-                toggleButton.isHidden = true
-                startButton.isHidden = false
-                picker.isHidden = false
-                remainingLabel.text = ""
-                showDetails = false
-            case .running:
-                picker.isHidden = true
-                startButton.isHidden = true
-                resetButton.isHidden = false
-                dayLabel.isHidden = false
-                remainingLabel.isHidden = false
-                toggleButton.isHidden = false
-            case .done:
-                break
-            }
 
-            stateLabel.text = state.rawValue
-        }
-    }
+    var model = TimerModel()
+
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
             let date = Date(timeIntervalSinceNow: selectedInterval)
-            targetDateLabel.text = dateTimeFormatter.string(from: date)
+            targetDateLabel.text = dateTimeFormatter.string(from: date) // TODO - need another (always-visible) label for this
         }
     }
-    var createdDate: Date? {
-        didSet {
-            if (createdDate != nil) {
-            createdDateLabel.text = dateTimeFormatter.string(from: createdDate!)
-            }
-        }
-    }
-    var targetDate: Date? {
-        didSet {
-            assert(targetDate == nil || createdDate != nil, "createdDate must be set before targetDate")
-            save()
-        }
-    }
+    
     var showDetails: Bool = false {
         didSet {
             detailsView.isHidden = !showDetails
@@ -101,25 +61,24 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - User action handlers
 
     @IBAction func startButton(_ sender: UIButton) {
-        createdDate = Date()
-        let date = Date(timeIntervalSinceNow: selectedInterval)
-        var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
-        print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
+        let createdDate = Date()
+        let targetDate = Date(timeIntervalSinceNow: selectedInterval)
+
+//        var components = Calendar.current.dateComponents(in: TimeZone.current, from: targetDate)
+//        print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
 //        components.hour = 23 // TODO
 //        components.minute = 59
 //        components.second = 59
-        targetDate = components.date
+//        targetDate = components.date
 
-        state = .running // TODO - move to targetDate setter?
-
+        setTargetDate(targetDate, createdOn: createdDate)
+        setModelState(.running)
         scheduleNotification(after: selectedInterval)
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
-        state = .notStarted
-
-        createdDate = nil
-        targetDate = nil
+        setModelState(.notStarted)
+        setTargetDate(nil)
     }
 
     @IBAction func toggleButton(_ sender: UIButton) {
@@ -153,28 +112,65 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         selectedInterval = defaultInterval
 
-        state = .notStarted
+        setModelState(.notStarted)
 
         startLoopTimer()
         restore()
     }
 
+    func setModelState(_ state: TimerModel.State) {
+        model.state = state
+        updateUI()
+    }
+
+    func setTargetDate(_ targetDate: Date?, createdOn createdDate: Date? = nil) {
+        model.targetDate = targetDate
+        model.createdDate = createdDate
+        createdDateLabel.text = (createdDate == nil ? "-" : dateTimeFormatter.string(from: createdDate!))
+        save()
+    }
+
+    func updateUI() {
+        stateLabel.text = model.state.rawValue
+
+        switch model.state {
+        case .notStarted:
+            dayLabel.isHidden = true
+            remainingLabel.isHidden = true
+            resetButton.isHidden = true
+            toggleButton.isHidden = true
+            startButton.isHidden = false
+            picker.isHidden = false
+            remainingLabel.text = ""
+            showDetails = false
+        case .running:
+            picker.isHidden = true
+            startButton.isHidden = true
+            resetButton.isHidden = false
+            dayLabel.isHidden = false
+            remainingLabel.isHidden = false
+            toggleButton.isHidden = false
+        case .done:
+            break
+        }
+    }
+
     func startLoopTimer() {
 
         func loopHandler(t: Timer) -> Void {
-            if let date = targetDate {
+            if let date = model.targetDate {
                 let remainingInterval = date.timeIntervalSinceNow
                 let remainingSeconds = Int(remainingInterval)
                 let remainingDays = remainingSeconds / secondsPerDay + 1
                 let isDone = remainingSeconds < 0
-                let elapsedSeconds = -1 * Int(createdDate!.timeIntervalSinceNow)
+                let elapsedSeconds = -1 * Int(model.createdDate!.timeIntervalSinceNow)
                 let elapsedDays = (elapsedSeconds / secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
 
                 if (isDone) {
                     dayLabel.text = ""
                     remainingLabel.text = "TIMER DONE"
-                    state = .done
-                    targetDate = nil
+                    setModelState(.done)
+                    setTargetDate(nil)
                 }
                 else {
                     dayLabel.text = "DAY\n\(elapsedDays)"
@@ -191,14 +187,14 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     func save() {
         let defaults = UserDefaults.standard
 
-        if (targetDate == nil) {
+        if (model.targetDate == nil) {
             print("Removing")
             defaults.removeObject(forKey: userDefaultsKeyTargetDate)
             defaults.removeObject(forKey: userDefaultsKeyCreatedDate)
         }
         else {
-            let tDate = targetDate!
-            let cDate = createdDate!
+            let tDate = model.targetDate!
+            let cDate = model.createdDate!
             print("Saving: \(dateTimeFormatter.string(from: tDate)) >> \(dateTimeFormatter.string(from: cDate))")
             defaults.set(tDate, forKey: userDefaultsKeyTargetDate)
             defaults.set(cDate, forKey: userDefaultsKeyCreatedDate)
@@ -212,9 +208,9 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         if let tDate = restoredTargetDate as? Date,
             let cDate = restoredCreatedDate as? Date {
             print("Restored: \(dateTimeFormatter.string(from: tDate)) >> \(dateTimeFormatter.string(from: cDate))")
-            createdDate = cDate
-            targetDate = tDate
-            state = .running
+            model.createdDate = cDate
+            model.targetDate = tDate
+            setModelState(.running)
         }
     }
     
