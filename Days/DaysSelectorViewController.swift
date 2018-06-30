@@ -34,17 +34,19 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         didSet {
             switch state {
             case .notStarted:
-                startButton.isHidden = false
                 resetButton.isHidden = true
                 dayLabel.isHidden = true
+                remainingLabel.isHidden = true
                 countdownLabel.isHidden = true
+                startButton.isHidden = false
                 picker.isHidden = false
             case .running:
                 startButton.isHidden = true
+                picker.isHidden = true
                 resetButton.isHidden = false
                 dayLabel.isHidden = false
+                remainingLabel.isHidden = false
                 countdownLabel.isHidden = false
-                picker.isHidden = true
             case .done:
                 break
             }
@@ -54,9 +56,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
-            dateLabel.isHidden = false
             let date = Date(timeIntervalSinceNow: selectedInterval)
-            dateLabel.text = dateOnlyFormatter.string(from: date) + "\n" + timeOnlyFormatter.string(from: date)
+            targetDateLabel.text = dateOnlyFormatter.string(from: date) + "\n" + timeOnlyFormatter.string(from: date)
         }
     }
     var targetDate: Date? {
@@ -65,12 +66,19 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             save()
         }
     }
+    var showDetails: Bool = false {
+        didSet {
+            detailsView.isHidden = !showDetails
+        }
+    }
 
     // MARK: - Outlets
 
     @IBOutlet weak var picker: UIPickerView!
-    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var targetDateLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
+    @IBOutlet weak var detailsView: UIStackView!
+    @IBOutlet weak var remainingLabel: UILabel!
     @IBOutlet weak var countdownLabel: UILabel!
     @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
@@ -83,9 +91,9 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let date = Date(timeIntervalSinceNow: selectedInterval)
         var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
         print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
-        components.hour = 23
-        components.minute = 59
-        components.second = 59
+//        components.hour = 23 // TODO
+//        components.minute = 59
+//        components.second = 59
         targetDate = components.date
 
         state = .running // TODO - move to targetDate setter?
@@ -98,6 +106,10 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         targetDate = nil
 
         picker.isHidden = false
+    }
+
+    @IBAction func toggleButton(_ sender: UIButton) {
+        showDetails = !showDetails
     }
 
     // MARK: - Methods
@@ -115,10 +127,15 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium
         dateTimeFormatter.timeStyle = .medium
+
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .short
+        
         countdownLabel.text = ""
         dayLabel.text = ""
+        remainingLabel.text = ""
+
+        showDetails = false
 
         selectedInterval = defaultInterval
 
@@ -134,10 +151,13 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             if let date = targetDate {
                 let remainingInterval = date.timeIntervalSinceNow
                 let remainingSeconds = Int(remainingInterval)
+                let remainingDays = remainingSeconds / secondsPerDay + 1
                 let isDone = remainingSeconds < 0
                 let elapsedSeconds = -1 * Int(createdDate!.timeIntervalSinceNow)
-                let elapsedDays = (elapsedSeconds / secondsPerDay) + 1
+                let elapsedDays = (elapsedSeconds / secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
+
                 dayLabel.text = "Day\n\(elapsedDays)"
+                remainingLabel.text = "\(remainingDays) \(remainingDays == 1 ? "day remains" : "days remain")"
 
                 if (isDone) {
                     state = .done
