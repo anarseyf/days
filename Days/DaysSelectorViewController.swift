@@ -79,7 +79,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - User action handlers
 
     @IBAction func startButton(_ sender: UIButton) {
-        createdDate = Date()
+        createdDate = Date() - Double(secondsPerDay - 10) // TODO - remove!
         targetDate = Date(timeIntervalSinceNow: selectedInterval)
         state = .running
     }
@@ -109,7 +109,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .short
         countdownLabel.text = ""
-        
+        dayLabel.text = ""
+
         selectedInterval = defaultInterval
 
         state = .notStarted
@@ -127,7 +128,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                 let isDone = remainingSeconds < 0
                 let elapsedSeconds = -1 * Int(createdDate!.timeIntervalSinceNow)
                 let elapsedDays = (elapsedSeconds / secondsPerDay) + 1
-                dayLabel.text = "Day \(elapsedDays)"
+                dayLabel.text = "Day\n\(elapsedDays)"
 
                 if (isDone) {
                     state = .done
@@ -146,7 +147,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     func save() {
         let defaults = UserDefaults.standard
-        let cDate = createdDate ?? Date()
 
         if (targetDate == nil) {
             print("Removing")
@@ -154,8 +154,10 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             defaults.removeObject(forKey: userDefaultsKeyCreatedDate)
         }
         else {
-            print("Saving: \(dateOnlyFormatter.string(from: targetDate!)) >> \(dateOnlyFormatter.string(from: cDate))")
-            defaults.set(targetDate, forKey: userDefaultsKeyTargetDate)
+            let tDate = targetDate!
+            let cDate = createdDate!
+            print("Saving: \(dateOnlyFormatter.string(from: tDate)) >> \(dateOnlyFormatter.string(from: cDate))")
+            defaults.set(tDate, forKey: userDefaultsKeyTargetDate)
             defaults.set(cDate, forKey: userDefaultsKeyCreatedDate)
         }
     }
