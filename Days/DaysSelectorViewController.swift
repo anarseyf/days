@@ -36,14 +36,18 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                 dayLabel.isHidden = true
                 remainingLabel.isHidden = true
                 resetButton.isHidden = true
+                toggleButton.isHidden = true
                 startButton.isHidden = false
                 picker.isHidden = false
+                remainingLabel.text = ""
+                showDetails = false
             case .running:
                 picker.isHidden = true
                 startButton.isHidden = true
                 resetButton.isHidden = false
                 dayLabel.isHidden = false
                 remainingLabel.isHidden = false
+                toggleButton.isHidden = false
             case .done:
                 break
             }
@@ -73,21 +77,26 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     var showDetails: Bool = false {
         didSet {
             detailsView.isHidden = !showDetails
+            let title = (showDetails ? "hide" : "show details")
+            toggleButton.setTitle(title, for: .normal)
         }
     }
 
     // MARK: - Outlets
 
     @IBOutlet weak var picker: UIPickerView!
+    @IBOutlet weak var detailsView: UIStackView!
+
     @IBOutlet weak var expiresInLabel: UILabel!
     @IBOutlet weak var targetDateLabel: UILabel!
     @IBOutlet weak var createdDateLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
-    @IBOutlet weak var detailsView: UIStackView!
     @IBOutlet weak var remainingLabel: UILabel!
     @IBOutlet weak var stateLabel: UILabel!
+
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
+    @IBOutlet weak var toggleButton: UIButton!
 
     // MARK: - User action handlers
 
@@ -109,14 +118,10 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         createdDate = nil
         targetDate = nil
-
-        picker.isHidden = false
     }
 
     @IBAction func toggleButton(_ sender: UIButton) {
         showDetails = !showDetails
-        let title = (showDetails ? "hide" : "show details")
-        sender.setTitle(title, for: .normal)
     }
 
     // MARK: - Methods
@@ -133,11 +138,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium
-        dateTimeFormatter.timeStyle = .medium
+        dateTimeFormatter.timeStyle = .short
 
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
-        intervalFormatter.unitsStyle = .short
+        intervalFormatter.unitsStyle = .abbreviated
 
+        // TODO - fold into state setter
         dayLabel.text = ""
         remainingLabel.text = ""
 
@@ -162,16 +168,18 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                 let elapsedSeconds = -1 * Int(createdDate!.timeIntervalSinceNow)
                 let elapsedDays = (elapsedSeconds / secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
 
-                dayLabel.text = "Day\n\(elapsedDays)"
-                remainingLabel.text = "\(remainingDays) \(remainingDays == 1 ? "day remains" : "days remain")"
-
                 if (isDone) {
+                    dayLabel.text = ""
+                    remainingLabel.text = "TIMER DONE"
+
                     state = .done
                     targetDate = nil
                     notify()
                 }
                 else {
+                    dayLabel.text = "DAY\n\(elapsedDays)"
                     expiresInLabel.text = intervalFormatter.string(from: remainingInterval)!
+                    remainingLabel.text = "\(remainingDays) \(remainingDays == 1 ? "DAY" : "DAYS" ) LEFT"
                 }
             }
         }
