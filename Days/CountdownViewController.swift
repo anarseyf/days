@@ -36,11 +36,12 @@ class CountdownViewController: UIViewController {
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
+//        loopTimer?.invalidate()
         navigationController?.popViewController(animated: true)
     }
 
     override func willMove(toParent parent: UIViewController?) {
-        if (parent == nil) {
+        if (parent == nil) { // popped off the nav stack
             dismissHandler?()
         }
     }
@@ -70,7 +71,8 @@ class CountdownViewController: UIViewController {
 
     func startLoopTimer() {
 
-        func loopHandler(t: Timer) -> Void {
+        func loopHandler(timer: Timer?) -> Void {
+            print("LOOP")
             if let date = model?.targetDate {
                 let remainingInterval = date.timeIntervalSinceNow
                 let remainingSeconds = Int(remainingInterval)
@@ -95,5 +97,7 @@ class CountdownViewController: UIViewController {
         loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
                                          repeats: true,
                                          block: loopHandler)
+
+        loopHandler(timer: nil) // otherwise it takes a second for the views to update
     }
 }

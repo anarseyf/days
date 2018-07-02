@@ -29,7 +29,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var provisionalDateLabel: UILabel!
-    @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var titleInput: UITextField!
 
@@ -88,11 +87,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let center = UNUserNotificationCenter.current()
         center.removeAllDeliveredNotifications()
         center.removeAllPendingNotificationRequests()
+
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
     func setModelState(_ state: TimerModel.State) {
         model.state = state
-        stateLabel.text = model.state.rawValue // TODO - not always updated
     }
 
     func save() {
