@@ -100,8 +100,8 @@
 				5E0ECCFB20E564C0004BEEDA /* DaysSelectorViewController.swift */,
 				5EE195E520E843C10076D761 /* TimerModel.swift */,
 				5E0ECCFD20E564C0004BEEDA /* Main.storyboard */,
-				5E0ECD0020E564C2004BEEDA /* Assets.xcassets */,
 				5E0ECD0220E564C2004BEEDA /* LaunchScreen.storyboard */,
+				5E0ECD0020E564C2004BEEDA /* Assets.xcassets */,
 				5E0ECD0520E564C2004BEEDA /* Info.plist */,
 			);
 			path = Days;
