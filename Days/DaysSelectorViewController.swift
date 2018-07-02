@@ -124,6 +124,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         restore()
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let viewController = segue.destination as? CountdownViewController {
+            viewController.model = model
+        }
+    }
+
     func setModelState(_ state: TimerModel.State) {
         model.state = state
         updateVisibility()
