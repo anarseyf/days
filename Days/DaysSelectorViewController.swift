@@ -14,7 +14,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - Properties
 
     let secondsPerDay = 60 * 60 * 24
-    let defaultInterval = 3.0 // TODO - remove, used for testing only
+    let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
 
     var dateOnlyFormatter = DateFormatter()
@@ -116,7 +116,9 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         showDetails = false
 
-        selectedInterval = defaultInterval
+        picker.selectRow(1, inComponent: 0, animated: false)
+        selectedInterval = 1 // TODO - tie to the array
+
         setModelState(.notStarted)
         startLoopTimer()
         restore()
@@ -239,7 +241,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         content.sound = UNNotificationSound.default
         content.badge = 1
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: (interval + notificationDelay), repeats: false)
 
         let request = UNNotificationRequest(identifier: "notificationId",
                                             content: content,
@@ -269,7 +271,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedInterval = Double(row * secondsPerDay) + defaultInterval
+        selectedInterval = Double(row * secondsPerDay)
     }
 
     // MARK: - UNUserNotificationCenterDelegate
