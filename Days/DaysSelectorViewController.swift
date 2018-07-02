@@ -116,8 +116,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         showDetails = false
 
-        picker.selectRow(1, inComponent: 0, animated: false)
-        selectedInterval = 1 // TODO - tie to the array
+        selectedInterval = 0 // TODO - tie to the array
+        picker.selectRow(0, inComponent: 0, animated: false)
 
         setModelState(.notStarted)
         startLoopTimer()
@@ -152,6 +152,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             resetButton.isHidden = true
             toggleButton.isHidden = true
             titleInput.isEnabled = true
+            titleInput.isHidden = false
             provisionalDateLabel.isHidden = false
             startButton.isHidden = false
             picker.isHidden = false
@@ -166,8 +167,9 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             remainingLabel.isHidden = false
             toggleButton.isHidden = false
             titleInput.isEnabled = false
+            titleInput.isHidden = (model.title == nil)
         case .done:
-            break
+            break // TODO - fill in
         }
     }
 
@@ -184,9 +186,9 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
                 if (isDone) {
                     dayLabel.text = ""
+                    expiresInLabel.text = "-"
                     remainingLabel.text = "TIMER DONE"
                     setModelState(.done)
-                    setTargetDate(nil)
                 }
                 else {
                     dayLabel.text = "DAY\n\(elapsedDays)"
