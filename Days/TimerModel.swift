@@ -16,9 +16,14 @@ class TimerModel: NSObject, NSCoding {
     }
 
     var state: State = .notStarted // TODO - computed property
-    var targetDate: Date? // TODO - enforce target/create date parity
-    var createdDate: Date?
+    private(set) var targetDate: Date? // TODO - enforce target/create date parity, make these read-only
+    private(set) var createdDate: Date?
     var title: String?
+
+    func setTargetDate(_ targetDate: Date?, createdOn createdDate: Date? = nil) {
+        self.targetDate = targetDate
+        self.createdDate = createdDate
+    }
 
     override var description: String {
         let formatter = DateFormatter()
@@ -26,9 +31,9 @@ class TimerModel: NSObject, NSCoding {
         formatter.timeStyle = .short
         let targetString = (targetDate == nil ? "(-)" : formatter.string(from: targetDate!))
         let createdString = (createdDate == nil ? "(-)" : formatter.string(from: createdDate!))
-        let titleString = title ?? "(no title)"
+        let titleString = title ?? "(-)"
 
-        return "title: \(titleString)\ntarget: \(targetString)\ncreated: \(createdString))"
+        return "title: \(titleString); target: \(targetString); created: \(createdString)"
     }
 
     func encode(with coder: NSCoder) {
