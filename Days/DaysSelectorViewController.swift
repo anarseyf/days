@@ -200,7 +200,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     func save() {
         let defaults = UserDefaults.standard
-
         if (model.targetDate == nil) {
             print("Removing")
             defaults.removeObject(forKey: userDefaultsKey)
