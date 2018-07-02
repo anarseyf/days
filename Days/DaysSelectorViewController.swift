@@ -9,14 +9,13 @@
 import UIKit
 import UserNotifications
 
-class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UNUserNotificationCenterDelegate {
+class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UNUserNotificationCenterDelegate, UITextFieldDelegate {
 
     // MARK: - Properties
 
     let secondsPerDay = 60 * 60 * 24
     let defaultInterval = 3.0 // TODO - remove, used for testing only
-    let userDefaultsKeyTargetDate = "targetDate"
-    let userDefaultsKeyCreatedDate = "createdDate"
+    let userDefaultsKey = "timerModel"
 
     var dateOnlyFormatter = DateFormatter()
     var timeOnlyFormatter = DateFormatter()
@@ -30,7 +29,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
             let date = Date(timeIntervalSinceNow: selectedInterval)
-            targetDateLabel.text = dateTimeFormatter.string(from: date) // TODO - need another (always-visible) label for this
+            provisionalDateLabel.text = "Timer will expire on\n\(dateTimeFormatter.string(from: date))"
         }
     }
     
@@ -47,6 +46,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var detailsView: UIStackView!
 
+    @IBOutlet weak var provisionalDateLabel: UILabel!
     @IBOutlet weak var expiresInLabel: UILabel!
     @IBOutlet weak var targetDateLabel: UILabel!
     @IBOutlet weak var createdDateLabel: UILabel!
@@ -57,6 +57,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var toggleButton: UIButton!
+    @IBOutlet weak var titleInput: UITextField!
 
     // MARK: - User action handlers
 
@@ -64,12 +65,13 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let createdDate = Date()
         let targetDate = Date(timeIntervalSinceNow: selectedInterval)
 
-//        var components = Calendar.current.dateComponents(in: TimeZone.current, from: targetDate)
-//        print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
-//        components.hour = 23 // TODO
-//        components.minute = 59
-//        components.second = 59
-//        targetDate = components.date
+        // TODO - uncomment to adjust time:
+        //        var components = Calendar.current.dateComponents(in: TimeZone.current, from: targetDate)
+        //        print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
+        //        components.hour = 23 // TODO
+        //        components.minute = 59
+        //        components.second = 59
+        //        targetDate = components.date
 
         setTargetDate(targetDate, createdOn: createdDate)
         setModelState(.running)
@@ -79,6 +81,9 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     @IBAction func resetButton(_ sender: UIButton) {
         setModelState(.notStarted)
         setTargetDate(nil)
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
     }
 
     @IBAction func toggleButton(_ sender: UIButton) {
@@ -93,6 +98,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         picker.delegate = self
         picker.dataSource = self
         UNUserNotificationCenter.current().delegate = self
+        titleInput.delegate = self
 
         dateOnlyFormatter.dateStyle = .medium
         dateOnlyFormatter.timeStyle = .none
@@ -111,26 +117,30 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         showDetails = false
 
         selectedInterval = defaultInterval
-
         setModelState(.notStarted)
-
         startLoopTimer()
         restore()
     }
 
     func setModelState(_ state: TimerModel.State) {
         model.state = state
-        updateUI()
+        updateVisibility()
     }
 
     func setTargetDate(_ targetDate: Date?, createdOn createdDate: Date? = nil) {
         model.targetDate = targetDate
         model.createdDate = createdDate
-        createdDateLabel.text = (createdDate == nil ? "-" : dateTimeFormatter.string(from: createdDate!))
+        updateTimerLabels()
         save()
     }
 
-    func updateUI() {
+    func updateTimerLabels() {
+        createdDateLabel.text = (model.createdDate == nil ? "-" : dateTimeFormatter.string(from: model.createdDate!))
+        targetDateLabel.text = (model.targetDate == nil ? "-" : dateTimeFormatter.string(from: model.targetDate!))
+        titleInput.text = model.title
+    }
+
+    func updateVisibility() {
         stateLabel.text = model.state.rawValue
 
         switch model.state {
@@ -139,6 +149,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             remainingLabel.isHidden = true
             resetButton.isHidden = true
             toggleButton.isHidden = true
+            titleInput.isEnabled = true
+            provisionalDateLabel.isHidden = false
             startButton.isHidden = false
             picker.isHidden = false
             remainingLabel.text = ""
@@ -146,10 +158,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         case .running:
             picker.isHidden = true
             startButton.isHidden = true
+            provisionalDateLabel.isHidden = true
             resetButton.isHidden = false
             dayLabel.isHidden = false
             remainingLabel.isHidden = false
             toggleButton.isHidden = false
+            titleInput.isEnabled = false
         case .done:
             break
         }
@@ -189,28 +203,29 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
         if (model.targetDate == nil) {
             print("Removing")
-            defaults.removeObject(forKey: userDefaultsKeyTargetDate)
-            defaults.removeObject(forKey: userDefaultsKeyCreatedDate)
+            defaults.removeObject(forKey: userDefaultsKey)
         }
         else {
             let tDate = model.targetDate!
             let cDate = model.createdDate!
             print("Saving: \(dateTimeFormatter.string(from: tDate)) >> \(dateTimeFormatter.string(from: cDate))")
-            defaults.set(tDate, forKey: userDefaultsKeyTargetDate)
-            defaults.set(cDate, forKey: userDefaultsKeyCreatedDate)
+
+            let encoded = NSKeyedArchiver.archivedData(withRootObject: model)
+            defaults.set(encoded, forKey: userDefaultsKey)
         }
     }
 
     func restore() {
         let defaults = UserDefaults.standard
-        let restoredTargetDate = defaults.object(forKey: userDefaultsKeyTargetDate)
-        let restoredCreatedDate = defaults.object(forKey: userDefaultsKeyCreatedDate)
-        if let tDate = restoredTargetDate as? Date,
-            let cDate = restoredCreatedDate as? Date {
-            print("Restored: \(dateTimeFormatter.string(from: tDate)) >> \(dateTimeFormatter.string(from: cDate))")
-            model.createdDate = cDate
-            model.targetDate = tDate
-            setModelState(.running)
+        if let encoded = defaults.data(forKey: userDefaultsKey),
+            let restoredModel = NSKeyedUnarchiver.unarchiveObject(with: encoded) as? TimerModel {
+            model = restoredModel
+            setModelState(.running) // TODO - computed property?
+            updateTimerLabels()
+            print("Restored: \(model)")
+        }
+        else {
+            print("Nothing restored")
         }
     }
     
@@ -220,9 +235,10 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     func scheduleNotification(after interval: TimeInterval) {
         let content = UNMutableNotificationContent()
-        content.title = "Timer done"
-        content.body = "Now what?"
+        content.title = model.title ?? "Timer expired"
+        content.body = (model.targetDate == nil ? "" : dateTimeFormatter.string(from: model.targetDate!))
         content.sound = UNNotificationSound.default
+        content.badge = 1
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
 
@@ -258,10 +274,30 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
 
     // MARK: - UNUserNotificationCenterDelegate
+
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .sound])
+    }
+
+    // MARK: - UITextFieldDelegate
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        model.title = textField.text
     }
 }
 

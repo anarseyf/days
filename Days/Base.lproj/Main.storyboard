@@ -86,15 +86,7 @@
                                     <action selector="startButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PVr-Sv-bnQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uu3-T4-93A">
-                                <rect key="frame" x="230" y="497" width="60" height="41"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Reset"/>
-                                <connections>
-                                    <action selector="resetButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="096-NY-Yih"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="State" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulu-be-o0o">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="State" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulu-be-o0o">
                                 <rect key="frame" x="249.5" y="453.5" width="40.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -125,19 +117,45 @@
                                     <action selector="toggleButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vpg-4i-o9p"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provisional Date Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bBd-TI-LmT">
+                                <rect key="frame" x="30" y="430" width="260" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Timer title" textAlignment="natural" minimumFontSize="16" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="mQc-GI-SbG">
+                                <rect key="frame" x="35" y="50" width="250" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="250" id="0Bf-bR-dB3"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uu3-T4-93A">
+                                <rect key="frame" x="230" y="494" width="60" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="resetButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="096-NY-Yih"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ulu-be-o0o" secondAttribute="trailing" constant="30" id="3Qt-im-FXy"/>
+                            <constraint firstItem="bBd-TI-LmT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4dD-uD-M8Z"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2Wf-XE-ITg" secondAttribute="trailing" priority="751" constant="30" id="56M-IV-VaC"/>
                             <constraint firstItem="tcI-PZ-j17" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="6vg-Lp-wgd"/>
+                            <constraint firstItem="bBd-TI-LmT" firstAttribute="top" secondItem="2Wf-XE-ITg" secondAttribute="bottom" constant="50" id="A2n-HV-Whw"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="30" id="F4w-pW-gR7"/>
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="G9W-D3-ers"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="uu3-T4-93A" secondAttribute="bottom" constant="33" id="GF8-Zi-5kZ"/>
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" priority="760" constant="30" id="Hz8-xL-S41"/>
                             <constraint firstItem="GXz-te-ebb" firstAttribute="top" secondItem="KiU-Cb-jbz" secondAttribute="bottom" constant="30" id="KsM-Ju-EbZ"/>
                             <constraint firstItem="KiU-Cb-jbz" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MU6-Vp-ndp"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="GXz-te-ebb" secondAttribute="trailing" constant="30" id="Tiw-wa-m3y"/>
-                            <constraint firstItem="uu3-T4-93A" firstAttribute="top" secondItem="Ulu-be-o0o" secondAttribute="bottom" constant="23" id="Yhr-ty-dGw"/>
+                            <constraint firstItem="mQc-GI-SbG" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="VvI-Ia-l8m"/>
                             <constraint firstItem="tcI-PZ-j17" firstAttribute="top" secondItem="GXz-te-ebb" secondAttribute="bottom" constant="20" id="Z91-ne-qHp"/>
                             <constraint firstItem="ooe-5g-JGW" firstAttribute="top" secondItem="GXz-te-ebb" secondAttribute="bottom" constant="5" id="d2X-Fk-a3m"/>
                             <constraint firstItem="KiU-Cb-jbz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="60" id="dwG-He-Wue"/>
@@ -145,7 +163,8 @@
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" priority="751" constant="60" id="gLS-do-Xik"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="uu3-T4-93A" secondAttribute="trailing" constant="30" id="gWM-nd-bxC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ooe-5g-JGW" secondAttribute="trailing" constant="30" id="hcl-td-SQA"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="uu3-T4-93A" secondAttribute="bottom" constant="30" id="nnx-uL-srR"/>
+                            <constraint firstItem="mQc-GI-SbG" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="mmb-B8-NrF"/>
+                            <constraint firstItem="bBd-TI-LmT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="y5D-5C-tcR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -155,17 +174,19 @@
                         <outlet property="detailsView" destination="tcI-PZ-j17" id="eeO-6K-OSp"/>
                         <outlet property="expiresInLabel" destination="Mez-MB-auz" id="W7q-3X-LVm"/>
                         <outlet property="picker" destination="2Wf-XE-ITg" id="u9k-It-OPp"/>
+                        <outlet property="provisionalDateLabel" destination="bBd-TI-LmT" id="Xlv-kq-k8c"/>
                         <outlet property="remainingLabel" destination="GXz-te-ebb" id="b5l-0t-LkO"/>
                         <outlet property="resetButton" destination="uu3-T4-93A" id="bVy-yT-iKU"/>
                         <outlet property="startButton" destination="sT0-n0-lZx" id="tMN-7F-b7e"/>
                         <outlet property="stateLabel" destination="Ulu-be-o0o" id="VVv-m8-lmp"/>
                         <outlet property="targetDateLabel" destination="g6x-nG-mc8" id="7tg-ZC-goW"/>
+                        <outlet property="titleInput" destination="mQc-GI-SbG" id="Aao-bn-1d3"/>
                         <outlet property="toggleButton" destination="ooe-5g-JGW" id="BAs-hc-4WV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="132.68365817091455"/>
+            <point key="canvasLocation" x="135" y="132.04225352112675"/>
         </scene>
     </scenes>
 </document>
