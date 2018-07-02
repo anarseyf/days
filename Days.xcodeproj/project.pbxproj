@@ -16,6 +16,7 @@
 		5E0ECD0120E564C2004BEEDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E0ECD0020E564C2004BEEDA /* Assets.xcassets */; };
 		5E0ECD0420E564C2004BEEDA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E0ECD0220E564C2004BEEDA /* LaunchScreen.storyboard */; };
 		5E0ECD0F20E564C3004BEEDA /* DaysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0ECD0E20E564C3004BEEDA /* DaysTests.swift */; };
+		5E55F98520EA9A5200A47C33 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */; };
 		5EE195E620E843C10076D761 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE195E520E843C10076D761 /* TimerModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		5E0ECD0A20E564C3004BEEDA /* DaysTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DaysTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E0ECD0E20E564C3004BEEDA /* DaysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysTests.swift; sourceTree = "<group>"; };
 		5E0ECD1020E564C3004BEEDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5EE195E520E843C10076D761 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -98,6 +100,7 @@
 				5E0C6E0820E6F8BB00C1813B /* Designs */,
 				5E0ECCF920E564C0004BEEDA /* AppDelegate.swift */,
 				5E0ECCFB20E564C0004BEEDA /* DaysSelectorViewController.swift */,
+				5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */,
 				5EE195E520E843C10076D761 /* TimerModel.swift */,
 				5E0ECCFD20E564C0004BEEDA /* Main.storyboard */,
 				5E0ECD0220E564C2004BEEDA /* LaunchScreen.storyboard */,
@@ -223,6 +226,7 @@
 				5EE195E620E843C10076D761 /* TimerModel.swift in Sources */,
 				5E0ECCFC20E564C0004BEEDA /* DaysSelectorViewController.swift in Sources */,
 				5E0ECCFA20E564C0004BEEDA /* AppDelegate.swift in Sources */,
+				5E55F98520EA9A5200A47C33 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

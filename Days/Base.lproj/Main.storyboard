@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cz7-Bb-peV">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,23 +10,23 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Days Selector View Controller-->
+        <!--Days View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="DaysSelectorViewController" customModule="Days" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Days View Controller" id="BYZ-38-t0r" customClass="DaysSelectorViewController" customModule="Days" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Wf-XE-ITg">
-                                <rect key="frame" x="30" y="90" width="260" height="250"/>
+                                <rect key="frame" x="30" y="134" width="260" height="250"/>
                                 <constraints>
                                     <constraint firstAttribute="height" priority="755" constant="250" id="eJO-hw-h68"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="N4f-kb-vpG"/>
                             </pickerView>
                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="tcI-PZ-j17">
-                                <rect key="frame" x="30" y="346" width="169.5" height="148"/>
+                                <rect key="frame" x="30" y="390" width="169.5" height="148"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timer expires in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xXo-8b-h6d">
                                         <rect key="frame" x="0.0" y="0.0" width="136.5" height="24.5"/>
@@ -83,7 +83,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Day 100" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KiU-Cb-jbz">
-                                <rect key="frame" x="46.5" y="80" width="227.5" height="160"/>
+                                <rect key="frame" x="46.5" y="124" width="227.5" height="160"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="900" constant="160" id="oxR-ae-gHq"/>
                                 </constraints>
@@ -92,7 +92,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(remaining)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GXz-te-ebb">
-                                <rect key="frame" x="30" y="260" width="260" height="36"/>
+                                <rect key="frame" x="30" y="304" width="260" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="KE1-mT-VyL"/>
                                 </constraints>
@@ -101,20 +101,20 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ooe-5g-JGW">
-                                <rect key="frame" x="30" y="306" width="86" height="30"/>
+                                <rect key="frame" x="30" y="350" width="86" height="30"/>
                                 <state key="normal" title="show details"/>
                                 <connections>
                                     <action selector="toggleButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Vpg-4i-o9p"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provisional Date Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bBd-TI-LmT">
-                                <rect key="frame" x="30" y="370" width="260" height="23.5"/>
+                                <rect key="frame" x="30" y="414" width="260" height="23.5"/>
                                 <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="20"/>
                                 <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Timer title" textAlignment="natural" minimumFontSize="16" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="mQc-GI-SbG">
-                                <rect key="frame" x="30" y="50" width="260" height="30"/>
+                                <rect key="frame" x="30" y="94" width="260" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done"/>
@@ -163,6 +163,15 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="gAm-hO-Mab">
+                        <barButtonItem key="rightBarButtonItem" title="Settings" id="KHP-T7-Gsb">
+                            <connections>
+                                <segue destination="AFl-Yc-qq1" kind="presentation" modalPresentationStyle="overCurrentContext" id="P8m-iB-Zq8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="createdDateLabel" destination="NtY-yQ-R8I" id="77u-Pq-2gW"/>
                         <outlet property="dayLabel" destination="KiU-Cb-jbz" id="jrx-ly-LzJ"/>
@@ -181,7 +190,78 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="943" y="131"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="IZV-79-FpA">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cz7-Bb-peV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7QY-N2-vJg">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Sau-ch-LZL"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GNN-vN-Ka7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
             <point key="canvasLocation" x="135" y="132.04225352112675"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="66q-Ru-f3K">
+            <objects>
+                <viewController title="Settings" id="Zqk-ac-2ag" customClass="SettingsViewController" customModule="Days" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="UGg-Iu-1ea">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jDr-zi-aYn">
+                                <rect key="frame" x="128" y="273.5" width="64" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="jDr-zi-aYn" firstAttribute="centerX" secondItem="UGg-Iu-1ea" secondAttribute="centerX" id="a4e-G9-Cdf"/>
+                            <constraint firstItem="jDr-zi-aYn" firstAttribute="centerY" secondItem="UGg-Iu-1ea" secondAttribute="centerY" id="qd7-2Z-Lf0"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Ndg-VB-swV"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="TgA-sq-n0m">
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="o9Z-rn-xmi">
+                            <connections>
+                                <action selector="dismiss:" destination="Zqk-ac-2ag" id="Mwh-nb-z4O"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EzO-hg-jac" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2518" y="132"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ePZ-uU-CwT">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PUQ-Kj-dD5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AFl-Yc-qq1" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="epW-Rj-O06">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Zqk-ac-2ag" kind="relationship" relationship="rootViewController" id="tMG-8Z-Mdq"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="1734.375" y="130.98591549295776"/>
         </scene>
     </scenes>
     <resources>
