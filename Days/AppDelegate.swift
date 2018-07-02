@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        let options: UNAuthorizationOptions = [.sound, .alert, .badge]
+        let options: UNAuthorizationOptions = [.alert, .badge]
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.requestAuthorization(options: options) {
             (granted, error) in

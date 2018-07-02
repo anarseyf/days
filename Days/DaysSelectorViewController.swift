@@ -15,9 +15,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
-
-    var days = Array(0...100)
-
+    let days = Array(0...100)
     var model = TimerModel()
 
     var selectedInterval: TimeInterval = 0.0 {
@@ -62,31 +60,39 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         
         picker.delegate = self
         picker.dataSource = self
-        UNUserNotificationCenter.current().delegate = self
         titleInput.delegate = self
+        UNUserNotificationCenter.current().delegate = self
 
-
-        selectedInterval = 0 // TODO - tie to the array
+        reset()
+        selectedInterval = 0
         picker.selectRow(0, inComponent: 0, animated: false)
-
-        setModelState(.notStarted)
         restore()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let viewController = segue.destination as? CountdownViewController {
             viewController.model = model
-            viewController.dismissHandler = self.reset
+            viewController.dismissHandler = { () in
+                self.reset()
+                self.save()
+            }
         }
     }
 
     func reset() {
+        setModelState(.notStarted)
         model.setTargetDate(nil)
+        model.title = nil
+        titleInput.text = ""
+
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
     }
 
     func setModelState(_ state: TimerModel.State) {
         model.state = state
-        stateLabel.text = model.state.rawValue
+        stateLabel.text = model.state.rawValue // TODO - not always updated
     }
 
     func save() {
@@ -129,7 +135,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         let content = UNMutableNotificationContent()
         content.title = model.title ?? "Timer expired"
         content.body = (model.targetDate == nil ? "" : Utils.shared.dateTimeFormatter.string(from: model.targetDate!))
-        content.sound = UNNotificationSound.default
         content.badge = 1
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: (interval + notificationDelay), repeats: false)
@@ -139,10 +144,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
                                             trigger: trigger)
 
         let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.add(request) {
-            (error) in
-            print ("Notification scheduled\(error != nil ? " WITH ERRORS" : "").")
-        }
+        notificationCenter.add(request, withCompletionHandler: nil)
     }
 
     // MARK: - UIPickerViewDataSource
@@ -170,7 +172,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .sound])
+        completionHandler([.alert, .badge])
     }
 
     // MARK: - UITextFieldDelegate

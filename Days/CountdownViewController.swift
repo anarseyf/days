@@ -36,13 +36,13 @@ class CountdownViewController: UIViewController {
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
-        setModelState(.notStarted)
-        model!.setTargetDate(nil)
-        dismiss(animated: true, completion: dismissHandler)
+        navigationController?.popViewController(animated: true)
     }
 
     override func willMove(toParent parent: UIViewController?) {
-        print("WILL MOVE") // TODO
+        if (parent == nil) {
+            dismissHandler?()
+        }
     }
     
     override func viewDidLoad() {
@@ -50,11 +50,12 @@ class CountdownViewController: UIViewController {
 
         assert(model != nil, "Model must be set when presenting the Countdown view controller")
 
+        navigationItem.hidesBackButton = true
         // TODO - fold into state setter
         dayLabel.text = ""
         remainingLabel.text = ""
         titleLabel.text = model!.title
-
+        updateTimerLabels()
         startLoopTimer()
     }
 

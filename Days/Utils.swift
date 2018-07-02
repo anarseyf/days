@@ -13,10 +13,10 @@ class Utils {
 
     static let shared = Utils()
 
-    var dateOnlyFormatter = DateFormatter()
-    var timeOnlyFormatter = DateFormatter()
-    var dateTimeFormatter = DateFormatter()
-    var intervalFormatter = DateComponentsFormatter()
+    let dateOnlyFormatter = DateFormatter()
+    let timeOnlyFormatter = DateFormatter()
+    let dateTimeFormatter = DateFormatter()
+    let intervalFormatter = DateComponentsFormatter()
 
     private init() {
         
