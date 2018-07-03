@@ -70,15 +70,25 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let viewController = segue.destination as? CountdownViewController {
-            viewController.model = model
-            viewController.dismissHandler = { () in
-                self.reset()
-                self.save()
-            }
+            prepareForPresenting(viewController)
         }
     }
 
+    private func prepareForPresenting(_ viewController: CountdownViewController) {
+        viewController.model = model
+        viewController.dismissHandler = { () in
+            self.reset()
+            self.save()
+        }
+    }
+
+    func setModelState(_ state: TimerModel.State) {
+        model.state = state
+    }
+
     func reset() {
+        print("RESET")
+
         setModelState(.notStarted)
         model.setTargetDate(nil)
         model.title = nil
@@ -89,10 +99,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         center.removeAllPendingNotificationRequests()
 
         UIApplication.shared.applicationIconBadgeNumber = 0
-    }
-
-    func setModelState(_ state: TimerModel.State) {
-        model.state = state
     }
 
     func save() {
@@ -117,18 +123,17 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             let restoredModel = NSKeyedUnarchiver.unarchiveObject(with: encoded) as? TimerModel {
             model = restoredModel
             setModelState(.running) // TODO - computed property?
-            titleInput.text = model.title
             print("Restored: \(model)")
 
-            // TODO - present CountdownVC, no animation
+            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countdownViewController")
+            if let countdownViewController = viewController as? CountdownViewController {
+                prepareForPresenting(countdownViewController)
+                navigationController?.pushViewController(countdownViewController, animated: false)
+            }
         }
         else {
             print("Nothing restored")
         }
-    }
-    
-    func titleForRow(_ row: Int) -> String {
-        return String(days[row])
     }
 
     func scheduleNotification(after interval: TimeInterval) {
@@ -160,7 +165,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - UIPickerViewDelegate
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return titleForRow(row)
+        return String(days[row])
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

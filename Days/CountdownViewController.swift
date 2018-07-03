@@ -36,7 +36,7 @@ class CountdownViewController: UIViewController {
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
-//        loopTimer?.invalidate()
+        loopTimer?.invalidate()
         navigationController?.popViewController(animated: true)
     }
 
