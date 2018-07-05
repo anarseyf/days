@@ -19,9 +19,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Wf-XE-ITg">
-                                <rect key="frame" x="30" y="134" width="260" height="250"/>
+                                <rect key="frame" x="30" y="134" width="260" height="160"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" priority="755" constant="250" id="eJO-hw-h68"/>
+                                    <constraint firstAttribute="height" priority="755" constant="160" id="eJO-hw-h68"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="N4f-kb-vpG"/>
                             </pickerView>
@@ -34,7 +34,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provisional Date Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bBd-TI-LmT">
-                                <rect key="frame" x="30" y="414" width="260" height="23.5"/>
+                                <rect key="frame" x="30" y="314" width="260" height="23.5"/>
                                 <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="20"/>
                                 <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -45,18 +45,34 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="done"/>
                             </textField>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="cDd-iE-WOC">
+                                <rect key="frame" x="0.0" y="358" width="320" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="9h3-yE-0hf"/>
+                                </constraints>
+                                <date key="date" timeIntervalSinceReferenceDate="552515171.16443598">
+                                    <!--2018-07-05 20:26:11 +0000-->
+                                </date>
+                                <connections>
+                                    <action selector="startDateAdjusted:" destination="BYZ-38-t0r" eventType="valueChanged" id="MHo-U0-Mh3"/>
+                                </connections>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="mQc-GI-SbG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="2JS-zb-Egb"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4dD-uD-M8Z"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2Wf-XE-ITg" secondAttribute="trailing" priority="751" constant="30" id="56M-IV-VaC"/>
-                            <constraint firstItem="bBd-TI-LmT" firstAttribute="top" secondItem="2Wf-XE-ITg" secondAttribute="bottom" constant="30" id="A2n-HV-Whw"/>
+                            <constraint firstItem="cDd-iE-WOC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6Ew-Nh-ibg"/>
+                            <constraint firstItem="bBd-TI-LmT" firstAttribute="top" secondItem="2Wf-XE-ITg" secondAttribute="bottom" constant="20" id="A2n-HV-Whw"/>
+                            <constraint firstItem="cDd-iE-WOC" firstAttribute="top" secondItem="bBd-TI-LmT" secondAttribute="bottom" constant="20" id="Cpi-Oh-tBs"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="29" id="F4w-pW-gR7"/>
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" priority="760" constant="30" id="Hz8-xL-S41"/>
+                            <constraint firstItem="cDd-iE-WOC" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="TuU-10-MdL"/>
                             <constraint firstItem="mQc-GI-SbG" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="VvI-Ia-l8m"/>
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YTV-SM-glc"/>
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="top" secondItem="mQc-GI-SbG" secondAttribute="bottom" priority="751" constant="10" id="gLS-do-Xik"/>
+                            <constraint firstItem="cDd-iE-WOC" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="jZg-ia-J5G"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mQc-GI-SbG" secondAttribute="trailing" constant="30" id="xIx-DB-cal"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="y5D-5C-tcR"/>
                         </constraints>
@@ -71,13 +87,14 @@
                         <outlet property="remainingLabel" destination="GXz-te-ebb" id="b5l-0t-LkO"/>
                         <outlet property="resetButton" destination="uu3-T4-93A" id="bVy-yT-iKU"/>
                         <outlet property="startButton" destination="sT0-n0-lZx" id="tMN-7F-b7e"/>
+                        <outlet property="startDatePicker" destination="cDd-iE-WOC" id="O5a-r3-VXj"/>
                         <outlet property="titleInput" destination="mQc-GI-SbG" id="Aao-bn-1d3"/>
                         <outlet property="toggleButton" destination="ooe-5g-JGW" id="BAs-hc-4WV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="943" y="131"/>
+            <point key="canvasLocation" x="941.25" y="130.98591549295776"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IZV-79-FpA">
@@ -135,7 +152,6 @@
         <!--Navigation Controller-->
         <scene sceneID="ePZ-uU-CwT">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="PUQ-Kj-dD5" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AFl-Yc-qq1" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="epW-Rj-O06">
@@ -147,6 +163,7 @@
                         <segue destination="Zqk-ac-2ag" kind="relationship" relationship="rootViewController" id="tMG-8Z-Mdq"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PUQ-Kj-dD5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="943" y="821"/>
         </scene>

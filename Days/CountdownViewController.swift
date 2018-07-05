@@ -76,10 +76,10 @@ class CountdownViewController: UIViewController {
             if let date = model?.targetDate {
                 let remainingInterval = date.timeIntervalSinceNow
                 let remainingSeconds = Int(remainingInterval)
-                let remainingDays = remainingSeconds / Utils.shared.secondsPerDay + 1
+                let remainingDays = remainingSeconds / Utils.secondsPerDay + 1
                 let isDone = remainingSeconds < 0
                 let elapsedSeconds = -1 * Int(model!.createdDate!.timeIntervalSinceNow)
-                let elapsedDays = (elapsedSeconds / Utils.shared.secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
+                let elapsedDays = (elapsedSeconds / Utils.secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
 
                 if (isDone) {
                     dayLabel.text = ""

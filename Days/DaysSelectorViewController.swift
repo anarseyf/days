@@ -21,7 +21,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
             let date = Date(timeIntervalSinceNow: selectedInterval)
-            provisionalDateLabel.text = "Timer will expire on\n\(Utils.shared.dateTimeFormatter.string(from: date))"
+            provisionalDateLabel.text = "Countdown will end on\n\(Utils.shared.dateTimeFormatter.string(from: date))"
         }
     }
 
@@ -31,26 +31,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     @IBOutlet weak var provisionalDateLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var titleInput: UITextField!
-
-    // MARK: - User action handlers
-
-    @IBAction func startButton(_ sender: UIButton) {
-        let createdDate = Date()
-        let targetDate = Date(timeIntervalSinceNow: selectedInterval)
-
-        // TODO - uncomment to adjust time:
-        //        var components = Calendar.current.dateComponents(in: TimeZone.current, from: targetDate)
-        //        print("\(components.hour?.description ?? "-") h, \(components.minute?.description ?? "-") m")
-        //        components.hour = 23 // TODO
-        //        components.minute = 59
-        //        components.second = 59
-        //        targetDate = components.date
-
-        model.setTargetDate(targetDate, createdOn: createdDate)
-        save()
-        setModelState(.running)
-        scheduleNotification(after: selectedInterval)
-    }
+    @IBOutlet weak var startDatePicker: UIDatePicker!
 
     // MARK: - Methods
 
@@ -61,6 +42,11 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         picker.dataSource = self
         titleInput.delegate = self
         UNUserNotificationCenter.current().delegate = self
+
+        let now = Date()
+        startDatePicker.minimumDate = now - Utils.startDateBracket
+        startDatePicker.maximumDate = now + Utils.startDateBracket
+        print("Min: \(String(describing: startDatePicker.minimumDate!)), Max: \(String(describing: startDatePicker.maximumDate!))")
 
         reset()
         selectedInterval = 0
@@ -169,7 +155,13 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedInterval = Double(row * Utils.shared.secondsPerDay)
+        selectedInterval = Double(row * Utils.secondsPerDay)
+
+        let createdDate = Date()
+        let targetDate = Date(timeIntervalSinceNow: selectedInterval)
+        model.setTargetDate(targetDate, createdOn: createdDate)
+
+        startDatePicker.setDate(createdDate, animated: true)
     }
 
     // MARK: - UNUserNotificationCenterDelegate
@@ -198,6 +190,20 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         model.title = textField.text
+    }
+
+    // MARK: - User action handlers
+
+    @IBAction func startDateAdjusted(_ sender: UIDatePicker) {
+        print("Start: \(Utils.shared.dateTimeFormatter.string(from: startDatePicker.date))")
+
+        model.setTargetDate(model.targetDate, createdOn: startDatePicker.date)
+    }
+
+    @IBAction func startButton(_ sender: UIButton) {
+        save()
+        setModelState(.running)
+        scheduleNotification(after: selectedInterval)
     }
 }
 

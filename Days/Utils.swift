@@ -9,7 +9,8 @@
 import UIKit
 
 class Utils {
-    let secondsPerDay = 60 * 60 * 24
+    static let secondsPerDay = 60 * 60 * 24
+    static let startDateBracket = Double(secondsPerDay) * 366.0
 
     static let shared = Utils()
 
