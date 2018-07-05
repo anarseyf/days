@@ -15,11 +15,16 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
-    let days = Array(0...100)
+    let days = Array(1...365)
     var model = TimerModel()
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
+            let createdDate = model.createdDate ?? Date()
+            model.createdDate = createdDate
+
+            updateTargetDate()
+
             updateProvisionalUI()
         }
     }
@@ -31,11 +36,14 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var titleInput: UITextField!
     @IBOutlet weak var startDatePicker: UIDatePicker!
+    @IBOutlet weak var todayButton: UIButton!
 
     // MARK: - Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        navigationItem.hidesBackButton = true
         
         picker.delegate = self
         picker.dataSource = self
@@ -47,7 +55,6 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         startDatePicker.maximumDate = now + Utils.startDateBracket
         print("Min: \(String(describing: startDatePicker.minimumDate!)), Max: \(String(describing: startDatePicker.maximumDate!))")
 
-        selectedInterval = 0
         reset()
         restore()
     }
@@ -66,6 +73,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         }
     }
 
+    func selectDaysIndex(_ row: Int) {
+        let numDays = days[row]
+        selectedInterval = Double(numDays * Utils.secondsPerDay)
+//        picker.selectRow(row, inComponent: 0, animated: true) // TODO - loop?
+    }
+
     func setModelState(_ state: TimerModel.State) {
         model.state = state
     }
@@ -78,14 +91,13 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     func updateProvisionalUI() {
 
         let formatter = Utils.shared.dateTimeFormatter
-        let createdString = (model.createdDate == nil ? "-" : formatter.string(from: model.createdDate!))
         let targetString = (model.createdDate == nil ? "-" : formatter.string(from: model.targetDate!))
 
-        provisionalDateLabel.text = "\(createdString)\n\(targetString)"
+        provisionalDateLabel.text = targetString
 
         if (model.targetDate != nil) {
             let isPast = (model.targetDate! < Date())
-            startButton.isHidden = isPast
+//            startButton.isHidden = isPast
             provisionalDateLabel.textColor = (isPast ? UIColor.red : UIColor.darkText)
         }
     }
@@ -93,14 +105,23 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     func reset() {
         print("RESET")
 
+        // State, models
         setModelState(.notStarted)
+        selectDaysIndex(0)
+
         model.targetDate = nil
         model.createdDate = nil
         model.title = nil
+
+        // UI
         titleInput.text = "" // TODO - do this in view update methods
 
-        picker.selectRow(0, inComponent: 0, animated: true)
         startDatePicker.setDate(Date(), animated: true)
+
+        todayButton.isHidden = false
+        startDatePicker.isHidden = true
+
+        updateProvisionalUI()
 
         let center = UNUserNotificationCenter.current()
         center.removeAllDeliveredNotifications()
@@ -133,14 +154,18 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
             setModelState(.running) // TODO - computed property?
             print("Restored: \(model)")
 
-            let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countdownViewController")
-            if let countdownViewController = viewController as? CountdownViewController {
-                prepareForPresenting(countdownViewController)
-                navigationController?.pushViewController(countdownViewController, animated: false)
-            }
+            presentCountdownIfNeeded()
         }
         else {
             print("Nothing restored")
+        }
+    }
+
+    func presentCountdownIfNeeded() {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countdownViewController")
+        if let countdownViewController = viewController as? CountdownViewController {
+            prepareForPresenting(countdownViewController)
+            navigationController?.pushViewController(countdownViewController, animated: false)
         }
     }
 
@@ -173,17 +198,12 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - UIPickerViewDelegate
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return String(days[row])
+        let value = days[row]
+        return String(value) + (value == 1 ? " day" : " days")
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedInterval = Double(row * Utils.secondsPerDay)
-
-        let createdDate = model.createdDate ?? Date()
-        model.createdDate = createdDate
-
-        updateTargetDate()
-        updateProvisionalUI()
+        selectDaysIndex(row)
     }
 
     // MARK: - UNUserNotificationCenterDelegate
@@ -215,6 +235,16 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     }
 
     // MARK: - User action handlers
+
+    @IBAction func todayButton(_ sender: UIButton) {
+        sender.isHidden = true
+        startDatePicker.isHidden = false
+    }
+
+    @IBAction func resetButton(_ sender: UIButton) {
+        reset()
+        save()
+    }
 
     @IBAction func startDateAdjusted(_ sender: UIDatePicker) {
         print("Start Date: \(Utils.shared.dateTimeFormatter.string(from: startDatePicker.date))")

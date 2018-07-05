@@ -43,7 +43,6 @@ class TimerModel: NSObject, NSCoding {
         self.title = decoder.decodeObject(forKey: "title") as? String
     }
 
-    override init() { // TODO - remove?
-        
+    override init() {
     }
 }
