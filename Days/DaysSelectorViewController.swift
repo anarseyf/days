@@ -20,8 +20,7 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
-            let date = Date(timeIntervalSinceNow: selectedInterval)
-            provisionalDateLabel.text = "Countdown will end on\n\(Utils.shared.dateTimeFormatter.string(from: date))"
+            updateProvisionalUI()
         }
     }
 
@@ -48,9 +47,8 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         startDatePicker.maximumDate = now + Utils.startDateBracket
         print("Min: \(String(describing: startDatePicker.minimumDate!)), Max: \(String(describing: startDatePicker.maximumDate!))")
 
-        reset()
         selectedInterval = 0
-        picker.selectRow(0, inComponent: 0, animated: false)
+        reset()
         restore()
     }
 
@@ -72,13 +70,37 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
         model.state = state
     }
 
+    func updateTargetDate() {
+        let targetDate = Date(timeInterval: selectedInterval, since: model.createdDate!)
+        model.targetDate = targetDate
+    }
+
+    func updateProvisionalUI() {
+
+        let formatter = Utils.shared.dateTimeFormatter
+        let createdString = (model.createdDate == nil ? "-" : formatter.string(from: model.createdDate!))
+        let targetString = (model.createdDate == nil ? "-" : formatter.string(from: model.targetDate!))
+
+        provisionalDateLabel.text = "\(createdString)\n\(targetString)"
+
+        if (model.targetDate != nil) {
+            let isPast = (model.targetDate! < Date())
+            startButton.isHidden = isPast
+            provisionalDateLabel.textColor = (isPast ? UIColor.red : UIColor.darkText)
+        }
+    }
+
     func reset() {
         print("RESET")
 
         setModelState(.notStarted)
-        model.setTargetDate(nil)
+        model.targetDate = nil
+        model.createdDate = nil
         model.title = nil
-        titleInput.text = ""
+        titleInput.text = "" // TODO - do this in view update methods
+
+        picker.selectRow(0, inComponent: 0, animated: true)
+        startDatePicker.setDate(Date(), animated: true)
 
         let center = UNUserNotificationCenter.current()
         center.removeAllDeliveredNotifications()
@@ -157,11 +179,11 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedInterval = Double(row * Utils.secondsPerDay)
 
-        let createdDate = Date()
-        let targetDate = Date(timeIntervalSinceNow: selectedInterval)
-        model.setTargetDate(targetDate, createdOn: createdDate)
+        let createdDate = model.createdDate ?? Date()
+        model.createdDate = createdDate
 
-        startDatePicker.setDate(createdDate, animated: true)
+        updateTargetDate()
+        updateProvisionalUI()
     }
 
     // MARK: - UNUserNotificationCenterDelegate
@@ -195,9 +217,11 @@ class DaysSelectorViewController: UIViewController, UIPickerViewDataSource, UIPi
     // MARK: - User action handlers
 
     @IBAction func startDateAdjusted(_ sender: UIDatePicker) {
-        print("Start: \(Utils.shared.dateTimeFormatter.string(from: startDatePicker.date))")
+        print("Start Date: \(Utils.shared.dateTimeFormatter.string(from: startDatePicker.date))")
 
-        model.setTargetDate(model.targetDate, createdOn: startDatePicker.date)
+        model.createdDate = startDatePicker.date
+        updateTargetDate()
+        updateProvisionalUI()
     }
 
     @IBAction func startButton(_ sender: UIButton) {
