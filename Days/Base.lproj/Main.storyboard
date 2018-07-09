@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -26,7 +27,7 @@
                                 <viewLayoutGuide key="safeArea" id="N4f-kb-vpG"/>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sT0-n0-lZx">
-                                <rect key="frame" x="132.5" y="484" width="55" height="55"/>
+                                <rect key="frame" x="132.5" y="463" width="55" height="55"/>
                                 <state key="normal" image="startButtonImage"/>
                                 <connections>
                                     <action selector="startButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PVr-Sv-bnQ"/>
@@ -57,7 +58,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w8L-nP-cmb">
-                                <rect key="frame" x="249" y="504" width="41" height="34"/>
+                                <rect key="frame" x="249" y="501" width="41" height="34"/>
                                 <state key="normal" title="reset">
                                     <color key="titleColor" red="0.82342099469999996" green="0.22518417739999999" blue="0.074341651209999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
@@ -72,7 +73,7 @@
                                     <constraint firstAttribute="height" constant="60" id="bKO-zu-rz3"/>
                                 </constraints>
                             </scrollView>
-                            <stackView userInteractionEnabled="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ZfA-qw-MVT">
+                            <stackView userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillProportionally" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ZfA-qw-MVT">
                                 <rect key="frame" x="0.0" y="431.5" width="320" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="i2g-eT-L4m"/>
@@ -84,20 +85,19 @@
                             <constraint firstItem="mQc-GI-SbG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="2JS-zb-Egb"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4dD-uD-M8Z"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="2Wf-XE-ITg" secondAttribute="trailing" priority="751" constant="30" id="56M-IV-VaC"/>
-                            <constraint firstItem="ZfA-qw-MVT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6y3-kL-Ofy"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="top" secondItem="2Wf-XE-ITg" secondAttribute="bottom" constant="20" id="A2n-HV-Whw"/>
                             <constraint firstItem="eTC-SU-V1b" firstAttribute="top" secondItem="bBd-TI-LmT" secondAttribute="bottom" id="D2C-Ro-q65"/>
                             <constraint firstItem="eTC-SU-V1b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Eod-UF-8Jf"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="29" id="F4w-pW-gR7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="50" id="F4w-pW-gR7"/>
+                            <constraint firstItem="ZfA-qw-MVT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="F5l-UM-6gX"/>
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" priority="760" constant="30" id="Hz8-xL-S41"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="w8L-nP-cmb" secondAttribute="bottom" constant="30" id="Jbf-m2-HKH"/>
+                            <constraint firstItem="w8L-nP-cmb" firstAttribute="centerY" secondItem="sT0-n0-lZx" secondAttribute="bottom" id="Jbf-m2-HKH"/>
                             <constraint firstItem="mQc-GI-SbG" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="VvI-Ia-l8m"/>
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YTV-SM-glc"/>
                             <constraint firstItem="Hae-9n-wMS" firstAttribute="top" secondItem="eTC-SU-V1b" secondAttribute="bottom" constant="10" id="asc-4z-71S"/>
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="top" secondItem="mQc-GI-SbG" secondAttribute="bottom" priority="751" constant="10" id="gLS-do-Xik"/>
                             <constraint firstItem="Hae-9n-wMS" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="sEp-kn-Wov"/>
                             <constraint firstItem="Hae-9n-wMS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="wOt-00-Gav"/>
-                            <constraint firstItem="ZfA-qw-MVT" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="wsF-0f-0H9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mQc-GI-SbG" secondAttribute="trailing" constant="30" id="xIx-DB-cal"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="y5D-5C-tcR"/>
                             <constraint firstItem="ZfA-qw-MVT" firstAttribute="top" secondItem="Hae-9n-wMS" secondAttribute="bottom" id="ygK-ic-p5e"/>

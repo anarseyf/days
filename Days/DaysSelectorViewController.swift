@@ -100,17 +100,30 @@ class DaysSelectorViewController: UIViewController {
 
     func configureCirclesView() {
 
-        circlesView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 40)
+        let radius: CGFloat = 8.0
+        let size: CGFloat = 2.0 * radius
+        let spacing = radius
+
+        circlesView.axis = .horizontal
         circlesView.alignment = .center
+        circlesView.distribution = .equalSpacing
+        circlesView.spacing = spacing
         circlesView.backgroundColor = UIColor.lightGray
+        circlesView.translatesAutoresizingMaskIntoConstraints = false
 
-        for (index, _) in startDateOptions.enumerated() {
-            let circle = UIView(frame: CGRect(x: index * 20, y: 0, width: 20, height: 20))
-            circle.layer.borderWidth = 2.0
+        for (_, _) in startDateOptions.enumerated() {
+            let circle = UIView()
+            circle.layer.borderWidth = 1.0
             circle.layer.borderColor = UIColor.darkGray.cgColor
-            circle.layer.cornerRadius = 20.0/2
+            circle.layer.cornerRadius = radius
+            let constraintW = circle.widthAnchor.constraint(equalToConstant: size)
+            constraintW.isActive = true
+            constraintW.priority = .defaultHigh
+            let constraintH = circle.heightAnchor.constraint(equalToConstant: size)
+            constraintH.isActive = true
+            constraintH.priority = .defaultHigh
 
-            circlesView.addSubview(circle)
+            circlesView.addArrangedSubview(circle)
         }
     }
 
