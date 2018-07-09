@@ -16,6 +16,7 @@
 		5E55F98520EA9A5200A47C33 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */; };
 		5E55F98720EAB26D00A47C33 /* CountdownViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */; };
 		5E55F98920EAB9F700A47C33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55F98820EAB9F700A47C33 /* Utils.swift */; };
+		5EB81A3E20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */; };
 		5EE195E620E843C10076D761 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE195E520E843C10076D761 /* TimerModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 		5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewController.swift; sourceTree = "<group>"; };
 		5E55F98820EAB9F700A47C33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DaysSelectorViewController+Extensions.swift"; sourceTree = "<group>"; };
 		5EE195E520E843C10076D761 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,13 +89,14 @@
 			children = (
 				5E0ECD0020E564C2004BEEDA /* Assets.xcassets */,
 				5E0ECCF920E564C0004BEEDA /* AppDelegate.swift */,
+				5E0ECD0220E564C2004BEEDA /* LaunchScreen.storyboard */,
+				5E0ECCFD20E564C0004BEEDA /* Main.storyboard */,
 				5E0ECCFB20E564C0004BEEDA /* DaysSelectorViewController.swift */,
+				5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */,
 				5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */,
 				5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */,
 				5EE195E520E843C10076D761 /* TimerModel.swift */,
 				5E55F98820EAB9F700A47C33 /* Utils.swift */,
-				5E0ECCFD20E564C0004BEEDA /* Main.storyboard */,
-				5E0ECD0220E564C2004BEEDA /* LaunchScreen.storyboard */,
 				5E0ECD0520E564C2004BEEDA /* Info.plist */,
 			);
 			path = Days;
@@ -209,6 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5EB81A3E20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift in Sources */,
 				5EE195E620E843C10076D761 /* TimerModel.swift in Sources */,
 				5E55F98720EAB26D00A47C33 /* CountdownViewController.swift in Sources */,
 				5E0ECCFC20E564C0004BEEDA /* DaysSelectorViewController.swift in Sources */,
