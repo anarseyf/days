@@ -67,11 +67,9 @@ extension DaysSelectorViewController : UITextFieldDelegate {
 extension DaysSelectorViewController: UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = Int(Double(startDateOptions.count) * Double(scrollView.contentOffset.x / scrollView.contentSize.width))
+        let page = Int(Double(scrollViewOptions.count) * Double(scrollView.contentOffset.x / scrollView.contentSize.width))
         print("page: \(page)")
 
-        for (index, view) in circlesView.subviews.enumerated() {
-            view.backgroundColor = (index == page ? UIColor.darkGray : UIColor.white)
-        }
+        selectStartOption(page, animated: true)
     }
 }

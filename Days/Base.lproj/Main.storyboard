@@ -68,13 +68,13 @@
                                 </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hae-9n-wMS">
-                                <rect key="frame" x="0.0" y="371.5" width="320" height="60"/>
+                                <rect key="frame" x="0.0" y="371.5" width="320" height="100"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="bKO-zu-rz3"/>
+                                    <constraint firstAttribute="height" constant="100" id="bKO-zu-rz3"/>
                                 </constraints>
                             </scrollView>
                             <stackView userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillProportionally" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ZfA-qw-MVT">
-                                <rect key="frame" x="0.0" y="431.5" width="320" height="20"/>
+                                <rect key="frame" x="0.0" y="471.5" width="320" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="i2g-eT-L4m"/>
                                 </constraints>
@@ -93,6 +93,7 @@
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" priority="760" constant="30" id="Hz8-xL-S41"/>
                             <constraint firstItem="w8L-nP-cmb" firstAttribute="centerY" secondItem="sT0-n0-lZx" secondAttribute="bottom" id="Jbf-m2-HKH"/>
                             <constraint firstItem="mQc-GI-SbG" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="VvI-Ia-l8m"/>
+                            <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Xg1-lZ-Eva"/>
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YTV-SM-glc"/>
                             <constraint firstItem="Hae-9n-wMS" firstAttribute="top" secondItem="eTC-SU-V1b" secondAttribute="bottom" constant="10" id="asc-4z-71S"/>
                             <constraint firstItem="2Wf-XE-ITg" firstAttribute="top" secondItem="mQc-GI-SbG" secondAttribute="bottom" priority="751" constant="10" id="gLS-do-Xik"/>

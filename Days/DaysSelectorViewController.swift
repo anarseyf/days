@@ -16,7 +16,7 @@ class DaysSelectorViewController: UIViewController {
     let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
     let days = Array(1...365)
-    let startDateOptions = ["Yesterday", "Today", "Tomorrow"]
+    let scrollViewOptions = ["Yesterday", "Today", "Tomorrow"]
     var model = TimerModel()
 
     var selectedInterval: TimeInterval = 0.0 {
@@ -70,6 +70,7 @@ class DaysSelectorViewController: UIViewController {
 
         configureScrollView()
         configureCirclesView()
+
         reset()
         restore()
     }
@@ -84,7 +85,7 @@ class DaysSelectorViewController: UIViewController {
 
         let frameSize = CGSize(width: view.frame.size.width, height: scrollView.frame.size.height)
 
-        for (index, element) in startDateOptions.enumerated() {
+        for (index, element) in scrollViewOptions.enumerated() {
             let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
             let label = UILabel(frame: CGRect(origin: origin, size: frameSize))
             label.text = element
@@ -94,7 +95,7 @@ class DaysSelectorViewController: UIViewController {
             scrollView.addSubview(label)
         }
 
-        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startDateOptions.count), height: frameSize.height)
+        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(scrollViewOptions.count), height: frameSize.height)
         scrollView.isPagingEnabled = true
     }
 
@@ -111,7 +112,7 @@ class DaysSelectorViewController: UIViewController {
         circlesView.backgroundColor = UIColor.lightGray
         circlesView.translatesAutoresizingMaskIntoConstraints = false
 
-        for (_, _) in startDateOptions.enumerated() {
+        for (_, _) in scrollViewOptions.enumerated() {
             let circle = UIView()
             circle.layer.borderWidth = 1.0
             circle.layer.borderColor = UIColor.darkGray.cgColor
@@ -139,6 +140,18 @@ class DaysSelectorViewController: UIViewController {
         let numDays = days[row]
         selectedInterval = Double(numDays * Utils.secondsPerDay)
 //        picker.selectRow(row, inComponent: 0, animated: true) // TODO - loop?
+    }
+
+    func selectStartOption(_ index: Int, animated: Bool = false) {
+
+        let size = scrollView.contentSize
+        let itemWidth = CGFloat(size.width) / CGFloat(scrollViewOptions.count)
+        let offset = CGPoint(x: itemWidth * CGFloat(index), y: 0)
+        scrollView.setContentOffset(offset, animated: true)
+
+        for (i, view) in circlesView.subviews.enumerated() {
+            view.backgroundColor = (i == index ? UIColor.darkGray : UIColor.white)
+        }
     }
 
     private func setModelState(_ state: TimerModel.State) {
@@ -170,6 +183,7 @@ class DaysSelectorViewController: UIViewController {
         // State, models
         setModelState(.notStarted)
         selectDaysIndex(0)
+        selectStartOption(scrollViewOptions.count/2)
 
         model.targetDate = nil
         model.createdDate = nil
