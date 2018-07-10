@@ -30,14 +30,20 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var provisionalDateLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var titleInput: UITextField!
+    @IBOutlet weak var daysInput: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var circlesView: UIStackView!
+    @IBOutlet weak var doneButton: UIButton!
 
     // MARK: - User action handlers
+
+    @IBAction func doneButton(_ sender: UIButton) {
+        daysInput.resignFirstResponder()
+        doneButton.isHidden = true
+    }
 
     @IBAction func resetButton(_ sender: UIButton) {
         reset()
@@ -56,9 +62,8 @@ class DaysSelectorViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.hidesBackButton = true
-        
-        picker.delegate = self
-        picker.dataSource = self
+
+        daysInput.delegate = self
         titleInput.delegate = self
         scrollView.delegate = self
         UNUserNotificationCenter.current().delegate = self
@@ -136,10 +141,13 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    func selectDaysIndex(_ row: Int) {
-        let numDays = days[row]
+    func setNumDays(_ numDays: Int) {
         selectedInterval = Double(numDays * Utils.secondsPerDay)
-//        picker.selectRow(row, inComponent: 0, animated: true) // TODO - loop?
+        //        picker.selectRow(row, inComponent: 0, animated: true) // TODO - loop?
+    }
+
+    func selectDaysIndex(_ row: Int) {
+        setNumDays(days[row])
     }
 
     func selectStartOption(_ index: Int, animated: Bool = false) {

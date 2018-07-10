@@ -9,31 +9,6 @@
 import UIKit
 import UserNotifications
 
-extension DaysSelectorViewController : UIPickerViewDataSource {
-
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return days.count
-    }
-
-}
-
-extension DaysSelectorViewController : UIPickerViewDelegate {
-
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let value = days[row]
-        return String(value) + (value == 1 ? " day" : " days")
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectDaysIndex(row)
-    }
-
-}
-
 extension DaysSelectorViewController : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
@@ -47,20 +22,61 @@ extension DaysSelectorViewController : UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         // TODO - disable Start and re-enable in didEndEditing
+        if (textField == daysInput) {
+            doneButton.isHidden = false
+        }
+
         return true
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // titleInput only
         textField.resignFirstResponder()
         return true
     }
 
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if (textField == titleInput) {
+            return true
+        }
+        else {
+            return daysInput.text != nil
+        }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if (textField == daysInput) {
+            var isDoneEnabled = false
+            if let text = textField.text,
+                let textRange = Range(range, in: text) {
+                let updatedText = text.replacingCharacters(in: textRange,
+                                                           with: string)
+                print (updatedText)
+                isDoneEnabled = (updatedText.count > 0)
+            }
+            else {
+                print ("(empty text)")
+            }
+            doneButton.isHidden = !isDoneEnabled
+        }
         return true
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        model.title = textField.text
+        if (textField == titleInput) {
+            model.title = textField.text
+        }
+        else if (textField == daysInput) {
+
+            let text: String = (daysInput.text ?? "").isEmpty ? "1" : daysInput.text!
+            var numDays = Int(text) ?? 1
+
+            numDays = min(max(numDays, Utils.minDays), Utils.maxDays)
+
+            daysInput.text = String(numDays)
+            print("selected days: \(numDays)")
+            setNumDays(numDays)
+        }
     }
 }
 

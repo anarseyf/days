@@ -11,6 +11,8 @@ import UIKit
 class Utils {
     static let secondsPerDay = 60 * 60 * 24
     static let startDateBracket = Double(secondsPerDay) * 366.0
+    static let minDays = 0
+    static let maxDays = 366
 
     static let shared = Utils()
 
