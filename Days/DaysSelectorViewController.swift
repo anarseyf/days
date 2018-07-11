@@ -36,6 +36,13 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
+    var selectedNumDays: Int {
+        get {
+            return Int(selectedInterval / Double(Utils.secondsPerDay))
+        }
+    }
+
+
     // MARK: - Outlets
 
     @IBOutlet weak var provisionalDateLabel: UILabel!
@@ -45,8 +52,26 @@ class DaysSelectorViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var circlesView: UIStackView!
     @IBOutlet weak var doneButton: UIButton!
-
+    @IBOutlet weak var minusDayButton: UIButton!
+    @IBOutlet weak var plusDayButton: UIButton!
+    
     // MARK: - User action handlers
+
+    @IBAction func minusDayButton(_ sender: UIButton) {
+        let numDays = selectedNumDays
+        print("num days: \(numDays)")
+        if (numDays > Utils.minDays) {
+            setNumDays(numDays - 1)
+        }
+    }
+    
+    @IBAction func plusDayButton(_ sender: UIButton) {
+        let numDays = selectedNumDays
+        print("num days: \(numDays)")
+        if (numDays < Utils.maxDays) {
+            setNumDays(numDays + 1)
+        }
+    }
 
     @IBAction func doneButton(_ sender: UIButton) {
         daysInput.resignFirstResponder()

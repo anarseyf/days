@@ -24,6 +24,8 @@ extension DaysSelectorViewController : UITextFieldDelegate {
         // TODO - disable Start and re-enable in didEndEditing
         if (textField == daysInput) {
             doneButton.isHidden = false
+            minusDayButton.isHidden = true
+            plusDayButton.isHidden = true
         }
 
         return true
@@ -58,6 +60,8 @@ extension DaysSelectorViewController : UITextFieldDelegate {
                 print ("(empty text)")
             }
             doneButton.isHidden = !isDoneEnabled
+            minusDayButton.isHidden = true
+            plusDayButton.isHidden = true
         }
         return true
     }
@@ -74,6 +78,9 @@ extension DaysSelectorViewController : UITextFieldDelegate {
             numDays = min(max(numDays, Utils.minDays), Utils.maxDays)
 
             setNumDays(numDays)
+
+            minusDayButton.isHidden = false
+            plusDayButton.isHidden = false
         }
     }
 }

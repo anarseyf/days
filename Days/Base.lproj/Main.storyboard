@@ -119,6 +119,28 @@
                                     <constraint firstAttribute="height" constant="100" id="nob-7K-84a"/>
                                 </constraints>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2dv-XX-XSs">
+                                <rect key="frame" x="60" y="90" width="50" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="fmd-Rh-2p4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <state key="normal" title="⊖"/>
+                                <connections>
+                                    <action selector="minusDayButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hGJ-jI-qK0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ya-mL-LK9">
+                                <rect key="frame" x="210" y="90" width="50" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="8GJ-5g-75N"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <state key="normal" title="⊕"/>
+                                <connections>
+                                    <action selector="plusDayButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9fc-4W-vDn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -128,6 +150,7 @@
                             <constraint firstItem="G9L-Mh-5TA" firstAttribute="bottom" secondItem="Hae-9n-wMS" secondAttribute="bottom" id="4tA-su-mGl"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="top" secondItem="hjJ-yK-pHs" secondAttribute="bottom" constant="50" id="9FE-G5-u6S"/>
                             <constraint firstItem="eTC-SU-V1b" firstAttribute="top" secondItem="bBd-TI-LmT" secondAttribute="bottom" id="D2C-Ro-q65"/>
+                            <constraint firstItem="4ya-mL-LK9" firstAttribute="centerY" secondItem="6yR-3e-nS4" secondAttribute="centerY" id="EBx-XO-VZp"/>
                             <constraint firstItem="cDw-Ho-1km" firstAttribute="top" secondItem="Hae-9n-wMS" secondAttribute="top" id="EVV-YY-K1x"/>
                             <constraint firstItem="eTC-SU-V1b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Eod-UF-8Jf"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="50" id="F4w-pW-gR7"/>
@@ -144,12 +167,15 @@
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Xg1-lZ-Eva"/>
                             <constraint firstItem="hjJ-yK-pHs" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Y8q-f5-EOx"/>
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="YTV-SM-glc"/>
+                            <constraint firstItem="2dv-XX-XSs" firstAttribute="centerY" secondItem="6yR-3e-nS4" secondAttribute="centerY" id="e5R-ge-9Sr"/>
                             <constraint firstItem="6yR-3e-nS4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="edk-2R-Z3J"/>
                             <constraint firstItem="Hae-9n-wMS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50" id="gME-Uy-KIW"/>
                             <constraint firstItem="G9L-Mh-5TA" firstAttribute="top" secondItem="Hae-9n-wMS" secondAttribute="top" id="h6Q-hQ-xqt"/>
                             <constraint firstItem="ZfA-qw-MVT" firstAttribute="top" secondItem="Hae-9n-wMS" secondAttribute="bottom" id="iIg-W1-Xhz"/>
+                            <constraint firstItem="4ya-mL-LK9" firstAttribute="leading" secondItem="6yR-3e-nS4" secondAttribute="trailing" id="tH1-mh-Rnc"/>
                             <constraint firstItem="6yR-3e-nS4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="70" id="xA7-8V-qAQ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mQc-GI-SbG" secondAttribute="trailing" constant="30" id="xIx-DB-cal"/>
+                            <constraint firstItem="2dv-XX-XSs" firstAttribute="trailing" secondItem="6yR-3e-nS4" secondAttribute="leading" id="xhO-Et-9Xm"/>
                             <constraint firstItem="bBd-TI-LmT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="y5D-5C-tcR"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="w8L-nP-cmb" secondAttribute="trailing" constant="30" id="yj1-I1-kQX"/>
                             <constraint firstItem="Hae-9n-wMS" firstAttribute="top" secondItem="eTC-SU-V1b" secondAttribute="bottom" id="zNp-EP-onT"/>
@@ -169,6 +195,8 @@
                         <outlet property="circlesView" destination="ZfA-qw-MVT" id="mgJ-jj-8eF"/>
                         <outlet property="daysInput" destination="6yR-3e-nS4" id="qmM-jP-czV"/>
                         <outlet property="doneButton" destination="Qvx-g3-JTp" id="jbY-IM-n96"/>
+                        <outlet property="minusDayButton" destination="2dv-XX-XSs" id="gcd-A9-PAN"/>
+                        <outlet property="plusDayButton" destination="4ya-mL-LK9" id="Fqr-0G-KE2"/>
                         <outlet property="provisionalDateLabel" destination="bBd-TI-LmT" id="Xlv-kq-k8c"/>
                         <outlet property="remainingLabel" destination="GXz-te-ebb" id="b5l-0t-LkO"/>
                         <outlet property="resetButton" destination="uu3-T4-93A" id="bVy-yT-iKU"/>
