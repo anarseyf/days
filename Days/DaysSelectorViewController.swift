@@ -20,16 +20,16 @@ class DaysSelectorViewController: UIViewController {
 
     let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
-    let days = Array(1...365)
     let startOffsetPast = -3
     let startOffsetFuture = 7
     var startOptions: [StartOption] = []
+    var selectedStartOptionIndex = 0
     var model = TimerModel()
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
-            let createdDate = model.createdDate ?? Date()
-            model.createdDate = createdDate
+            let startDate = model.startDate ?? Date()
+            model.startDate = startDate
             updateTargetDate()
             updateProvisionalUI()
         }
@@ -50,6 +50,18 @@ class DaysSelectorViewController: UIViewController {
     @IBAction func doneButton(_ sender: UIButton) {
         daysInput.resignFirstResponder()
         doneButton.isHidden = true
+    }
+
+    @IBAction func previousStartOptionButton(_ sender: UIButton) {
+        if (selectedStartOptionIndex > 0) {
+            selectStartOption(selectedStartOptionIndex - 1)
+        }
+    }
+
+    @IBAction func nextStartOptionButton(_ sender: UIButton) {
+        if (selectedStartOptionIndex < startOptions.count - 1) {
+            selectStartOption(selectedStartOptionIndex + 1)
+        }
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
@@ -118,7 +130,7 @@ class DaysSelectorViewController: UIViewController {
 
     private func configureScrollView() {
 
-        let frameSize = CGSize(width: view.frame.size.width, height: scrollView.frame.size.height)
+        let frameSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height)
 
         for (index, element) in startOptions.enumerated() {
             let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
@@ -178,15 +190,20 @@ class DaysSelectorViewController: UIViewController {
     }
 
     func setNumDays(_ numDays: Int) {
+
+        daysInput.text = String(numDays)
+        print("selected days: \(numDays)")
+
         selectedInterval = Double(numDays * Utils.secondsPerDay)
         //        picker.selectRow(row, inComponent: 0, animated: true) // TODO - loop?
     }
 
-    func selectDaysIndex(_ row: Int) {
-        setNumDays(days[row])
-    }
-
     func selectStartOption(_ index: Int, animated: Bool = false) {
+
+        let option = startOptions[index]
+        model.startDate = option.date
+        updateTargetDate()
+        updateProvisionalUI() // TODO - this kind of UI update should be in one place, probably layoutSubviews()
 
         let size = scrollView.contentSize
         let itemWidth = CGFloat(size.width) / CGFloat(startOptions.count)
@@ -196,6 +213,8 @@ class DaysSelectorViewController: UIViewController {
         for (i, view) in circlesView.subviews.enumerated() {
             view.backgroundColor = (i == index ? UIColor.darkGray : UIColor.white)
         }
+
+        selectedStartOptionIndex = index
     }
 
     private func setModelState(_ state: TimerModel.State) {
@@ -203,14 +222,14 @@ class DaysSelectorViewController: UIViewController {
     }
 
     private func updateTargetDate() {
-        let targetDate = Date(timeInterval: selectedInterval, since: model.createdDate!)
+        let targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
         model.targetDate = targetDate
     }
 
     private func updateProvisionalUI() {
 
         let formatter = Utils.shared.dateOnlyFormatter // dateTimeFormatter
-        let targetString = (model.createdDate == nil ? "-" : formatter.string(from: model.targetDate!))
+        let targetString = (model.startDate == nil ? "-" : formatter.string(from: model.targetDate!))
 
         provisionalDateLabel.text = targetString
 
@@ -226,11 +245,11 @@ class DaysSelectorViewController: UIViewController {
 
         // State, models
         setModelState(.notStarted)
-        selectDaysIndex(0)
         selectStartOption(-startOffsetPast) // Today
+        setNumDays(1)
 
         model.targetDate = nil
-        model.createdDate = nil
+        model.startDate = nil
         model.title = nil
 
         // UI
@@ -256,7 +275,7 @@ class DaysSelectorViewController: UIViewController {
         }
         else {
             let tDate = model.targetDate!
-            let cDate = model.createdDate!
+            let cDate = model.startDate!
             print("Saving: \(Utils.shared.dateTimeFormatter.string(from: tDate)) >> \(Utils.shared.dateTimeFormatter.string(from: cDate))")
 
             let encoded = NSKeyedArchiver.archivedData(withRootObject: model)

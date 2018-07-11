@@ -73,8 +73,6 @@ extension DaysSelectorViewController : UITextFieldDelegate {
 
             numDays = min(max(numDays, Utils.minDays), Utils.maxDays)
 
-            daysInput.text = String(numDays)
-            print("selected days: \(numDays)")
             setNumDays(numDays)
         }
     }

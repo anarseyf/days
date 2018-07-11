@@ -27,7 +27,7 @@ class CountdownViewController: UIViewController {
     @IBOutlet weak var detailsView: UIStackView!
     @IBOutlet weak var expiresInLabel: UILabel!
     @IBOutlet weak var targetDateLabel: UILabel!
-    @IBOutlet weak var createdDateLabel: UILabel!
+    @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var remainingLabel: UILabel!
     @IBOutlet weak var toggleButton: UIButton!
 
@@ -65,7 +65,7 @@ class CountdownViewController: UIViewController {
     }
 
     func updateTimerLabels() {
-        createdDateLabel.text = (model?.createdDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.createdDate!) : "-")
+        startDateLabel.text = (model?.startDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.startDate!) : "-")
         targetDateLabel.text = (model?.targetDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.targetDate!) : "-")
     }
 
@@ -78,7 +78,7 @@ class CountdownViewController: UIViewController {
                 let remainingSeconds = Int(remainingInterval)
                 let remainingDays = remainingSeconds / Utils.secondsPerDay + 1
                 let isDone = remainingSeconds < 0
-                let elapsedSeconds = -1 * Int(model!.createdDate!.timeIntervalSinceNow)
+                let elapsedSeconds = -1 * Int(model!.startDate!.timeIntervalSinceNow)
                 let elapsedDays = (elapsedSeconds / Utils.secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
 
                 if (isDone) {

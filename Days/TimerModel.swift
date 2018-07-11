@@ -17,7 +17,7 @@ class TimerModel: NSObject, NSCoding {
 
     var state: State = .notStarted // TODO - computed property
     var targetDate: Date?
-    var createdDate: Date?
+    var startDate: Date?
     var title: String?
 
     override var description: String {
@@ -25,7 +25,7 @@ class TimerModel: NSObject, NSCoding {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         let targetString = (targetDate == nil ? "(-)" : formatter.string(from: targetDate!))
-        let createdString = (createdDate == nil ? "(-)" : formatter.string(from: createdDate!))
+        let createdString = (startDate == nil ? "(-)" : formatter.string(from: startDate!))
         let titleString = title ?? "(-)"
 
         return "title: \(titleString); target: \(targetString); created: \(createdString)"
@@ -33,13 +33,13 @@ class TimerModel: NSObject, NSCoding {
 
     func encode(with coder: NSCoder) {
         coder.encode(targetDate, forKey: "targetDate")
-        coder.encode(createdDate, forKey: "createdDate")
+        coder.encode(startDate, forKey: "createdDate")
         coder.encode(title, forKey: "title")
     }
 
     required init(coder decoder: NSCoder) {
         self.targetDate = decoder.decodeObject(forKey: "targetDate") as? Date
-        self.createdDate = decoder.decodeObject(forKey: "createdDate") as? Date
+        self.startDate = decoder.decodeObject(forKey: "createdDate") as? Date
         self.title = decoder.decodeObject(forKey: "title") as? String
     }
 
