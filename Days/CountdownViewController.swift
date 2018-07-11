@@ -72,7 +72,7 @@ class CountdownViewController: UIViewController {
     func startLoopTimer() {
 
         func loopHandler(timer: Timer?) -> Void {
-            print("LOOP")
+
             if let date = model?.targetDate {
                 let remainingInterval = date.timeIntervalSinceNow
                 let remainingSeconds = Int(remainingInterval)

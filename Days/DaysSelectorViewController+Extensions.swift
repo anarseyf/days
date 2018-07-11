@@ -9,6 +9,8 @@
 import UIKit
 import UserNotifications
 
+// MARK: - UNUserNotificationCenterDelegate
+
 extension DaysSelectorViewController : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
@@ -17,6 +19,8 @@ extension DaysSelectorViewController : UNUserNotificationCenterDelegate {
     }
 
 }
+
+// MARK: - UITextFieldDelegate
 
 extension DaysSelectorViewController : UITextFieldDelegate {
 
@@ -53,12 +57,9 @@ extension DaysSelectorViewController : UITextFieldDelegate {
                 let textRange = Range(range, in: text) {
                 let updatedText = text.replacingCharacters(in: textRange,
                                                            with: string)
-                print (updatedText)
                 isDoneEnabled = (updatedText.count > 0)
             }
-            else {
-                print ("(empty text)")
-            }
+
             doneButton.isHidden = !isDoneEnabled
             minusDayButton.isHidden = true
             plusDayButton.isHidden = true
@@ -85,12 +86,13 @@ extension DaysSelectorViewController : UITextFieldDelegate {
     }
 }
 
+// MARK: - UIScrollViewDelegate
+
 extension DaysSelectorViewController: UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let page = Int(Double(startOptions.count) * Double(scrollView.contentOffset.x / scrollView.contentSize.width))
-        print("page: \(page)")
-
+        
         selectStartOption(page, animated: true)
     }
 }

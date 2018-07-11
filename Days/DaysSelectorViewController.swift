@@ -59,7 +59,6 @@ class DaysSelectorViewController: UIViewController {
 
     @IBAction func minusDayButton(_ sender: UIButton) {
         let numDays = selectedNumDays
-        print("num days: \(numDays)")
         if (numDays > Utils.minDays) {
             setNumDays(numDays - 1)
         }
@@ -67,7 +66,6 @@ class DaysSelectorViewController: UIViewController {
     
     @IBAction func plusDayButton(_ sender: UIButton) {
         let numDays = selectedNumDays
-        print("num days: \(numDays)")
         if (numDays < Utils.maxDays) {
             setNumDays(numDays + 1)
         }
@@ -113,11 +111,6 @@ class DaysSelectorViewController: UIViewController {
         scrollView.delegate = self
         UNUserNotificationCenter.current().delegate = self
 
-//        let now = Date()
-//        startDatePicker.minimumDate = now - Utils.startDateBracket
-//        startDatePicker.maximumDate = now + Utils.startDateBracket
-//        print("Min: \(String(describing: startDatePicker.minimumDate!)), Max: \(String(describing: startDatePicker.maximumDate!))")
-
         createStartOptions()
         configureScrollView()
         configureCirclesView()
@@ -150,15 +143,9 @@ class DaysSelectorViewController: UIViewController {
             let title = replaceTitle(formatter.string(from: date), forOffset: i)
             return StartOption(date: date, title: title)
         }
-
-        print(startOptions)
     }
 
     private func configureScrollView() {
-
-//        print("view: \(view.frame.size.width)")
-//        print("scrollView: \(scrollView.frame.size.width)")
-//        print("superview: \(view.superview?.frame.size.width)")
 
         let frameSize = CGSize(width: view.frame.size.width - 2 * arrowButtonWidth,
                                height: scrollView.frame.size.height)
@@ -176,6 +163,14 @@ class DaysSelectorViewController: UIViewController {
         scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count),
                                         height: frameSize.height)
         scrollView.isPagingEnabled = true
+
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollViewTap(_:)))
+        tapRecognizer.cancelsTouchesInView = false
+        scrollView.addGestureRecognizer(tapRecognizer)
+    }
+
+    @objc func scrollViewTap(_ sender: UITapGestureRecognizer) {
+        setStartToToday()
     }
 
     func configureCirclesView() {
@@ -222,12 +217,8 @@ class DaysSelectorViewController: UIViewController {
     }
 
     func setNumDays(_ numDays: Int) {
-
         daysInput.text = String(numDays)
-        print("selected days: \(numDays)")
-
         selectedInterval = Double(numDays * Utils.secondsPerDay)
-        //        picker.selectRow(row, inComponent: 0, animated: true) // TODO - loop?
     }
 
     func selectStartOption(_ index: Int, animated: Bool = false) {
@@ -273,11 +264,9 @@ class DaysSelectorViewController: UIViewController {
     }
 
     private func reset() {
-        print("RESET")
-
         // State, models
         setModelState(.notStarted)
-        selectStartOption(-startOffsetPast) // Today
+        setStartToToday()
         setNumDays(1)
 
         model.targetDate = nil
@@ -286,9 +275,6 @@ class DaysSelectorViewController: UIViewController {
 
         // UI
         titleInput.text = "" // TODO - do this in view update methods
-
-//        startDatePicker.setDate(Date(), animated: true)
-//        startDatePicker.isHidden = true
 
         updateProvisionalUI()
 
@@ -328,6 +314,10 @@ class DaysSelectorViewController: UIViewController {
         else {
             print("Nothing restored")
         }
+    }
+
+    private func setStartToToday() {
+        selectStartOption(-startOffsetPast)
     }
 
     private func presentCountdownIfNeeded() {
