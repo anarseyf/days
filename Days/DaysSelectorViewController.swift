@@ -20,8 +20,9 @@ class DaysSelectorViewController: UIViewController {
 
     let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
-    let startOffsetPast = -3
+    let startOffsetPast = -7
     let startOffsetFuture = 7
+    let arrowButtonWidth: CGFloat = 50.0
     var startOptions: [StartOption] = []
     var selectedStartOptionIndex = 0
     var model = TimerModel()
@@ -130,7 +131,12 @@ class DaysSelectorViewController: UIViewController {
 
     private func configureScrollView() {
 
-        let frameSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height)
+//        print("view: \(view.frame.size.width)")
+//        print("scrollView: \(scrollView.frame.size.width)")
+//        print("superview: \(view.superview?.frame.size.width)")
+
+        let frameSize = CGSize(width: view.frame.size.width - 2 * arrowButtonWidth,
+                               height: scrollView.frame.size.height)
 
         for (index, element) in startOptions.enumerated() {
             let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
@@ -138,17 +144,18 @@ class DaysSelectorViewController: UIViewController {
             label.text = element.title
             label.font = UIFont.systemFont(ofSize: 36.0)
             label.textAlignment = .center
-            
+
             scrollView.addSubview(label)
         }
 
-        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count), height: frameSize.height)
+        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count),
+                                        height: frameSize.height)
         scrollView.isPagingEnabled = true
     }
 
     func configureCirclesView() {
 
-        let radius: CGFloat = 5.0
+        let radius: CGFloat = 4.0
         let size: CGFloat = 2.0 * radius
         let spacing = radius
 
