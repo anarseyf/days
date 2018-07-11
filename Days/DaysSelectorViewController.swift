@@ -9,6 +9,11 @@
 import UIKit
 import UserNotifications
 
+struct StartOption {
+    let date: Date
+    let title: String
+}
+
 class DaysSelectorViewController: UIViewController {
 
     // MARK: - Properties
@@ -16,7 +21,9 @@ class DaysSelectorViewController: UIViewController {
     let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
     let days = Array(1...365)
-    let scrollViewOptions = ["Yesterday", "Today", "Tomorrow"]
+    let startOffsetPast = -3
+    let startOffsetFuture = 7
+    var startOptions: [StartOption] = []
     var model = TimerModel()
 
     var selectedInterval: TimeInterval = 0.0 {
@@ -73,6 +80,7 @@ class DaysSelectorViewController: UIViewController {
 //        startDatePicker.maximumDate = now + Utils.startDateBracket
 //        print("Min: \(String(describing: startDatePicker.minimumDate!)), Max: \(String(describing: startDatePicker.maximumDate!))")
 
+        createStartOptions()
         configureScrollView()
         configureCirclesView()
 
@@ -80,33 +88,55 @@ class DaysSelectorViewController: UIViewController {
         restore()
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let viewController = segue.destination as? CountdownViewController {
-            prepareForPresenting(viewController)
+    func createStartOptions() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EE, MMM d"
+        let now = Date()
+        let calendar = Calendar.current
+        let nowComponents = calendar.dateComponents(in: TimeZone.current, from: now)
+        let day = nowComponents.day!
+
+        func replaceTitle(_ title: String, forOffset offset: Int) -> String {
+            switch (offset) {
+            case -1: return "Yesterday"
+            case 0: return "Today"
+            case 1: return "Tomorrow"
+            default: return title
+            }
         }
+
+        startOptions = Array(startOffsetPast...startOffsetFuture).map { i in
+            var components = nowComponents
+            components.day = day + i
+            let date = components.date!
+            let title = replaceTitle(formatter.string(from: date), forOffset: i)
+            return StartOption(date: date, title: title)
+        }
+
+        print(startOptions)
     }
 
     private func configureScrollView() {
 
         let frameSize = CGSize(width: view.frame.size.width, height: scrollView.frame.size.height)
 
-        for (index, element) in scrollViewOptions.enumerated() {
+        for (index, element) in startOptions.enumerated() {
             let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
             let label = UILabel(frame: CGRect(origin: origin, size: frameSize))
-            label.text = element
+            label.text = element.title
             label.font = UIFont.systemFont(ofSize: 36.0)
             label.textAlignment = .center
             
             scrollView.addSubview(label)
         }
 
-        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(scrollViewOptions.count), height: frameSize.height)
+        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count), height: frameSize.height)
         scrollView.isPagingEnabled = true
     }
 
     func configureCirclesView() {
 
-        let radius: CGFloat = 8.0
+        let radius: CGFloat = 5.0
         let size: CGFloat = 2.0 * radius
         let spacing = radius
 
@@ -117,7 +147,7 @@ class DaysSelectorViewController: UIViewController {
         circlesView.backgroundColor = UIColor.lightGray
         circlesView.translatesAutoresizingMaskIntoConstraints = false
 
-        for (_, _) in scrollViewOptions.enumerated() {
+        for (_, _) in startOptions.enumerated() {
             let circle = UIView()
             circle.layer.borderWidth = 1.0
             circle.layer.borderColor = UIColor.darkGray.cgColor
@@ -130,6 +160,12 @@ class DaysSelectorViewController: UIViewController {
             constraintH.priority = .defaultHigh
 
             circlesView.addArrangedSubview(circle)
+        }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let viewController = segue.destination as? CountdownViewController {
+            prepareForPresenting(viewController)
         }
     }
 
@@ -153,7 +189,7 @@ class DaysSelectorViewController: UIViewController {
     func selectStartOption(_ index: Int, animated: Bool = false) {
 
         let size = scrollView.contentSize
-        let itemWidth = CGFloat(size.width) / CGFloat(scrollViewOptions.count)
+        let itemWidth = CGFloat(size.width) / CGFloat(startOptions.count)
         let offset = CGPoint(x: itemWidth * CGFloat(index), y: 0)
         scrollView.setContentOffset(offset, animated: true)
 
@@ -191,7 +227,7 @@ class DaysSelectorViewController: UIViewController {
         // State, models
         setModelState(.notStarted)
         selectDaysIndex(0)
-        selectStartOption(scrollViewOptions.count/2)
+        selectStartOption(-startOffsetPast) // Today
 
         model.targetDate = nil
         model.createdDate = nil
