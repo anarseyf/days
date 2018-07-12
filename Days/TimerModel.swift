@@ -40,6 +40,15 @@ class TimerModel: NSObject, NSCoding {
     var startDate: Date?
     var title: String?
 
+    var totalDays: Int? {
+        if (computedState == .invalid) {
+            return nil
+        }
+
+        let interval = targetDate!.timeIntervalSince(startDate!)
+        return Int(ceil(interval / Double(Utils.secondsPerDay))) // TODO - revise
+    }
+
     var elapsedDays: Int? {
         if (computedState == .invalid) {
             return nil
