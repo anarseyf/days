@@ -10,7 +10,7 @@ import UIKit
 import UserNotifications
 
 struct StartOption {
-    let date: Date
+    let date: Date // TODO - use offset, not Date(). Otherwise the date becomes stale
     let title: String
 }
 
@@ -94,8 +94,8 @@ class DaysSelectorViewController: UIViewController {
     }
 
     @IBAction func startButton(_ sender: UIButton) {
+        model.isActive = true
         save()
-        setModelState(.running)
         scheduleNotification(after: selectedInterval)
     }
 
@@ -171,7 +171,7 @@ class DaysSelectorViewController: UIViewController {
     }
 
     @objc func scrollViewTap(_ sender: UITapGestureRecognizer) {
-        setStartToToday()
+        setStartOptionToday()
     }
 
     func configureCirclesView() {
@@ -249,10 +249,6 @@ class DaysSelectorViewController: UIViewController {
         selectedStartOptionIndex = index
     }
 
-    private func setModelState(_ state: TimerModel.State) {
-        model.state = state
-    }
-
     private func updateTargetDate() {
         let targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
         model.targetDate = targetDate
@@ -274,13 +270,10 @@ class DaysSelectorViewController: UIViewController {
 
     private func reset() {
         // State, models
-        setModelState(.notStarted)
-        setStartToToday()
-        setNumDays(1)
+        model.reset()
 
-        model.targetDate = nil
-        model.startDate = nil
-        model.title = nil
+        setStartOptionToday()
+        setNumDays(1)
 
         // UI
         titleInput.text = "" // TODO - do this in view update methods
@@ -315,7 +308,6 @@ class DaysSelectorViewController: UIViewController {
         if let encoded = defaults.data(forKey: userDefaultsKey),
             let restoredModel = NSKeyedUnarchiver.unarchiveObject(with: encoded) as? TimerModel {
             model = restoredModel
-            setModelState(.running) // TODO - computed property?
             print("Restored: \(model)")
 
             presentCountdownIfNeeded()
@@ -325,7 +317,7 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    private func setStartToToday() {
+    private func setStartOptionToday() {
         selectStartOption(-startOffsetPast)
     }
 

@@ -76,10 +76,6 @@ class CountdownViewController: UIViewController {
         }
     }
 
-    func setModelState(_ state: TimerModel.State) { // TODO - computed property
-        model?.state = state
-    }
-
     func updateTimerLabels() {
         startDateLabel.text = (model?.startDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.startDate!) : "-")
         targetDateLabel.text = (model?.targetDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.targetDate!) : "-")
@@ -89,26 +85,32 @@ class CountdownViewController: UIViewController {
 
         func loopHandler(timer: Timer?) -> Void {
 
-            if let date = model?.targetDate {
-                let remainingInterval = date.timeIntervalSinceNow
-                let remainingSeconds = Int(remainingInterval)
-                let remainingDays = remainingSeconds / Utils.secondsPerDay + 1
-                let isDone = remainingSeconds < 0
-                let elapsedSeconds = -1 * Int(model!.startDate!.timeIntervalSinceNow)
-                let elapsedDays = (elapsedSeconds / Utils.secondsPerDay) + 1 // TODO - prevent overrun if we're past targetDate
-
-                if (isDone) {
-                    dayLabel.text = ""
-                    expiresInLabel.text = "-"
-                    remainingLabel.text = "TIMER DONE"
-                    setModelState(.done)
-                }
-                else {
-                    dayLabel.text = "DAY\n\(elapsedDays)"
-                    expiresInLabel.text = Utils.shared.intervalFormatter.string(from: remainingInterval)!
-                    remainingLabel.text = "\(remainingDays) \(remainingDays == 1 ? "DAY" : "DAYS" ) LEFT"
-                }
+            guard let model = model else {
+                print("Loop: No model")
+                return
             }
+
+            let state = model.computedState
+            titleLabel.text = state.rawValue // TODO - remove
+
+            guard state != .invalid else {
+                print("Loop: Invalid state")
+                return
+            }
+
+            if (state == .ended) {
+                dayLabel.text = ""
+                expiresInLabel.text = "-"
+                remainingLabel.text = "TIMER DONE"
+            }
+            else {
+                dayLabel.text = "DAY \(model.elapsedDays ?? -1)"
+                expiresInLabel.text = Utils.shared.intervalFormatter.string(from: model.remainingInterval!)!
+
+                let remainingDays = model.remainingDays!
+                remainingLabel.text = "\(remainingDays) \(remainingDays == 1 ? "DAY" : "DAYS" ) LEFT"
+            }
+
         }
         loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
                                          repeats: true,
