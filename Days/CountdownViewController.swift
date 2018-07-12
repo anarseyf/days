@@ -10,6 +10,8 @@ import UIKit
 
 class CountdownViewController: UIViewController {
 
+    // MARK: - Properties
+
     var model: TimerModel?
     var loopTimer: Timer? = nil
     var dismissHandler: (() -> Void)?
@@ -22,6 +24,8 @@ class CountdownViewController: UIViewController {
         }
     }
 
+    // MARK: - Outlets
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var detailsView: UIStackView!
@@ -30,6 +34,8 @@ class CountdownViewController: UIViewController {
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var remainingLabel: UILabel!
     @IBOutlet weak var toggleButton: UIButton!
+
+    // MARK: - User Actions
 
     @IBAction func toggleButton(_ sender: UIButton) {
         showDetails = !showDetails
@@ -45,11 +51,15 @@ class CountdownViewController: UIViewController {
             dismissHandler?()
         }
     }
+
+    // MARK: - Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         assert(model != nil, "Model must be set when presenting the Countdown view controller")
+
+        configureProgressView()
 
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter
@@ -58,6 +68,12 @@ class CountdownViewController: UIViewController {
         titleLabel.text = model!.title
         updateTimerLabels()
         startLoopTimer()
+    }
+
+    func configureProgressView() {
+        if let progressVC = children.first as? ProgressViewController {
+            progressVC.model = model
+        }
     }
 
     func setModelState(_ state: TimerModel.State) { // TODO - computed property

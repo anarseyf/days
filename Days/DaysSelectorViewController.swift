@@ -105,6 +105,7 @@ class DaysSelectorViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.hidesBackButton = true
+        navigationController?.isNavigationBarHidden = true
 
         daysInput.delegate = self
         titleInput.delegate = self
@@ -216,6 +217,14 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
+    private func presentCountdownIfNeeded() {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countdownViewController")
+        if let countdownViewController = viewController as? CountdownViewController {
+            prepareForPresenting(countdownViewController)
+            navigationController?.pushViewController(countdownViewController, animated: false)
+        }
+    }
+
     func setNumDays(_ numDays: Int) {
         daysInput.text = String(numDays)
         selectedInterval = Double(numDays * Utils.secondsPerDay)
@@ -318,14 +327,6 @@ class DaysSelectorViewController: UIViewController {
 
     private func setStartToToday() {
         selectStartOption(-startOffsetPast)
-    }
-
-    private func presentCountdownIfNeeded() {
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countdownViewController")
-        if let countdownViewController = viewController as? CountdownViewController {
-            prepareForPresenting(countdownViewController)
-            navigationController?.pushViewController(countdownViewController, animated: false)
-        }
     }
 
     private func scheduleNotification(after interval: TimeInterval) {
