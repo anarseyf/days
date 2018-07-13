@@ -11,6 +11,7 @@ import UIKit
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     let numBars = 5
+    var barViews: [UIView] = []
     var cellData: [Int] = []
 
     var model: TimerModel? = nil {
@@ -56,7 +57,24 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "progressCell", for: indexPath) as! ProgressCell
-        cell.completed = cellData[indexPath.row]
+
+        let numCompleted = cellData[indexPath.row]
+
+        let bars = [cell.bar1, cell.bar2, cell.bar3, cell.bar4, cell.bar5]
+        for (index, bar) in bars.enumerated() {
+            let i = index + 1
+            if (i < numCompleted) {
+                bar?.backgroundColor = UIColor.darkGray
+            }
+            else if (i == numCompleted) {
+                let isLast = (indexPath.row == cellData.count - 1)
+                bar?.backgroundColor = (isLast ? UIColor.red : UIColor.darkGray)
+            }
+            else {
+                bar?.backgroundColor = UIColor.lightGray
+            }
+        }
+
         return cell
     }
 }

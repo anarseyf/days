@@ -19,6 +19,7 @@
 		5EB81A3E20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */; };
 		5EBA5F0E20F6BC8F0078827A /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA5F0D20F6BC8F0078827A /* ProgressViewController.swift */; };
 		5EBA5F1020F6CCDE0078827A /* ProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA5F0F20F6CCDE0078827A /* ProgressCell.swift */; };
+		5EBA5F1220F6F90E0078827A /* ProgressCellBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA5F1120F6F90E0078827A /* ProgressCellBar.swift */; };
 		5EE195E620E843C10076D761 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE195E520E843C10076D761 /* TimerModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DaysSelectorViewController+Extensions.swift"; sourceTree = "<group>"; };
 		5EBA5F0D20F6BC8F0078827A /* ProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
 		5EBA5F0F20F6CCDE0078827A /* ProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCell.swift; sourceTree = "<group>"; };
+		5EBA5F1120F6F90E0078827A /* ProgressCellBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCellBar.swift; sourceTree = "<group>"; };
 		5EE195E520E843C10076D761 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,6 +102,7 @@
 				5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */,
 				5EBA5F0D20F6BC8F0078827A /* ProgressViewController.swift */,
 				5EBA5F0F20F6CCDE0078827A /* ProgressCell.swift */,
+				5EBA5F1120F6F90E0078827A /* ProgressCellBar.swift */,
 				5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */,
 				5EE195E520E843C10076D761 /* TimerModel.swift */,
 				5E55F98820EAB9F700A47C33 /* Utils.swift */,
@@ -222,6 +225,7 @@
 				5EE195E620E843C10076D761 /* TimerModel.swift in Sources */,
 				5E55F98720EAB26D00A47C33 /* CountdownViewController.swift in Sources */,
 				5EBA5F0E20F6BC8F0078827A /* ProgressViewController.swift in Sources */,
+				5EBA5F1220F6F90E0078827A /* ProgressCellBar.swift in Sources */,
 				5E0ECCFC20E564C0004BEEDA /* DaysSelectorViewController.swift in Sources */,
 				5E0ECCFA20E564C0004BEEDA /* AppDelegate.swift in Sources */,
 				5E55F98520EA9A5200A47C33 /* SettingsViewController.swift in Sources */,
