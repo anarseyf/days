@@ -27,6 +27,7 @@ class ProgressCell: UICollectionViewCell {
             print("superview: \(newSuperview!.frame)")
 
             self.clipsToBounds = false // TODO - remove
+            self.layer.borderColor = UIColor.lightGray.cgColor
 
             let bars = [bar1, bar2, bar3, bar4, bar5]
             let verticalBarOrigin = CGPoint(x: 0, y: 0)
@@ -43,6 +44,7 @@ class ProgressCell: UICollectionViewCell {
                 let layer = bar.layer
                 layer.cornerRadius = barWidth/2
                 layer.borderWidth = 1.0
+                layer.borderColor = UIColor.white.cgColor
 
                 bar.frame.size = barSize
 
@@ -52,22 +54,17 @@ class ProgressCell: UICollectionViewCell {
                         + (CGFloat(index) * verticalBarHorizontalSpace)
                         + verticalBarHorizontalSpace/2
                         - barWidth/2
-
-                    layer.borderColor = UIColor.white.cgColor
                 }
                 else { // diagonal
-//                    bar.frame.size.height = bar.frame.height * 1.4
-                    bar.frame.origin = CGPoint(x: (self.frame.size.width - bar.frame.size.width)/2,
-                                               y: (self.frame.size.height - bar.frame.size.height)/2)
-//                    bar.transform = CGAffineTransform(rotationAngle: -.pi/8)
+                    bar.frame.size.height = bar.frame.height * 1.2
+                    bar.center = CGPoint(x: self.bounds.width/2,
+                                         y: self.bounds.height/2)
+                    bar.transform = CGAffineTransform(rotationAngle: .pi * 0.7)
 
-                    layer.borderColor = UIColor.orange.cgColor
-                    layer.borderWidth = 2.0
+                    bar.removeFromSuperview()
+                    self.addSubview(bar) // make diagonal the topmost view. This somehow also fixes the bar centering
                 }
-
             }
-
-
         }
     }
 }

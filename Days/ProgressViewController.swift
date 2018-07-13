@@ -18,8 +18,6 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
         didSet {
             guard let totalDays = model?.totalDays else { return }
 
-            label.text = "total days: \(totalDays)"
-
             print("total: \(totalDays)")
 
             let remainder = totalDays % numBars
@@ -36,7 +34,6 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
         }
     }
 
-    @IBOutlet weak var label: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
