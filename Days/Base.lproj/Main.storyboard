@@ -405,12 +405,11 @@
                         <viewLayoutGuide key="safeArea" id="Gdr-DT-xWs"/>
                     </view>
                     <connections>
-                        <outlet property="dayLabel" destination="KiU-Cb-jbz" id="fCX-bn-anF"/>
+                        <outlet property="detailsStartLabel" destination="whR-l0-JS2" id="QB9-0y-4gf"/>
+                        <outlet property="detailsTargetLabel" destination="rif-zT-7fU" id="yKm-n4-aZG"/>
                         <outlet property="detailsView" destination="XVl-j1-pJl" id="vLs-xf-FTr"/>
-                        <outlet property="expiresInLabel" destination="Zw5-mJ-j0A" id="O5Z-1b-WpI"/>
-                        <outlet property="remainingLabel" destination="GXz-te-ebb" id="x4m-Yp-BDU"/>
-                        <outlet property="startDateLabel" destination="whR-l0-JS2" id="QB9-0y-4gf"/>
-                        <outlet property="targetDateLabel" destination="rif-zT-7fU" id="yKm-n4-aZG"/>
+                        <outlet property="mainLabel" destination="KiU-Cb-jbz" id="fCX-bn-anF"/>
+                        <outlet property="secondaryLabel" destination="Zw5-mJ-j0A" id="O5Z-1b-WpI"/>
                         <outlet property="titleLabel" destination="hHZ-wk-gA6" id="An4-S9-VkS"/>
                         <outlet property="toggleButton" destination="ooe-5g-JGW" id="4Ug-Cx-gAL"/>
                     </connections>

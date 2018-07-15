@@ -256,14 +256,14 @@ class DaysSelectorViewController: UIViewController {
 
     private func updateProvisionalUI() {
 
-        let formatter = Utils.shared.dateOnlyFormatter // dateTimeFormatter
-        let targetString = (model.startDate == nil ? "-" : formatter.string(from: model.targetDate!))
+        let formatter = Utils.shared.dateTimeFormatter
+        let startString = (model.startDate == nil ? "-" : formatter.string(from: model.startDate!))
+        let targetString = (model.targetDate == nil ? "-" : formatter.string(from: model.targetDate!))
 
-        provisionalDateLabel.text = targetString
+        provisionalDateLabel.text = "\(startString)\n\(targetString)"
 
         if (model.targetDate != nil) {
             let isPast = (model.targetDate! < Date())
-//            startButton.isHidden = isPast
             provisionalDateLabel.textColor = (isPast ? UIColor.red : UIColor.darkText)
         }
     }

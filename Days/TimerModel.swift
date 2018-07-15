@@ -10,21 +10,18 @@ import UIKit
 
 class TimerModel: NSObject, NSCoding {
 
-    enum ComputedState: String {
-        case invalid, inactive, willRun, running, ended
+    enum State: String {
+        case invalid, willRun, running, ended
     }
 
+    var targetDate: Date?
+    var startDate: Date?
     var isActive = false
+    var title: String?
     
-    var computedState: ComputedState {
-        if (startDate == nil || targetDate == nil) {
+    var state: State {
+        if (startDate == nil || targetDate == nil || startDate! >= targetDate!) {
             return .invalid
-        }
-        if (startDate! >= targetDate!) {
-            return .invalid
-        }
-        if (!isActive) {
-            return .inactive
         }
         let now = Date()
         if (now < startDate!) {
@@ -36,38 +33,52 @@ class TimerModel: NSObject, NSCoding {
         return .ended
     }
 
-    var targetDate: Date?
-    var startDate: Date?
-    var title: String?
-
-    var totalDays: Int? {
-        if (computedState == .invalid) {
-            return nil
-        }
-
-        let interval = targetDate!.timeIntervalSince(startDate!)
-        return Int(ceil(interval / Double(Utils.secondsPerDay))) // TODO - revise
+    private var totalInterval: TimeInterval? {
+        if (state == .invalid) { return nil }
+        return targetDate!.timeIntervalSince(startDate!)
     }
 
-    var elapsedDays: Int? { // TODO - negative if start is in future
-        if (computedState == .invalid) {
-            return nil
-        }
+    var totalDays: Int? {
+        if (state == .invalid) { return nil }
+        return Int(floor(totalInterval! / Double(Utils.secondsPerDay))) // TODO - daylight savings, time zone changes
+    }
 
-        let elapsedSeconds = -1 * Int(startDate!.timeIntervalSinceNow)
-        let result = (elapsedSeconds / Utils.secondsPerDay) + 1
+    var currentDay: Int? { // TODO - negative if start is in future
+        if (state != .running) { return nil }
+
+        let now = Date()
+        let elapsedInterval = now.timeIntervalSince(startDate!)
+        let result = Int(floor(elapsedInterval / Double(Utils.secondsPerDay)))
 
         return result
     }
 
     var remainingInterval: TimeInterval? {
-        return (computedState == .invalid) ? nil : targetDate!.timeIntervalSinceNow
+        if (state != .running) { return nil }
+        return targetDate!.timeIntervalSinceNow
     }
 
     var remainingDays: Int? {
-        if (computedState == .invalid) { return nil }
-        let remainingSeconds = Int(remainingInterval!)
-        return remainingSeconds / Utils.secondsPerDay
+        switch state {
+        case .invalid: return nil
+        case .willRun: return totalDays!
+        case .ended:   return 0
+        case .running: return totalDays! - currentDay!
+        }
+    }
+
+    // Negative if now is before start, positive if now is after end, otherwise nil
+    var outsideInterval: TimeInterval? {
+        switch state {
+        case .invalid:
+            return nil
+        case .willRun:
+            return startDate!.timeIntervalSinceNow // negative
+        case .ended:
+            return Date().timeIntervalSince(targetDate!) // positive
+        case .running:
+            return nil
+        }
     }
 
     override var description: String {
@@ -78,10 +89,10 @@ class TimerModel: NSObject, NSCoding {
         let startString = (startDate == nil ? "(-)" : formatter.string(from: startDate!))
         let titleString = title ?? "(-)"
 
-        return "state: \(computedState)"
-             + "\n\ttitle: \(titleString)"
-             + "\n\tstart: \(startString)"
-             + "\n\ttarget: \(targetString)"
+        return "state: \(state) (\(isActive ? "ACTIVE" : "INACTIVE"))"
+            + "\n\ttitle: \(titleString)"
+            + "\n\tstart: \(startString)"
+            + "\n\ttarget: \(targetString)"
     }
 
     func reset() {

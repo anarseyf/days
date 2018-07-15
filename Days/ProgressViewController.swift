@@ -10,23 +10,14 @@ import UIKit
 
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
-    struct ProgressCellData : CustomStringConvertible {
-        let numTotal: Int
-        let numElapsed: Int
-
-        var description: String {
-            return "\(numTotal)/\(numElapsed)"
-        }
-    }
-
-    let barsPerCell = 5
+    let barsPerCell = ProgressCell.barsPerCell
     var barViews: [UIView] = []
-    var cellData: [ProgressCellData] = []
+    var cellData: [ProgressCell.Datum] = []
 
     var model: TimerModel? = nil {
         didSet {
             guard var unaccountedTotal = model?.totalDays else { return }
-            var unaccountedElapsed = model!.elapsedDays!
+            var unaccountedElapsed = model!.currentDay!
 
             print("total: \(unaccountedTotal), elapsed: \(unaccountedElapsed)")
 
@@ -35,7 +26,7 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
                 let numTotal = min(barsPerCell, unaccountedTotal)
                 let numElapsed = min(barsPerCell, unaccountedElapsed)
 
-                let datum = ProgressCellData(numTotal: numTotal, numElapsed: numElapsed)
+                let datum = ProgressCell.Datum(numTotal: numTotal, numElapsed: numElapsed)
                 cellData.append(datum)
 
                 unaccountedTotal -= datum.numTotal
@@ -71,19 +62,19 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
 
         let datum = cellData[indexPath.row]
 
-        // TODO - move this logic to ProgressCell:
+        // TODO - move this logic to ProgressCell:layoutSubviews()?
 
         let bars = [cell.bar1, cell.bar2, cell.bar3, cell.bar4, cell.bar5]
         for (index, bar) in bars.enumerated() {
             let i = index + 1
             if (i > datum.numTotal) { // invisible
-                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.0)
+            }
+            else if (i == datum.numElapsed + 1) { // current day
+                bar?.backgroundColor = UIColor.red
             }
             else if (i > datum.numElapsed) { // future day
-                bar?.backgroundColor = UIColor.lightGray
-            }
-            else if (i == datum.numElapsed) { // current day
-                bar?.backgroundColor = UIColor.red
+                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
             }
             else { // past day
                 bar?.backgroundColor = UIColor.darkGray

@@ -26,13 +26,12 @@ class CountdownViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var detailsView: UIStackView!
-    @IBOutlet weak var expiresInLabel: UILabel!
-    @IBOutlet weak var targetDateLabel: UILabel!
-    @IBOutlet weak var startDateLabel: UILabel!
-    @IBOutlet weak var remainingLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var mainLabel: UILabel!
+    @IBOutlet weak var secondaryLabel: UILabel!
+    @IBOutlet weak var detailsStartLabel: UILabel!
+    @IBOutlet weak var detailsTargetLabel: UILabel!
     @IBOutlet weak var toggleButton: UIButton!
 
     // MARK: - User Actions
@@ -63,10 +62,10 @@ class CountdownViewController: UIViewController {
 
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter
-        dayLabel.text = ""
-        remainingLabel.text = ""
+        mainLabel.text = ""
+//        detailsRemainingIntervalLabel.text = ""
         titleLabel.text = model!.title
-        updateTimerLabels()
+        updateDetailsLabels()
         startLoopTimer()
     }
 
@@ -76,9 +75,9 @@ class CountdownViewController: UIViewController {
         }
     }
 
-    func updateTimerLabels() {
-        startDateLabel.text = (model?.startDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.startDate!) : "-")
-        targetDateLabel.text = (model?.targetDate != nil ? Utils.shared.dateTimeFormatter.string(from: model!.targetDate!) : "-")
+    func updateDetailsLabels() {
+        detailsStartLabel.text = (model?.startDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.startDate!))
+        detailsTargetLabel.text = (model?.targetDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.targetDate!))
     }
 
     func startLoopTimer() {
@@ -90,27 +89,42 @@ class CountdownViewController: UIViewController {
                 return
             }
 
-            let state = model.computedState
+            let state = model.state
             titleLabel.text = state.rawValue // TODO - remove
 
-            guard state != .invalid else {
+            let formatter = Utils.shared.intervalFormatter
+
+            // Main view
+            switch state {
+            case .invalid:
                 print("Loop: Invalid state")
-                return
+            case .willRun:
+                mainLabel.text = "\(model.totalDays!) days"
+                let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
+                secondaryLabel.text = "Starts in \(outsideString)"
+            case .running:
+                mainLabel.text = "Day \(model.currentDay!)"
+                secondaryLabel.text = "\(model.remainingDays!) days left of \(model.totalDays!)"
+            case .ended:
+                mainLabel.text = "\(model.totalDays!) days\ndone"
+                let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
+                secondaryLabel.text = "Ended \(outsideString) ago"
             }
 
-            if (state == .ended) {
-                dayLabel.text = ""
-                expiresInLabel.text = "-"
-                remainingLabel.text = "TIMER DONE"
+            // Details view
+            switch state {
+            case .invalid:
+                fallthrough
+//                detailsRemainingIntervalLabel.text = "invalid"
+            case .willRun:
+                fallthrough
+            case .running:
+                fallthrough
+//                detailsRemainingIntervalLabel.text = formatter.string(from: model.remainingInterval!)
+            case .ended:
+//                detailsRemainingIntervalLabel.text = "-"
+                break
             }
-            else {
-                dayLabel.text = "DAY \(model.elapsedDays ?? -1)"
-                expiresInLabel.text = Utils.shared.intervalFormatter.string(from: model.remainingInterval!)!
-
-                let remainingDays = model.remainingDays!
-                remainingLabel.text = "\(remainingDays) \(remainingDays == 1 ? "DAY" : "DAYS" ) LEFT"
-            }
-
         }
         loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
                                          repeats: true,
