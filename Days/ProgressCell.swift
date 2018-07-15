@@ -11,11 +11,11 @@ import UIKit
 class ProgressCell: UICollectionViewCell {
 
     struct Datum : CustomStringConvertible {
-        let numTotal: Int
-        let numElapsed: Int
+        let totalDays: Int
+        let currentDayRelative: Int
 
         var description: String {
-            return "\(numTotal)/\(numElapsed)"
+            return "\(totalDays)/\(currentDayRelative)"
         }
     }
 

@@ -26,12 +26,13 @@ class CountdownViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var detailsView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
     @IBOutlet weak var detailsStartLabel: UILabel!
     @IBOutlet weak var detailsTargetLabel: UILabel!
+    @IBOutlet weak var detailsRemainingIntervalLabel: UILabel!
+    @IBOutlet weak var detailsView: UIStackView!
     @IBOutlet weak var toggleButton: UIButton!
 
     // MARK: - User Actions
@@ -63,7 +64,7 @@ class CountdownViewController: UIViewController {
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter
         mainLabel.text = ""
-//        detailsRemainingIntervalLabel.text = ""
+        detailsRemainingIntervalLabel.text = ""
         titleLabel.text = model!.title
         updateDetailsLabels()
         startLoopTimer()
@@ -103,7 +104,7 @@ class CountdownViewController: UIViewController {
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
                 secondaryLabel.text = "Starts in \(outsideString)"
             case .running:
-                mainLabel.text = "Day \(model.currentDay!)"
+                mainLabel.text = "Day \(model.completedDays!)"
                 secondaryLabel.text = "\(model.remainingDays!) days left of \(model.totalDays!)"
             case .ended:
                 mainLabel.text = "\(model.totalDays!) days\ndone"
@@ -114,16 +115,13 @@ class CountdownViewController: UIViewController {
             // Details view
             switch state {
             case .invalid:
-                fallthrough
-//                detailsRemainingIntervalLabel.text = "invalid"
+                detailsRemainingIntervalLabel.text = "invalid"
             case .willRun:
                 fallthrough
             case .running:
-                fallthrough
-//                detailsRemainingIntervalLabel.text = formatter.string(from: model.remainingInterval!)
+                detailsRemainingIntervalLabel.text = formatter.string(from: model.remainingInterval!)
             case .ended:
-//                detailsRemainingIntervalLabel.text = "-"
-                break
+                detailsRemainingIntervalLabel.text = "-"
             }
         }
         loopTimer = Timer.scheduledTimer(withTimeInterval: 1,

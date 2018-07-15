@@ -14,8 +14,19 @@ class TimerModel: NSObject, NSCoding {
         case invalid, willRun, running, ended
     }
 
-    var targetDate: Date?
     var startDate: Date?
+    var targetDate: Date? {
+        didSet {
+
+
+            // TODO - remove:
+            let adjusted = adjustedTarget
+            let formatter = Utils.shared.dateTimeFormatter
+            let str = (adjusted == nil ? "-" : formatter.string(from: adjusted!))
+
+            print("NEW TARGET, ADJUSTED: \(str)")
+        }
+    }
     var isActive = false
     var title: String?
     
@@ -33,6 +44,18 @@ class TimerModel: NSObject, NSCoding {
         return .ended
     }
 
+    private var adjustedTarget: Date? {
+        if (state == .invalid) { return nil }
+        let date = targetDate!
+        var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+        let adjusted = components.date
+
+        return adjusted ?? date
+    }
+
     private var totalInterval: TimeInterval? {
         if (state == .invalid) { return nil }
         return targetDate!.timeIntervalSince(startDate!)
@@ -46,6 +69,9 @@ class TimerModel: NSObject, NSCoding {
     var currentDay: Int? { // TODO - negative if start is in future
         if (state != .running) { return nil }
 
+        // TODO - may need to return 0 (.willRun) or total (.ended)
+        // for progress bars to update
+
         let now = Date()
         let elapsedInterval = now.timeIntervalSince(startDate!)
         let result = Int(floor(elapsedInterval / Double(Utils.secondsPerDay)))
@@ -53,9 +79,18 @@ class TimerModel: NSObject, NSCoding {
         return result
     }
 
+    var completedDays: Int? {
+        switch state {
+        case .invalid: return nil
+        case .willRun: return 0
+        case .ended:   return totalDays!
+        case .running: return max(currentDay! - 1, 0)
+        }
+    }
+
     var remainingInterval: TimeInterval? {
         if (state != .running) { return nil }
-        return targetDate!.timeIntervalSinceNow
+        return targetDate!.timeIntervalSinceNow // TODO - revise
     }
 
     var remainingDays: Int? {

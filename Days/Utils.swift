@@ -28,7 +28,7 @@ class Utils {
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium
-        dateTimeFormatter.timeStyle = .short
+        dateTimeFormatter.timeStyle = .medium
 
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .abbreviated
