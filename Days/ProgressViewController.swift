@@ -10,22 +10,36 @@ import UIKit
 
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
-    let numBars = 5
+    struct ProgressCellData : CustomStringConvertible {
+        let numTotal: Int
+        let numElapsed: Int
+
+        var description: String {
+            return "\(numTotal)/\(numElapsed)"
+        }
+    }
+
+    let barsPerCell = 5
     var barViews: [UIView] = []
-    var cellData: [Int] = []
+    var cellData: [ProgressCellData] = []
 
     var model: TimerModel? = nil {
         didSet {
-            guard let totalDays = model?.totalDays else { return }
+            guard var unaccountedTotal = model?.totalDays else { return }
+            var unaccountedElapsed = model!.elapsedDays!
 
-            print("total: \(totalDays)")
+            print("total: \(unaccountedTotal), elapsed: \(unaccountedElapsed)")
 
-            let remainder = totalDays % numBars
-            let numCells = totalDays / numBars + (remainder == 0 ? 0 : 1)
-            cellData = Array(0..<numCells).enumerated().map { (index, _) in
-                let windowStart = numBars * index
-                let windowEnd = min(totalDays, numBars * (index + 1))
-                return windowEnd - windowStart
+            while (unaccountedTotal > 0) {
+
+                let numTotal = min(barsPerCell, unaccountedTotal)
+                let numElapsed = min(barsPerCell, unaccountedElapsed)
+
+                let datum = ProgressCellData(numTotal: numTotal, numElapsed: numElapsed)
+                cellData.append(datum)
+
+                unaccountedTotal -= datum.numTotal
+                unaccountedElapsed -= datum.numElapsed
             }
 
             print(cellData)
@@ -55,20 +69,24 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "progressCell", for: indexPath) as! ProgressCell
 
-        let numCompleted = cellData[indexPath.row]
+        let datum = cellData[indexPath.row]
+
+        // TODO - move this logic to ProgressCell:
 
         let bars = [cell.bar1, cell.bar2, cell.bar3, cell.bar4, cell.bar5]
         for (index, bar) in bars.enumerated() {
             let i = index + 1
-            if (i < numCompleted) {
-                bar?.backgroundColor = UIColor.darkGray
+            if (i > datum.numTotal) { // invisible
+                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
             }
-            else if (i == numCompleted) {
-                let isLast = (indexPath.row == cellData.count - 1)
-                bar?.backgroundColor = (isLast ? UIColor.red : UIColor.darkGray)
-            }
-            else {
+            else if (i > datum.numElapsed) { // future day
                 bar?.backgroundColor = UIColor.lightGray
+            }
+            else if (i == datum.numElapsed) { // current day
+                bar?.backgroundColor = UIColor.red
+            }
+            else { // past day
+                bar?.backgroundColor = UIColor.darkGray
             }
         }
 

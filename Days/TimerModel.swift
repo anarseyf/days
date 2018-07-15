@@ -49,7 +49,7 @@ class TimerModel: NSObject, NSCoding {
         return Int(ceil(interval / Double(Utils.secondsPerDay))) // TODO - revise
     }
 
-    var elapsedDays: Int? {
+    var elapsedDays: Int? { // TODO - negative if start is in future
         if (computedState == .invalid) {
             return nil
         }
