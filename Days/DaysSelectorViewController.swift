@@ -45,6 +45,7 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Outlets
 
+    @IBOutlet weak var daysLabel: UILabel!
     @IBOutlet weak var provisionalDateLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var titleInput: UITextField!
@@ -90,7 +91,6 @@ class DaysSelectorViewController: UIViewController {
 
     @IBAction func resetButton(_ sender: UIButton) {
         reset()
-        save()
     }
 
     @IBAction func startButton(_ sender: UIButton) {
@@ -213,7 +213,6 @@ class DaysSelectorViewController: UIViewController {
         viewController.model = model
         viewController.dismissHandler = { () in
             self.reset()
-            self.save()
         }
     }
 
@@ -227,6 +226,7 @@ class DaysSelectorViewController: UIViewController {
 
     func setNumDays(_ numDays: Int) {
         daysInput.text = String(numDays)
+        daysLabel.text = Utils.daysString(from: numDays)
         selectedInterval = Double(numDays * Utils.secondsPerDay)
     }
 
@@ -250,8 +250,15 @@ class DaysSelectorViewController: UIViewController {
     }
 
     private func updateTargetDate() {
-        let targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
-        model.targetDate = targetDate
+        let target = Date(timeInterval: selectedInterval, since: model.startDate!)
+
+        let adjustedTarget = TimerModel.adjustedDate(from: target)
+        let formatter = Utils.shared.dateTimeFormatter
+        let aStr = formatter.string(from: target)
+        let bStr = (adjustedTarget == nil ? "-" : formatter.string(from: adjustedTarget!))
+        print("NEW TARGET: \(aStr)\n  ADJUSTED: \(bStr)")
+
+        model.targetDate = adjustedTarget
     }
 
     private func updateProvisionalUI() {
@@ -271,6 +278,7 @@ class DaysSelectorViewController: UIViewController {
     private func reset() {
         // State, models
         model.reset()
+        save()
 
         setStartOptionToday()
         setNumDays(1)

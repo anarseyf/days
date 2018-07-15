@@ -91,7 +91,6 @@ class CountdownViewController: UIViewController {
             }
 
             let state = model.state
-            titleLabel.text = state.rawValue // TODO - remove
 
             let formatter = Utils.shared.intervalFormatter
 
@@ -100,16 +99,18 @@ class CountdownViewController: UIViewController {
             case .invalid:
                 print("Loop: Invalid state")
             case .willRun:
-                mainLabel.text = "\(model.totalDays!) days"
+                mainLabel.text = Utils.daysString(from: model.totalDays!)
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
                 secondaryLabel.text = "Starts in \(outsideString)"
             case .running:
                 mainLabel.text = "Day \(model.completedDays!)"
-                secondaryLabel.text = "\(model.remainingDays!) days left of \(model.totalDays!)"
+                let daysString = Utils.daysString(from: model.remainingDays!)
+                secondaryLabel.text = "\(daysString) left of \(model.totalDays!)"
             case .ended:
-                mainLabel.text = "\(model.totalDays!) days\ndone"
+                let daysString = Utils.daysString(from: model.totalDays!)
+                mainLabel.text = "\(daysString)\ndone"
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
-                secondaryLabel.text = "Ended \(outsideString) ago"
+                secondaryLabel.text = "ended \(outsideString) ago" // TODO - move into Details View
             }
 
             // Details view

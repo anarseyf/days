@@ -33,4 +33,8 @@ class Utils {
         intervalFormatter.allowedUnits = [.day, .hour, .minute, .second]
         intervalFormatter.unitsStyle = .abbreviated
     }
+
+    static func daysString(from days: Int) -> String {
+        return (days == 1 ? "\(days) day" : "\(days) days")
+    }
 }

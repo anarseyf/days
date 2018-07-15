@@ -15,18 +15,7 @@ class TimerModel: NSObject, NSCoding {
     }
 
     var startDate: Date?
-    var targetDate: Date? {
-        didSet {
-
-
-            // TODO - remove:
-            let adjusted = adjustedTarget
-            let formatter = Utils.shared.dateTimeFormatter
-            let str = (adjusted == nil ? "-" : formatter.string(from: adjusted!))
-
-            print("NEW TARGET, ADJUSTED: \(str)")
-        }
-    }
+    var targetDate: Date?
     var isActive = false
     var title: String?
     
@@ -42,18 +31,6 @@ class TimerModel: NSObject, NSCoding {
             return .running
         }
         return .ended
-    }
-
-    private var adjustedTarget: Date? {
-        if (state == .invalid) { return nil }
-        let date = targetDate!
-        var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
-        components.hour = 0
-        components.minute = 0
-        components.second = 0
-        let adjusted = components.date
-
-        return adjusted ?? date
     }
 
     private var totalInterval: TimeInterval? {
@@ -89,8 +66,12 @@ class TimerModel: NSObject, NSCoding {
     }
 
     var remainingInterval: TimeInterval? {
-        if (state != .running) { return nil }
-        return targetDate!.timeIntervalSinceNow // TODO - revise
+        switch state {
+        case .invalid: return nil
+        case .willRun: return totalInterval!
+        case .ended:   return 0
+        case .running: return targetDate!.timeIntervalSinceNow
+        }
     }
 
     var remainingDays: Int? {
@@ -145,6 +126,7 @@ class TimerModel: NSObject, NSCoding {
     }
 
     required init(coder decoder: NSCoder) {
+        super.init()
         self.startDate = decoder.decodeObject(forKey: "startDate") as? Date
         self.targetDate = decoder.decodeObject(forKey: "targetDate") as? Date
         self.title = decoder.decodeObject(forKey: "title") as? String
@@ -152,5 +134,17 @@ class TimerModel: NSObject, NSCoding {
     }
 
     override init() {
+    }
+
+    static func adjustedDate(from date: Date?) -> Date? {
+
+        guard let date = date else { return nil }
+
+        var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
+        components.day = components.day! + 1
+        components.hour = 0
+        components.minute = 0
+        components.second = -1 // 11:59:59PM
+        return components.date
     }
 }

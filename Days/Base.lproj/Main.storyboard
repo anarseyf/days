@@ -194,6 +194,7 @@
                     <connections>
                         <outlet property="circlesView" destination="ZfA-qw-MVT" id="mgJ-jj-8eF"/>
                         <outlet property="daysInput" destination="6yR-3e-nS4" id="qmM-jP-czV"/>
+                        <outlet property="daysLabel" destination="hjJ-yK-pHs" id="BZ2-Ca-8Aj"/>
                         <outlet property="doneButton" destination="Qvx-g3-JTp" id="jbY-IM-n96"/>
                         <outlet property="minusDayButton" destination="2dv-XX-XSs" id="gcd-A9-PAN"/>
                         <outlet property="plusDayButton" destination="4ya-mL-LK9" id="Fqr-0G-KE2"/>
