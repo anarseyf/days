@@ -29,7 +29,7 @@ class ProgressCell: UICollectionViewCell {
     
     var datum: ProgressCell.Datum?
 
-    private let barWidth: CGFloat = 8.0
+    private let barWidth: CGFloat = 6.0
     private let horizontalMargin: CGFloat = 10.0
 
     override func willMove(toSuperview newSuperview: UIView?) {
@@ -76,7 +76,14 @@ class ProgressCell: UICollectionViewCell {
                 bar.transform = CGAffineTransform(rotationAngle: .pi * 0.7)
 
                 bar.removeFromSuperview()
-                self.addSubview(bar)
+                // if diagonal bar must be filled in (either current or completed),
+                // place it above the others. Otherwise, behind.
+                if (datum?.currentDayRelative ?? 0) > 4 {
+                    self.addSubview(bar)
+                }
+                else {
+                    self.insertSubview(bar, at: 0)
+                }
             }
         }
     }

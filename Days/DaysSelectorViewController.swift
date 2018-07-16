@@ -90,7 +90,9 @@ class DaysSelectorViewController: UIViewController {
     }
 
     @IBAction func resetButton(_ sender: UIButton) {
-        reset()
+        model.reset()
+        save()
+        resetUI()
     }
 
     @IBAction func startButton(_ sender: UIButton) {
@@ -116,7 +118,7 @@ class DaysSelectorViewController: UIViewController {
         configureScrollView()
         configureCirclesView()
 
-        reset()
+        resetUI()
         restore()
     }
 
@@ -212,7 +214,9 @@ class DaysSelectorViewController: UIViewController {
     private func prepareForPresenting(_ viewController: CountdownViewController) {
         viewController.model = model
         viewController.dismissHandler = { () in
-            self.reset()
+            self.model.reset()
+            self.save()
+            self.resetUI()
         }
     }
 
@@ -278,17 +282,10 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    private func reset() {
-        // State, models
-        model.reset()
-        save()
-
+    private func resetUI() {
         setStartOptionToday()
         setNumDays(1)
-
-        // UI
         titleInput.text = "" // TODO - do this in view update methods
-
         updateProvisionalUI()
 
         let center = UNUserNotificationCenter.current()

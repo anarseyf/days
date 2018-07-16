@@ -376,9 +376,8 @@
                                     <action selector="resetButton:" destination="6Dp-yP-tMz" eventType="touchUpInside" id="DhG-QO-e4c"/>
                                 </connections>
                             </button>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YLb-G9-j7a">
-                                <rect key="frame" x="0.0" y="234" width="320" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLb-G9-j7a">
+                                <rect key="frame" x="0.0" y="265" width="320" height="209"/>
                                 <connections>
                                     <segue destination="EuO-DO-ptr" kind="embed" id="Ep2-cC-2yR"/>
                                 </connections>
@@ -388,12 +387,16 @@
                         <constraints>
                             <constraint firstItem="Gdr-DT-xWs" firstAttribute="trailing" secondItem="hHZ-wk-gA6" secondAttribute="trailing" constant="30" id="90c-SH-MCa"/>
                             <constraint firstItem="XVl-j1-pJl" firstAttribute="leading" secondItem="hHZ-wk-gA6" secondAttribute="leading" id="9Bu-5f-Vzk"/>
+                            <constraint firstItem="YLb-G9-j7a" firstAttribute="leading" secondItem="6tR-Iw-eXz" secondAttribute="leading" id="BMX-Hi-egE"/>
                             <constraint firstItem="uu3-T4-93A" firstAttribute="bottom" secondItem="Gdr-DT-xWs" secondAttribute="bottom" constant="-30" id="FUh-4y-vtM"/>
+                            <constraint firstItem="YLb-G9-j7a" firstAttribute="centerX" secondItem="Gdr-DT-xWs" secondAttribute="centerX" id="K6y-VX-XZ2"/>
+                            <constraint firstItem="uu3-T4-93A" firstAttribute="top" secondItem="YLb-G9-j7a" secondAttribute="bottom" constant="20" id="MRR-gp-4Ym"/>
                             <constraint firstItem="Gdr-DT-xWs" firstAttribute="trailing" secondItem="uu3-T4-93A" secondAttribute="trailing" constant="30" id="MfC-xr-rkO"/>
                             <constraint firstItem="ooe-5g-JGW" firstAttribute="bottom" secondItem="XVl-j1-pJl" secondAttribute="top" id="R8Z-hU-TPR"/>
                             <constraint firstItem="hHZ-wk-gA6" firstAttribute="leading" secondItem="Gdr-DT-xWs" secondAttribute="leading" constant="30" id="SWp-cq-mPN"/>
                             <constraint firstItem="ooe-5g-JGW" firstAttribute="leading" secondItem="GXz-te-ebb" secondAttribute="leading" id="TGc-hf-IxO"/>
                             <constraint firstItem="KiU-Cb-jbz" firstAttribute="leading" secondItem="hHZ-wk-gA6" secondAttribute="leading" id="TTE-NL-TN2"/>
+                            <constraint firstItem="YLb-G9-j7a" firstAttribute="top" secondItem="GXz-te-ebb" secondAttribute="bottom" constant="50" id="Tq7-5p-uGb"/>
                             <constraint firstItem="KiU-Cb-jbz" firstAttribute="top" secondItem="hHZ-wk-gA6" secondAttribute="bottom" constant="20" id="VaN-ht-mpY"/>
                             <constraint firstItem="hHZ-wk-gA6" firstAttribute="top" secondItem="Gdr-DT-xWs" secondAttribute="top" constant="30" id="Vlg-qq-frw"/>
                             <constraint firstItem="KiU-Cb-jbz" firstAttribute="centerX" secondItem="6tR-Iw-eXz" secondAttribute="centerX" id="aLJ-Vo-f1w"/>
@@ -424,7 +427,7 @@
             <objects>
                 <viewController id="EuO-DO-ptr" customClass="ProgressViewController" customModule="Days" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Zyv-12-QRI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="128"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="209"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Hc2-5M-iqQ">
@@ -474,7 +477,7 @@
                                                 </view>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" red="0.91896049222797926" green="0.91896049222797926" blue="0.91896049222797926" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <size key="customSize" width="80" height="80"/>
                                         <connections>
                                             <outlet property="bar1" destination="139-ST-Sfh" id="ruC-iA-Mus"/>

@@ -11,7 +11,9 @@ import UIKit
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     let barsPerCell = ProgressCell.barsPerCell
-    let cellWidth: CGFloat = 50.0
+    let cellWidth: CGFloat = 60.0
+    let cellSpacing: CGFloat = 10.0
+    let minTotalSpacing: CGFloat = 50.0
     var barViews: [UIView] = []
     var cellData: [ProgressCell.Datum] = []
 
@@ -47,8 +49,8 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.layer.borderWidth = 1.0
-        view.layer.borderColor = UIColor.darkGray.cgColor
+//        view.layer.borderWidth = 1.0
+//        view.layer.borderColor = UIColor.darkGray.cgColor
 
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -60,10 +62,10 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
         collectionView.frame = self.view.bounds
 
         let viewWidth = collectionView.frame.width
-        let cellWidth: CGFloat = 60.0
-        let cellSpacing = 10
-        let cellsPerRow = min(5, cellData.count)
-        let totalSpacing = CGFloat((cellsPerRow - 1) * cellSpacing)
+
+        var cellsPerRow = Int((viewWidth - minTotalSpacing) / cellWidth)
+        cellsPerRow = min(cellsPerRow, cellData.count)
+        let totalSpacing = CGFloat(cellsPerRow - 1) * cellSpacing
         let totalCellsWidth = cellWidth * CGFloat(cellsPerRow)
         let inset = (viewWidth - totalSpacing - totalCellsWidth)/2
 
@@ -83,6 +85,7 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "progressCell", for: indexPath) as! ProgressCell
 
         let datum = cellData[indexPath.row]
+        cell.datum = datum
 
         // TODO - move this logic to ProgressCell:layoutSubviews()?
         // TODO - named colors (asset catalog)
@@ -99,7 +102,7 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
                 bar?.backgroundColor = UIColor.red
             }
             else if (i > datum.currentDayRelative) { // future day
-                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.6)
+                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.4)
             }
             else { // past day
                 bar?.backgroundColor = UIColor.darkGray
