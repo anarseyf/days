@@ -11,6 +11,7 @@ import UIKit
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     let barsPerCell = ProgressCell.barsPerCell
+    let cellWidth: CGFloat = 50.0
     var barViews: [UIView] = []
     var cellData: [ProgressCell.Datum] = []
 
@@ -53,6 +54,25 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
         collectionView.delegate = self
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        collectionView.frame = self.view.bounds
+
+        let viewWidth = collectionView.frame.width
+        let cellWidth: CGFloat = 60.0
+        let cellSpacing = 10
+        let cellsPerRow = min(5, cellData.count)
+        let totalSpacing = CGFloat((cellsPerRow - 1) * cellSpacing)
+        let totalCellsWidth = cellWidth * CGFloat(cellsPerRow)
+        let inset = (viewWidth - totalSpacing - totalCellsWidth)/2
+
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: cellWidth, height: cellWidth)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        collectionView.collectionViewLayout = layout
+    }
+
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -88,4 +108,6 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
 
         return cell
     }
+
+
 }
