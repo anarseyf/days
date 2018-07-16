@@ -17,7 +17,6 @@ extension DaysSelectorViewController : UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .badge])
     }
-
 }
 
 // MARK: - UITextFieldDelegate

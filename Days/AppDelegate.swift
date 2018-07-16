@@ -16,14 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        let options: UNAuthorizationOptions = [.alert, .badge]
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.requestAuthorization(options: options) {
-            (granted, error) in
-            print(granted ? "Granted" : "DENIED")
-        }
+        NotificationsHandler.requestAuth()
 
         return true
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        NotificationsHandler.clearBadge()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -34,10 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        application.applicationIconBadgeNumber = 0
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

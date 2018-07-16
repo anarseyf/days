@@ -16,34 +16,26 @@ class CountdownViewController: UIViewController {
     var loopTimer: Timer? = nil
     var dismissHandler: (() -> Void)?
 
-    var showDetails: Bool = false {
-        didSet {
-            detailsView.isHidden = !showDetails
-            let title = (showDetails ? "hide" : "show details")
-            toggleButton.setTitle(title, for: .normal)
-        }
-    }
-
     // MARK: - Outlets
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
-    @IBOutlet weak var detailsStartLabel: UILabel!
-    @IBOutlet weak var detailsTargetLabel: UILabel!
-    @IBOutlet weak var detailsRemainingIntervalLabel: UILabel!
-    @IBOutlet weak var detailsView: UIStackView!
-    @IBOutlet weak var toggleButton: UIButton!
 
     // MARK: - User Actions
-
-    @IBAction func toggleButton(_ sender: UIButton) {
-        showDetails = !showDetails
-    }
 
     @IBAction func resetButton(_ sender: UIButton) {
         loopTimer?.invalidate()
         navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func settingsButton(_ sender: UIButton) {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "settingsViewController")
+        if let settingsViewController = viewController as? SettingsViewController {
+            settingsViewController.model = model
+            navigationController?.modalPresentationStyle = .overCurrentContext
+            navigationController?.present(settingsViewController, animated: true)
+        }
     }
 
     override func willMove(toParent parent: UIViewController?) {
@@ -64,9 +56,7 @@ class CountdownViewController: UIViewController {
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter
         mainLabel.text = ""
-        detailsRemainingIntervalLabel.text = ""
         titleLabel.text = model!.title
-        updateDetailsLabels()
         startLoopTimer()
     }
 
@@ -74,11 +64,6 @@ class CountdownViewController: UIViewController {
         if let progressVC = children.first as? ProgressViewController {
             progressVC.model = model
         }
-    }
-
-    func updateDetailsLabels() {
-        detailsStartLabel.text = (model?.startDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.startDate!))
-        detailsTargetLabel.text = (model?.targetDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.targetDate!))
     }
 
     func startLoopTimer() {
@@ -93,7 +78,7 @@ class CountdownViewController: UIViewController {
             let state = model.state
 
             let formatter = Utils.shared.intervalFormatter
-
+            
             // Main view
             switch state {
             case .invalid:
@@ -101,7 +86,7 @@ class CountdownViewController: UIViewController {
             case .willRun:
                 mainLabel.text = Utils.daysString(from: model.totalDays!)
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
-                secondaryLabel.text = "Starts in \(outsideString)"
+                secondaryLabel.text = "starts in \(outsideString)"
             case .running:
                 mainLabel.text = "Day \(model.currentDay!)"
                 let daysString = Utils.daysString(from: model.remainingDays!)
@@ -112,23 +97,11 @@ class CountdownViewController: UIViewController {
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
                 secondaryLabel.text = "ended \(outsideString) ago" // TODO - move into Details View
             }
-
-            // Details view
-            switch state {
-            case .invalid:
-                detailsRemainingIntervalLabel.text = "invalid"
-            case .willRun:
-                fallthrough
-            case .running:
-                detailsRemainingIntervalLabel.text = formatter.string(from: model.remainingInterval!)
-            case .ended:
-                detailsRemainingIntervalLabel.text = "-"
-            }
         }
         loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
                                          repeats: true,
                                          block: loopHandler)
 
-        loopHandler(timer: nil) // otherwise it takes a second for the views to update
+        loopHandler(timer: nil) // Otherwise it takes a second for the views to update // TODO - review if still needed
     }
 }

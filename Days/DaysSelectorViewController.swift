@@ -18,7 +18,6 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Properties
 
-    let notificationDelay = 3.0
     let userDefaultsKey = "timerModel"
     let startOffsetPast = -7
     let startOffsetFuture = 7
@@ -44,17 +43,18 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var daysLabel: UILabel!
-    @IBOutlet weak var provisionalDateLabel: UILabel!
-    @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var titleInput: UITextField!
     @IBOutlet weak var daysInput: UITextField!
+    @IBOutlet weak var daysLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var circlesView: UIStackView!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var minusDayButton: UIButton!
     @IBOutlet weak var plusDayButton: UIButton!
-    
+    @IBOutlet weak var leftArrow: UIButton!
+    @IBOutlet weak var rightArrow: UIButton!
+    @IBOutlet weak var startButton: UIButton!
+
     // MARK: - User action handlers
 
     @IBAction func minusDayButton(_ sender: UIButton) {
@@ -88,16 +88,10 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    @IBAction func resetButton(_ sender: UIButton) {
-        model.reset()
-        save()
-        resetUI()
-    }
-
     @IBAction func startButton(_ sender: UIButton) {
         model.isActive = true
         save()
-        scheduleNotification(after: selectedInterval)
+        NotificationsHandler.schedule(with: model, after: selectedInterval)
     }
 
     // MARK: - Methods
@@ -230,6 +224,8 @@ class DaysSelectorViewController: UIViewController {
     func setNumDays(_ numDays: Int) {
         daysInput.text = String(numDays)
         daysLabel.text = Utils.daysString(from: numDays, withNumber: false)
+        minusDayButton.isHidden = (numDays <= Utils.minDays)
+        plusDayButton.isHidden = (numDays >= Utils.maxDays)
         selectedInterval = Double(numDays * Utils.secondsPerDay)
     }
 
@@ -239,12 +235,6 @@ class DaysSelectorViewController: UIViewController {
 
         let option = startOptions[index]
         let adjusted = TimerModel.dateFloor(from: option.date)
-
-        let formatter = Utils.shared.dateTimeFormatter
-        let aStr = formatter.string(from: option.date)
-        let bStr = (adjusted == nil ? "-" : formatter.string(from: adjusted!))
-        print("NEW START: \(aStr)\n  ADJUSTED: \(bStr)")
-
         model.startDate = adjusted
         updateTargetDate()
 
@@ -264,18 +254,16 @@ class DaysSelectorViewController: UIViewController {
         for (index, view) in circlesView.subviews.enumerated() {
             view.backgroundColor = (index == selectedStartOptionIndex ? UIColor.darkGray : UIColor.white)
         }
+
+        leftArrow.isHidden = (selectedStartOptionIndex <= 0)
+        rightArrow.isHidden = (selectedStartOptionIndex >= startOptions.count - 1)
     }
 
     private func resetUI() {
         setStartOptionToday()
         setNumDays(1)
         titleInput.text = "" // TODO - do this in view update methods
-
-        let center = UNUserNotificationCenter.current()
-        center.removeAllDeliveredNotifications()
-        center.removeAllPendingNotificationRequests()
-
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        NotificationsHandler.reset()
     }
 
     private func save() {
@@ -310,22 +298,6 @@ class DaysSelectorViewController: UIViewController {
 
     private func setStartOptionToday() {
         selectStartOption(-startOffsetPast)
-    }
-
-    private func scheduleNotification(after interval: TimeInterval) {
-        let content = UNMutableNotificationContent()
-        content.title = model.title ?? "Timer expired"
-        content.body = (model.targetDate == nil ? "" : Utils.shared.dateTimeFormatter.string(from: model.targetDate!))
-        content.badge = 1
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: (interval + notificationDelay), repeats: false)
-
-        let request = UNNotificationRequest(identifier: "notificationId",
-                                            content: content,
-                                            trigger: trigger)
-
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.add(request, withCompletionHandler: nil)
     }
 }
 

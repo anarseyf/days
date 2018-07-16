@@ -17,7 +17,7 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
     let barColorFuture = UIColor.lightGray.withAlphaComponent(0.4)
 
     let barsPerCell = ProgressCell.barsPerCell
-    let cellWidth: CGFloat = 60.0
+    let cellWidth: CGFloat = 50.0
     let cellSpacing: CGFloat = 10.0
     let minTotalSpacing: CGFloat = 50.0
     var barViews: [UIView] = []
