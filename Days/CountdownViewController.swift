@@ -103,7 +103,7 @@ class CountdownViewController: UIViewController {
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
                 secondaryLabel.text = "Starts in \(outsideString)"
             case .running:
-                mainLabel.text = "Day \(model.completedDays!)"
+                mainLabel.text = "Day \(model.currentDay!)"
                 let daysString = Utils.daysString(from: model.remainingDays!)
                 secondaryLabel.text = "\(daysString) left of \(model.totalDays!)"
             case .ended:

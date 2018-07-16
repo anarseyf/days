@@ -40,7 +40,7 @@ class TimerModel: NSObject, NSCoding {
 
     var totalDays: Int? {
         if (state == .invalid) { return nil }
-        return Int(floor(totalInterval! / Double(Utils.secondsPerDay))) // TODO - daylight savings, time zone changes
+        return Int(ceil(totalInterval! / Double(Utils.secondsPerDay))) // TODO - daylight savings, time zone changes
     }
 
     var currentDay: Int? { // TODO - negative if start is in future
@@ -51,7 +51,7 @@ class TimerModel: NSObject, NSCoding {
 
         let now = Date()
         let elapsedInterval = now.timeIntervalSince(startDate!)
-        let result = Int(floor(elapsedInterval / Double(Utils.secondsPerDay)))
+        let result = Int(ceil(elapsedInterval / Double(Utils.secondsPerDay)))
 
         return result
     }
@@ -136,15 +136,14 @@ class TimerModel: NSObject, NSCoding {
     override init() {
     }
 
-    static func adjustedDate(from date: Date?) -> Date? {
+    static func dateFloor(from date: Date?) -> Date? {
 
         guard let date = date else { return nil }
 
         var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
-        components.day = components.day! + 1
         components.hour = 0
         components.minute = 0
-        components.second = -1 // 11:59:59PM
+        components.second = 0
         return components.date
     }
 }

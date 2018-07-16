@@ -29,8 +29,9 @@ class DaysSelectorViewController: UIViewController {
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
-            let startDate = model.startDate ?? Date()
-            model.startDate = startDate
+            if (model.startDate == nil) {
+                model.startDate = Date()
+            }
             updateTargetDate()
             updateProvisionalUI()
         }
@@ -41,7 +42,6 @@ class DaysSelectorViewController: UIViewController {
             return Int(selectedInterval / Double(Utils.secondsPerDay))
         }
     }
-
 
     // MARK: - Outlets
 
@@ -232,33 +232,25 @@ class DaysSelectorViewController: UIViewController {
 
     func selectStartOption(_ index: Int, animated: Bool = false) {
 
-        let option = startOptions[index]
-        model.startDate = option.date
-        updateTargetDate()
-        updateProvisionalUI() // TODO - this kind of UI update should be in one place, probably layoutSubviews()
-
-        let size = scrollView.contentSize
-        let itemWidth = CGFloat(size.width) / CGFloat(startOptions.count)
-        let offset = CGPoint(x: itemWidth * CGFloat(index), y: 0)
-        scrollView.setContentOffset(offset, animated: true)
-
-        for (i, view) in circlesView.subviews.enumerated() {
-            view.backgroundColor = (i == index ? UIColor.darkGray : UIColor.white)
-        }
-
         selectedStartOptionIndex = index
+
+        let option = startOptions[index]
+        let adjusted = TimerModel.dateFloor(from: option.date)
+
+        let formatter = Utils.shared.dateTimeFormatter
+        let aStr = formatter.string(from: option.date)
+        let bStr = (adjusted == nil ? "-" : formatter.string(from: adjusted!))
+        print("NEW START: \(aStr)\n  ADJUSTED: \(bStr)")
+
+        model.startDate = adjusted
+        updateTargetDate()
+
+        updateProvisionalUI() // TODO - this kind of UI update should be in one place, probably layoutSubviews()
+        updateScrollView()
     }
 
     private func updateTargetDate() {
-        let target = Date(timeInterval: selectedInterval, since: model.startDate!)
-
-        let adjustedTarget = TimerModel.adjustedDate(from: target)
-        let formatter = Utils.shared.dateTimeFormatter
-        let aStr = formatter.string(from: target)
-        let bStr = (adjustedTarget == nil ? "-" : formatter.string(from: adjustedTarget!))
-        print("NEW TARGET: \(aStr)\n  ADJUSTED: \(bStr)")
-
-        model.targetDate = adjustedTarget
+        model.targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
     }
 
     private func updateProvisionalUI() {
@@ -272,6 +264,17 @@ class DaysSelectorViewController: UIViewController {
         if (model.targetDate != nil) {
             let isPast = (model.targetDate! < Date())
             provisionalDateLabel.textColor = (isPast ? UIColor.red : UIColor.darkText)
+        }
+    }
+
+    func updateScrollView() {
+        let size = scrollView.contentSize
+        let itemWidth = CGFloat(size.width) / CGFloat(startOptions.count)
+        let offset = CGPoint(x: itemWidth * CGFloat(selectedStartOptionIndex), y: 0)
+        scrollView.setContentOffset(offset, animated: true)
+
+        for (index, view) in circlesView.subviews.enumerated() {
+            view.backgroundColor = (index == selectedStartOptionIndex ? UIColor.darkGray : UIColor.white)
         }
     }
 
