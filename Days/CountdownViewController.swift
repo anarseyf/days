@@ -21,6 +21,7 @@ class CountdownViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
+    @IBOutlet weak var settingsButton: UIButton!
 
     // MARK: - User Actions
 
@@ -52,6 +53,7 @@ class CountdownViewController: UIViewController {
         assert(model != nil, "Model must be set when presenting the Countdown view controller")
 
         configureProgressView()
+        settingsButton.alpha = 0.6 // TODO - replace image and remove
 
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter

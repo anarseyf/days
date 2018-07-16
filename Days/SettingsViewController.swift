@@ -17,21 +17,12 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var timePicker: UIDatePicker!
 
-    @IBAction func dismiss(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil) // TODO - remove
-    }
-
     @IBAction func doneButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
     @IBAction func timeChanged(_ sender: UIDatePicker) {
-        let formatter = Utils.shared.dateTimeFormatter
-        print(formatter.string(from: sender.date))
-
-        if model != nil {
-            NotificationsHandler.schedule(with: model!, after: 1.0)
-        }
+        rescheduleNotification()
     }
 
     override func viewDidLoad() {
@@ -52,6 +43,16 @@ class SettingsViewController: UIViewController {
     func updateDetailsLabels() {
         startLabel.text = (model?.startDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.startDate!))
         targetLabel.text = (model?.targetDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.targetDate!))
+    }
+
+    func rescheduleNotification() {
+        guard let model = model else { return }
+
+        let notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
+                                                      withTimeOverride: timePicker.date)
+
+        NotificationsHandler.reset()
+        NotificationsHandler.schedule(on: notificationDate, with: model)
     }
 
     func loop() {

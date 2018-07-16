@@ -11,8 +11,6 @@ import UserNotifications
 
 class NotificationsHandler: NSObject {
 
-    static let notificationDelay: TimeInterval = 1.0
-
     static func requestAuth() {
         let options: UNAuthorizationOptions = [.alert, .badge]
         let notificationCenter = UNUserNotificationCenter.current()
@@ -23,7 +21,7 @@ class NotificationsHandler: NSObject {
     }
 
     static func reset() {
-        let center = UNUserNotificationCenter.current()
+        let center = UNUserNotificationCenter.current() // TODO
         center.removeAllDeliveredNotifications()
         center.removeAllPendingNotificationRequests()
 
@@ -34,14 +32,27 @@ class NotificationsHandler: NSObject {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
-    static func schedule(with model: TimerModel, after interval: TimeInterval) {
+    static func schedule(on date: Date, with model: TimerModel) {
+
+        if (model.state == .invalid) {
+            print("Invalid model, cannot schedule notification")
+            return
+        }
+
+        let formatter = Utils.shared.dateOnlyFormatter
+        let now = Date()
+        let interval = date.timeIntervalSince(now)
+        if interval < 0 {
+            print("\(formatter.string(from: date)) is in the past, notification not scheduled")
+            return
+        }
+
         let content = UNMutableNotificationContent()
-        content.title = model.title ?? "Timer expired"
-        content.body = (model.targetDate == nil ? "" : Utils.shared.dateTimeFormatter.string(from: model.targetDate!))
+        content.title = model.title ?? Utils.daysString(from: model.totalDays!)
+        content.body = formatter.string(from: date)
         content.badge = 1
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: (interval + notificationDelay),
-                                                        repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
 
         let request = UNNotificationRequest(identifier: "notificationId",
                                             content: content,
@@ -49,5 +60,7 @@ class NotificationsHandler: NSObject {
 
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.add(request, withCompletionHandler: nil)
+
+        print("Scheduled for \(Utils.shared.dateTimeFormatter.string(from: date))")
     }
 }

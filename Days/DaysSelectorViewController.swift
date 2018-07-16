@@ -89,9 +89,18 @@ class DaysSelectorViewController: UIViewController {
     }
 
     @IBAction func startButton(_ sender: UIButton) {
+
+        if (model.state == .invalid) {
+            print("Invalid model")
+            return
+        }
+
         model.isActive = true
         save()
-        NotificationsHandler.schedule(with: model, after: selectedInterval)
+
+        NotificationsHandler.reset()
+        let notificationDate = Utils.notificationDate(fromTarget: model.targetDate!)
+        NotificationsHandler.schedule(on: notificationDate, with: model)
     }
 
     // MARK: - Methods
@@ -120,7 +129,7 @@ class DaysSelectorViewController: UIViewController {
         formatter.dateFormat = "EE, MMM d"
         let now = Date()
         let calendar = Calendar.current
-        let nowComponents = calendar.dateComponents(in: TimeZone.current, from: now)
+        let nowComponents = calendar.dateComponents(in: .current, from: now)
         let day = nowComponents.day!
 
         func replaceTitle(_ title: String, forOffset offset: Int) -> String {

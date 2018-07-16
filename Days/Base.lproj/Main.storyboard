@@ -281,13 +281,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Ndg-VB-swV"/>
                     </view>
-                    <navigationItem key="navigationItem" id="TgA-sq-n0m">
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="o9Z-rn-xmi">
-                            <connections>
-                                <action selector="dismiss:" destination="Zqk-ac-2ag" id="Mwh-nb-z4O"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="TgA-sq-n0m"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -350,7 +344,7 @@
                                     <segue destination="EuO-DO-ptr" kind="embed" id="Ep2-cC-2yR"/>
                                 </connections>
                             </containerView>
-                            <button contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ceV-uP-aoI">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ceV-uP-aoI">
                                 <rect key="frame" x="30" y="496" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="LKf-bW-VOZ"/>
@@ -387,6 +381,7 @@
                     <connections>
                         <outlet property="mainLabel" destination="KiU-Cb-jbz" id="fCX-bn-anF"/>
                         <outlet property="secondaryLabel" destination="GXz-te-ebb" id="2lQ-nz-ccn"/>
+                        <outlet property="settingsButton" destination="ceV-uP-aoI" id="k8A-FL-uvo"/>
                         <outlet property="titleLabel" destination="hHZ-wk-gA6" id="An4-S9-VkS"/>
                     </connections>
                 </viewController>

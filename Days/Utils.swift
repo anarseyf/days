@@ -9,6 +9,10 @@
 import UIKit
 
 class Utils {
+
+    private static let defaultNotificationHour = 7
+    private static let defaultNotificationMinute = 0
+
     static let secondsPerDay = 60 * 60 * 24
     static let startDateBracket = Double(secondsPerDay) * 366.0
     static let minDays = 1
@@ -38,5 +42,24 @@ class Utils {
     static func daysString(from days: Int, withNumber: Bool = true) -> String {
         let daysString = (days == 1 ? "day" : "days")
         return withNumber ? "\(days) \(daysString)" : daysString
+    }
+
+    static func notificationDate(fromTarget targetDate: Date, withTimeOverride overrideDate: Date? = nil) -> Date {
+
+        var targetComponents = Calendar.current.dateComponents(in: .current, from: targetDate)
+        targetComponents.day = targetComponents.day! - 1
+        targetComponents.second = 0
+
+        if (overrideDate == nil) {
+            targetComponents.hour = defaultNotificationHour
+            targetComponents.minute = defaultNotificationMinute
+        }
+        else {
+            let overrideComponents = Calendar.current.dateComponents(in: .current, from: overrideDate!)
+            targetComponents.hour = overrideComponents.hour
+            targetComponents.minute = overrideComponents.minute
+
+        }
+        return targetComponents.date ?? targetDate
     }
 }
