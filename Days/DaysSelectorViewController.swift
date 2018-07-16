@@ -33,7 +33,6 @@ class DaysSelectorViewController: UIViewController {
                 model.startDate = Date()
             }
             updateTargetDate()
-            updateProvisionalUI()
         }
     }
 
@@ -230,7 +229,7 @@ class DaysSelectorViewController: UIViewController {
 
     func setNumDays(_ numDays: Int) {
         daysInput.text = String(numDays)
-        daysLabel.text = Utils.daysString(from: numDays)
+        daysLabel.text = Utils.daysString(from: numDays, withNumber: false)
         selectedInterval = Double(numDays * Utils.secondsPerDay)
     }
 
@@ -249,26 +248,11 @@ class DaysSelectorViewController: UIViewController {
         model.startDate = adjusted
         updateTargetDate()
 
-        updateProvisionalUI() // TODO - this kind of UI update should be in one place, probably layoutSubviews()
         updateScrollView()
     }
 
     private func updateTargetDate() {
         model.targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
-    }
-
-    private func updateProvisionalUI() {
-
-        let formatter = Utils.shared.dateTimeFormatter
-        let startString = (model.startDate == nil ? "-" : formatter.string(from: model.startDate!))
-        let targetString = (model.targetDate == nil ? "-" : formatter.string(from: model.targetDate!))
-
-        provisionalDateLabel.text = "\(startString)\n\(targetString)"
-
-        if (model.targetDate != nil) {
-            let isPast = (model.targetDate! < Date())
-            provisionalDateLabel.textColor = (isPast ? UIColor.red : UIColor.darkText)
-        }
     }
 
     func updateScrollView() {
@@ -286,7 +270,6 @@ class DaysSelectorViewController: UIViewController {
         setStartOptionToday()
         setNumDays(1)
         titleInput.text = "" // TODO - do this in view update methods
-        updateProvisionalUI()
 
         let center = UNUserNotificationCenter.current()
         center.removeAllDeliveredNotifications()

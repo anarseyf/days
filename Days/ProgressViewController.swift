@@ -10,6 +10,12 @@ import UIKit
 
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
+    // TODO - enum with associated values?
+    let barColorExcluded = UIColor.white.withAlphaComponent(0.0)
+    let barColorPast = UIColor.darkGray
+    let barColorCurrent = UIColor.red
+    let barColorFuture = UIColor.lightGray.withAlphaComponent(0.4)
+
     let barsPerCell = ProgressCell.barsPerCell
     let cellWidth: CGFloat = 60.0
     let cellSpacing: CGFloat = 10.0
@@ -48,10 +54,6 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        view.layer.borderWidth = 1.0
-//        view.layer.borderColor = UIColor.darkGray.cgColor
-
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -92,20 +94,25 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
 
         let bars = [cell.bar1, cell.bar2, cell.bar3, cell.bar4, cell.bar5]
         for (index, bar) in bars.enumerated() {
+
             let i = index + 1
             if (i > datum.totalDays) { // invisible
-                let transparentColor = UIColor.white.withAlphaComponent(0.0)
-                bar?.backgroundColor = transparentColor
-                bar?.layer.borderColor = UIColor.green.cgColor
+                bar?.backgroundColor = barColorExcluded
             }
             else if (i == datum.currentDayRelative) { // current day
-                bar?.backgroundColor = UIColor.red
+                bar?.backgroundColor = barColorFuture
+                UIView.animate(withDuration: 1.3,
+                               delay: 0.0,
+                               options: [.repeat, .autoreverse],
+                               animations: {
+                                    bar?.backgroundColor = self.barColorCurrent },
+                               completion: nil)
             }
             else if (i > datum.currentDayRelative) { // future day
-                bar?.backgroundColor = UIColor.lightGray.withAlphaComponent(0.4)
+                bar?.backgroundColor = barColorFuture
             }
             else { // past day
-                bar?.backgroundColor = UIColor.darkGray
+                bar?.backgroundColor = barColorPast
             }
         }
 

@@ -34,7 +34,8 @@ class Utils {
         intervalFormatter.unitsStyle = .abbreviated
     }
 
-    static func daysString(from days: Int) -> String {
-        return (days == 1 ? "\(days) day" : "\(days) days")
+    static func daysString(from days: Int, withNumber: Bool = true) -> String {
+        let daysString = (days == 1 ? "day" : "days")
+        return withNumber ? "\(days) \(daysString)" : daysString
     }
 }
