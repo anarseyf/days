@@ -30,7 +30,7 @@ class ProgressCell: UICollectionViewCell {
     var datum: ProgressCell.Datum?
 
     private let barWidth: CGFloat = 6.0
-    private let horizontalMargin: CGFloat = 10.0
+    private let horizontalMargin: CGFloat = 8.0
 
     override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)

@@ -25,16 +25,16 @@ class SettingsViewController: UIViewController {
     }
 
     @IBAction func timeChanged(_ sender: UIDatePicker) {
+        updateNotificationDate()
         scheduleNotification()
         updateNotifyUI()
     }
 
-    @IBAction func notifySwitch(_ sender: UISwitch) {
+    @IBAction func notifyToggled(_ sender: UISwitch) {
         guard let model = model else { return }
 
         if (sender.isOn) {
-            model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
-                                                            withTimeOverride: timePicker.date)
+            updateNotificationDate()
         }
         else {
             model.notificationDate = nil
@@ -43,6 +43,13 @@ class SettingsViewController: UIViewController {
         scheduleNotification()
         model.save()
         updateNotifyUI()
+    }
+
+    private func updateNotificationDate() {
+        guard let model = model else { return }
+
+        model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
+                                                        withTimeOverride: timePicker.date)
     }
     
     override func viewDidLoad() {
@@ -84,8 +91,15 @@ class SettingsViewController: UIViewController {
     }
 
     func updateLabels() {
-        startLabel.text = (model?.startDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.startDate!))
-        targetLabel.text = (model?.targetDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.targetDate!))
+        guard let model = model else { return }
+
+        let formatter = Utils.shared.dateOnlyFormatter
+
+        startLabel.text = formatter.string(from: model.startDate!)
+
+        var lastDayComponents = Calendar.current.dateComponents(in: .current, from: model.targetDate!)
+        lastDayComponents.second = -1
+        targetLabel.text = formatter.string(from: lastDayComponents.date!)
     }
 
     func unscheduleExisting() {

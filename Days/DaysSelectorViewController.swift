@@ -95,11 +95,14 @@ class DaysSelectorViewController: UIViewController {
         }
 
         model.isActive = true
-        model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!)
-        model.save()
-
+        let notificationDate = Utils.notificationDate(fromTarget: model.targetDate!)
+        let now = Date()
         NotificationsHandler.reset()
-        NotificationsHandler.schedule(on: model.notificationDate!, with: model)
+        if now < notificationDate {
+            model.notificationDate = notificationDate
+            NotificationsHandler.schedule(on: notificationDate, with: model)
+        }
+        model.save()
     }
 
     // MARK: - Methods
