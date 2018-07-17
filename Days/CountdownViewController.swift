@@ -71,6 +71,7 @@ class CountdownViewController: UIViewController {
     func startLoopTimer() {
 
         func loopHandler(timer: Timer?) -> Void {
+//            print("Countdown loop")
 
             guard let model = model else {
                 print("Loop: No model")

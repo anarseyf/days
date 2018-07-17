@@ -18,16 +18,33 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var timePicker: UIDatePicker!
     @IBOutlet weak var notifyLabel: UILabel!
-    
+    @IBOutlet weak var notifySwitch: UISwitch!
+
     @IBAction func doneButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
     @IBAction func timeChanged(_ sender: UIDatePicker) {
-        rescheduleNotification()
-        updateNotifyLabel()
+        scheduleNotification()
+        updateNotifyUI()
     }
 
+    @IBAction func notifySwitch(_ sender: UISwitch) {
+        guard let model = model else { return }
+
+        if (sender.isOn) {
+            model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
+                                                            withTimeOverride: timePicker.date)
+        }
+        else {
+            model.notificationDate = nil
+        }
+
+        scheduleNotification()
+        model.save()
+        updateNotifyUI()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -39,12 +56,8 @@ class SettingsViewController: UIViewController {
 
         self.view.insertSubview(blurEffectView, at: 0)
 
-        updateDetailsLabels()
-        updateNotifyLabel()
-
-        if let date = model?.notificationDate {
-            timePicker.date = date
-        }
+        updateLabels()
+        updateNotifyUI()
 
         startLoopTimer()
     }
@@ -55,32 +68,45 @@ class SettingsViewController: UIViewController {
         }
     }
 
-    func updateNotifyLabel() {
+    func updateNotifyUI() {
         if let date = model?.notificationDate {
             let formatter = Utils.shared.dateOnlyFormatter
             notifyLabel.text = "Notify on \(formatter.string(from: date)) at:"
+            notifySwitch.isOn = true
+            timePicker.isHidden = false
+            timePicker.date = date
+        }
+        else {
+            notifyLabel.text = "Notification off"
+            notifySwitch.isOn = false
+            timePicker.isHidden = true
         }
     }
 
-    func updateDetailsLabels() {
+    func updateLabels() {
         startLabel.text = (model?.startDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.startDate!))
         targetLabel.text = (model?.targetDate == nil ? "-" : Utils.shared.dateTimeFormatter.string(from: model!.targetDate!))
     }
 
-    func rescheduleNotification() {
+    func unscheduleExisting() {
+        NotificationsHandler.reset()
+    }
+
+    func scheduleNotification() {
         guard let model = model else { return }
 
-        let notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
-                                                      withTimeOverride: timePicker.date)
+        unscheduleExisting()
 
-        model.notificationDate = notificationDate
-        NotificationsHandler.reset()
-        NotificationsHandler.schedule(on: notificationDate, with: model)
+        if let date = model.notificationDate {
+            NotificationsHandler.schedule(on: date, with: model)
+        }
     }
 
     func startLoopTimer() {
 
         func loopHandler(timer: Timer?) -> Void {
+//            print("Settings loop")
+
             let formatter = Utils.shared.intervalFormatter
 
             switch model!.state {

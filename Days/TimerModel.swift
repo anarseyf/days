@@ -14,6 +14,7 @@ class TimerModel: NSObject, NSCoding {
         case invalid, willRun, running, ended
     }
 
+    static let userDefaultsKey = "timerModel"
     var startDate: Date?
     var targetDate: Date?
     var notificationDate: Date?
@@ -120,6 +121,33 @@ class TimerModel: NSObject, NSCoding {
         startDate = nil
         notificationDate = nil
         title = nil
+    }
+
+    func save() {
+        let defaults = UserDefaults.standard
+        let key = TimerModel.userDefaultsKey
+        if (targetDate == nil) {
+            print("Removing \(key)")
+            defaults.removeObject(forKey: key)
+        }
+        else {
+            print("Saving \(key):\n\(self.description)")
+            let encoded = NSKeyedArchiver.archivedData(withRootObject: self)
+            defaults.set(encoded, forKey: key)
+        }
+    }
+
+    static func restore() -> TimerModel? {
+        let defaults = UserDefaults.standard
+        if let encoded = defaults.data(forKey: TimerModel.userDefaultsKey),
+            let restoredModel = NSKeyedUnarchiver.unarchiveObject(with: encoded) as? TimerModel {
+            print("Restored \(TimerModel.userDefaultsKey):\n\(restoredModel)")
+            return restoredModel
+        }
+        else {
+            print("Nothing restored")
+            return nil
+        }
     }
 
     func encode(with coder: NSCoder) {

@@ -18,7 +18,6 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Properties
 
-    let userDefaultsKey = "timerModel"
     let startOffsetPast = -7
     let startOffsetFuture = 7
     let arrowButtonWidth: CGFloat = 50.0
@@ -97,7 +96,7 @@ class DaysSelectorViewController: UIViewController {
 
         model.isActive = true
         model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!)
-        save()
+        model.save()
 
         NotificationsHandler.reset()
         NotificationsHandler.schedule(on: model.notificationDate!, with: model)
@@ -217,7 +216,7 @@ class DaysSelectorViewController: UIViewController {
         viewController.model = model
         viewController.dismissHandler = { () in
             self.model.reset()
-            self.save()
+            self.model.save()
             self.resetUI()
         }
     }
@@ -275,31 +274,9 @@ class DaysSelectorViewController: UIViewController {
         NotificationsHandler.reset()
     }
 
-    private func save() {
-        let defaults = UserDefaults.standard
-        if (model.targetDate == nil) {
-            print("Removing \(userDefaultsKey)")
-            defaults.removeObject(forKey: userDefaultsKey)
-        }
-        else {
-            print("Saving \(userDefaultsKey):\n\(model.description)")
-            let encoded = NSKeyedArchiver.archivedData(withRootObject: model)
-            defaults.set(encoded, forKey: userDefaultsKey)
-        }
-    }
-
     private func restore() {
-        let defaults = UserDefaults.standard
-        if let encoded = defaults.data(forKey: userDefaultsKey),
-            let restoredModel = NSKeyedUnarchiver.unarchiveObject(with: encoded) as? TimerModel {
-            model = restoredModel
-            print("Restored \(userDefaultsKey):\n\(model)")
-
-            presentCountdownIfNeeded()
-        }
-        else {
-            print("Nothing restored")
-        }
+        model = TimerModel.restore() ?? TimerModel()
+        presentCountdownIfNeeded()
     }
 
     private func setStartOptionToday() {
