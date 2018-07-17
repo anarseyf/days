@@ -11,6 +11,7 @@ import UIKit
 class SettingsViewController: UIViewController {
 
     var model: TimerModel?
+    var loopTimer: Timer? = nil
 
     @IBOutlet weak var remainingIntervalLabel: UILabel!
     @IBOutlet weak var startLabel: UILabel!
@@ -38,12 +39,19 @@ class SettingsViewController: UIViewController {
 
         self.view.insertSubview(blurEffectView, at: 0)
 
-        remainingIntervalLabel.text = ""
         updateDetailsLabels()
         updateNotifyLabel()
 
         if let date = model?.notificationDate {
             timePicker.date = date
+        }
+
+        startLoopTimer()
+    }
+
+    override func willMove(toParent parent: UIViewController?) {
+        if parent == nil {
+            loopTimer?.invalidate()
         }
     }
 
@@ -70,19 +78,26 @@ class SettingsViewController: UIViewController {
         NotificationsHandler.schedule(on: notificationDate, with: model)
     }
 
-    func loop() {
+    func startLoopTimer() {
 
-        let formatter = Utils.shared.intervalFormatter
+        func loopHandler(timer: Timer?) -> Void {
+            let formatter = Utils.shared.intervalFormatter
 
-        switch model!.state {
-        case .invalid:
-            remainingIntervalLabel.text = "invalid"
-        case .willRun:
-            fallthrough
-        case .running:
-            remainingIntervalLabel.text = formatter.string(from: model!.remainingInterval!)
-        case .ended:
-            remainingIntervalLabel.text = "-"
+            switch model!.state {
+            case .invalid:
+                remainingIntervalLabel.text = "(invalid)"
+            case .willRun:
+                remainingIntervalLabel.text = "(not started)"
+            case .running:
+                remainingIntervalLabel.text = formatter.string(from: model!.remainingInterval!)
+            case .ended:
+                remainingIntervalLabel.text = "(ended)"
+            }
         }
+        loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
+                                         repeats: true,
+                                         block: loopHandler)
+
+        loopHandler(timer: loopTimer)
     }
 }

@@ -34,7 +34,7 @@ class Utils {
         dateTimeFormatter.dateStyle = .medium
         dateTimeFormatter.timeStyle = .medium
 
-        intervalFormatter.allowedUnits = [.day, .hour, .minute]
+        intervalFormatter.allowedUnits = [.day, .hour, .minute, .second] // TODO - remove .second
         intervalFormatter.zeroFormattingBehavior = [.dropLeading, .pad]
         intervalFormatter.unitsStyle = .abbreviated
     }

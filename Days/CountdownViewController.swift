@@ -104,6 +104,6 @@ class CountdownViewController: UIViewController {
                                          repeats: true,
                                          block: loopHandler)
 
-        loopHandler(timer: nil) // Otherwise it takes a second for the views to update // TODO - review if still needed
+        loopHandler(timer: loopTimer) // Otherwise it takes a second for the views to update // TODO - review if still needed
     }
 }
