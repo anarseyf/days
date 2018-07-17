@@ -29,7 +29,9 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
             if model.state == .invalid { return }
 
             var unaccountedTotal = model.totalDays!
-            let currentDay = model.currentDay ?? 0
+            let currentDay = ( model.state == .willRun ? 0
+                           : ( model.state == .running ? model.currentDay!
+                           : model.totalDays! + 1 ))
             var currentDayRelative = currentDay
 
             print("total: \(unaccountedTotal), current(absolute): \(currentDay)")

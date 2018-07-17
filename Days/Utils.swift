@@ -14,7 +14,6 @@ class Utils {
     private static let defaultNotificationMinute = 0
 
     static let secondsPerDay = 60 * 60 * 24
-    static let startDateBracket = Double(secondsPerDay) * 366.0
     static let minDays = 1
     static let maxDays = 366
 
@@ -34,7 +33,7 @@ class Utils {
         dateTimeFormatter.dateStyle = .medium
         dateTimeFormatter.timeStyle = .medium
 
-        intervalFormatter.allowedUnits = [.day, .hour, .minute, .second] // TODO - remove .second
+        intervalFormatter.allowedUnits = [.day, .hour, .minute]
         intervalFormatter.zeroFormattingBehavior = [.dropLeading, .pad]
         intervalFormatter.unitsStyle = .abbreviated
     }

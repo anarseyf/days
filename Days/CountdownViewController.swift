@@ -58,7 +58,6 @@ class CountdownViewController: UIViewController {
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter
         mainLabel.text = ""
-        titleLabel.text = model!.title
         startLoopTimer()
     }
 
@@ -79,9 +78,10 @@ class CountdownViewController: UIViewController {
             }
 
             let state = model.state
-
             let formatter = Utils.shared.intervalFormatter
-            
+
+            titleLabel.isHidden = (state != .running)
+
             // Main view
             switch state {
             case .invalid:

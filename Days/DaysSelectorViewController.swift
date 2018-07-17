@@ -73,6 +73,7 @@ class DaysSelectorViewController: UIViewController {
     @IBAction func doneButton(_ sender: UIButton) {
         daysInput.resignFirstResponder()
         doneButton.isHidden = true
+        // TODO - show/hide plus/minus buttons here
     }
 
     @IBAction func previousStartOptionButton(_ sender: UIButton) {
@@ -224,7 +225,7 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    private func presentCountdownIfNeeded() {
+    private func presentCountdown() {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "countdownViewController")
         if let countdownViewController = viewController as? CountdownViewController {
             prepareForPresenting(countdownViewController)
@@ -278,8 +279,11 @@ class DaysSelectorViewController: UIViewController {
     }
 
     private func restore() {
-        model = TimerModel.restore() ?? TimerModel()
-        presentCountdownIfNeeded()
+        let restoredModel = TimerModel.restore()
+        if (restoredModel != nil) {
+            model = restoredModel!
+            presentCountdown()
+        }
     }
 
     private func setStartOptionToday() {
