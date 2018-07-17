@@ -259,7 +259,7 @@
                                     <action selector="doneButton:" destination="Zqk-ac-2ag" eventType="touchUpInside" id="pW2-Mg-p7P"/>
                                 </connections>
                             </button>
-                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="yYX-9l-Y7I">
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="yYX-9l-Y7I">
                                 <rect key="frame" x="0.0" y="263" width="320" height="156"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="553465694.03143203">
@@ -269,6 +269,13 @@
                                     <action selector="timeChanged:" destination="Zqk-ac-2ag" eventType="valueChanged" id="lba-2K-qXl"/>
                                 </connections>
                             </datePicker>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notify at" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="slM-ZO-bVg">
+                                <rect key="frame" x="30" y="244" width="260" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -285,6 +292,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="notifyLabel" destination="slM-ZO-bVg" id="Baf-vj-CvM"/>
                         <outlet property="remainingIntervalLabel" destination="4ee-gB-Xau" id="gxc-k2-cZR"/>
                         <outlet property="startLabel" destination="l53-6A-JxC" id="GRN-oX-08z"/>
                         <outlet property="targetLabel" destination="PtC-cL-Voj" id="m6G-Ei-YCU"/>

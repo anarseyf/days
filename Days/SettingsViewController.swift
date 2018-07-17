@@ -16,13 +16,15 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var startLabel: UILabel!
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var timePicker: UIDatePicker!
-
+    @IBOutlet weak var notifyLabel: UILabel!
+    
     @IBAction func doneButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
     @IBAction func timeChanged(_ sender: UIDatePicker) {
         rescheduleNotification()
+        updateNotifyLabel()
     }
 
     override func viewDidLoad() {
@@ -38,6 +40,18 @@ class SettingsViewController: UIViewController {
 
         remainingIntervalLabel.text = ""
         updateDetailsLabels()
+        updateNotifyLabel()
+
+        if let date = model?.notificationDate {
+            timePicker.date = date
+        }
+    }
+
+    func updateNotifyLabel() {
+        if let date = model?.notificationDate {
+            let formatter = Utils.shared.dateOnlyFormatter
+            notifyLabel.text = "Notify on \(formatter.string(from: date)) at:"
+        }
     }
 
     func updateDetailsLabels() {
@@ -51,6 +65,7 @@ class SettingsViewController: UIViewController {
         let notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
                                                       withTimeOverride: timePicker.date)
 
+        model.notificationDate = notificationDate
         NotificationsHandler.reset()
         NotificationsHandler.schedule(on: notificationDate, with: model)
     }

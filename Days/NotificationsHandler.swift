@@ -59,7 +59,9 @@ class NotificationsHandler: NSObject {
                                             trigger: trigger)
 
         let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.add(request, withCompletionHandler: nil)
+        notificationCenter.add(request, withCompletionHandler: { error in
+            model.notificationDate = (error == nil ? date : nil)
+        })
 
         print("Scheduled for \(Utils.shared.dateTimeFormatter.string(from: date))")
     }

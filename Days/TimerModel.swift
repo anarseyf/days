@@ -16,6 +16,7 @@ class TimerModel: NSObject, NSCoding {
 
     var startDate: Date?
     var targetDate: Date?
+    var notificationDate: Date?
     var isActive = false
     var title: String?
     
@@ -103,24 +104,28 @@ class TimerModel: NSObject, NSCoding {
         formatter.timeStyle = .short
         let targetString = (targetDate == nil ? "(-)" : formatter.string(from: targetDate!))
         let startString = (startDate == nil ? "(-)" : formatter.string(from: startDate!))
+        let notificationString = (notificationDate == nil ? "(-)" : formatter.string(from: notificationDate!))
         let titleString = title ?? "(-)"
 
         return "state: \(state) (\(isActive ? "ACTIVE" : "INACTIVE"))"
             + "\n\ttitle: \(titleString)"
             + "\n\tstart: \(startString)"
             + "\n\ttarget: \(targetString)"
+            + "\n\tnotification: \(notificationString)"
     }
 
     func reset() {
         isActive = false
         targetDate = nil
         startDate = nil
+        notificationDate = nil
         title = nil
     }
 
     func encode(with coder: NSCoder) {
         coder.encode(startDate, forKey: "startDate")
         coder.encode(targetDate, forKey: "targetDate")
+        coder.encode(notificationDate, forKey: "notificationDate")
         coder.encode(title, forKey: "title")
         coder.encode(isActive, forKey: "isActive")
     }
@@ -129,6 +134,7 @@ class TimerModel: NSObject, NSCoding {
         super.init()
         self.startDate = decoder.decodeObject(forKey: "startDate") as? Date
         self.targetDate = decoder.decodeObject(forKey: "targetDate") as? Date
+        self.notificationDate = decoder.decodeObject(forKey: "notificationDate") as? Date
         self.title = decoder.decodeObject(forKey: "title") as? String
         self.isActive = decoder.decodeBool(forKey: "isActive")
     }
@@ -136,7 +142,7 @@ class TimerModel: NSObject, NSCoding {
     override init() {
     }
 
-    static func dateFloor(from date: Date?) -> Date? {
+    static func dateFloor(from date: Date?) -> Date? { // TODO - move to Utils?
 
         guard let date = date else { return nil }
 

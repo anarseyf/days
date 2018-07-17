@@ -96,11 +96,11 @@ class DaysSelectorViewController: UIViewController {
         }
 
         model.isActive = true
+        model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!)
         save()
 
         NotificationsHandler.reset()
-        let notificationDate = Utils.notificationDate(fromTarget: model.targetDate!)
-        NotificationsHandler.schedule(on: notificationDate, with: model)
+        NotificationsHandler.schedule(on: model.notificationDate!, with: model)
     }
 
     // MARK: - Methods
@@ -271,21 +271,18 @@ class DaysSelectorViewController: UIViewController {
     private func resetUI() {
         setStartOptionToday()
         setNumDays(1)
-        titleInput.text = "" // TODO - do this in view update methods
+        titleInput.text = "" // TODO - do this in view update methods / property observer or delegate on model?
         NotificationsHandler.reset()
     }
 
     private func save() {
         let defaults = UserDefaults.standard
         if (model.targetDate == nil) {
-            print("Removing")
+            print("Removing \(userDefaultsKey)")
             defaults.removeObject(forKey: userDefaultsKey)
         }
         else {
-            let tDate = model.targetDate!
-            let cDate = model.startDate!
-            print("Saving: \(Utils.shared.dateTimeFormatter.string(from: tDate)) >> \(Utils.shared.dateTimeFormatter.string(from: cDate))")
-
+            print("Saving \(userDefaultsKey):\n\(model.description)")
             let encoded = NSKeyedArchiver.archivedData(withRootObject: model)
             defaults.set(encoded, forKey: userDefaultsKey)
         }
@@ -296,7 +293,7 @@ class DaysSelectorViewController: UIViewController {
         if let encoded = defaults.data(forKey: userDefaultsKey),
             let restoredModel = NSKeyedUnarchiver.unarchiveObject(with: encoded) as? TimerModel {
             model = restoredModel
-            print("Restored: \(model)")
+            print("Restored \(userDefaultsKey):\n\(model)")
 
             presentCountdownIfNeeded()
         }
