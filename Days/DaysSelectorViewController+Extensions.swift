@@ -24,11 +24,9 @@ extension DaysSelectorViewController : UNUserNotificationCenterDelegate {
 extension DaysSelectorViewController : UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        // TODO - disable Start and re-enable in didEndEditing
         if (textField == daysInput) {
-            doneButton.isHidden = false
-            minusDayButton.isHidden = true
-            plusDayButton.isHidden = true
+            setDoneButtonHidden(false)
+            setIncrementButtonsHidden(true)
         }
 
         return true
@@ -41,12 +39,7 @@ extension DaysSelectorViewController : UITextFieldDelegate {
     }
 
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if (textField == titleInput) {
-            return true
-        }
-        else {
-            return daysInput.text != nil
-        }
+        return daysInput.text != nil
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -59,29 +52,18 @@ extension DaysSelectorViewController : UITextFieldDelegate {
                 isDoneEnabled = (updatedText.count > 0)
             }
 
-            doneButton.isHidden = !isDoneEnabled
-            minusDayButton.isHidden = true
-            plusDayButton.isHidden = true
+            setDoneButtonHidden(!isDoneEnabled)
+            setIncrementButtonsHidden(true)
         }
         return true
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if (textField == titleInput) {
-            model.title = textField.text
-        }
-        else if (textField == daysInput) {
-
-            let text: String = (daysInput.text ?? "").isEmpty ? "1" : daysInput.text!
-            var numDays = Int(text) ?? 1
-
-            numDays = min(max(numDays, Utils.minDays), Utils.maxDays)
-
-            setNumDays(numDays)
-
-            minusDayButton.isHidden = false
-            plusDayButton.isHidden = false
-        }
+        let text: String = (daysInput.text ?? "").isEmpty ? "1" : daysInput.text!
+        var numDays = Int(text) ?? 1
+        numDays = min(max(numDays, Utils.minDays), Utils.maxDays)
+        setNumDays(numDays)
+        setIncrementButtonsHidden(false)
     }
 }
 

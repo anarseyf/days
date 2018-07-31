@@ -51,10 +51,7 @@ class CountdownViewController: UIViewController {
         super.viewDidLoad()
 
         assert(model != nil, "Model must be set when presenting the Countdown view controller")
-
         configureProgressView()
-        settingsButton.alpha = 0.6 // TODO - replace image and remove
-
         navigationItem.hidesBackButton = true
         // TODO - fold into state setter
         mainLabel.text = ""
@@ -62,8 +59,16 @@ class CountdownViewController: UIViewController {
     }
 
     func configureProgressView() {
+
         if let progressVC = children.first as? ProgressViewController {
-            progressVC.model = model
+
+            // if the countdown is for fewer than 5 days, the bars look confusing
+            // (for example: "|||") and there's no point showing them at all.
+            let showProgress = (model?.state != .invalid && model!.totalDays! >= ProgressCell.barsPerCell)
+
+            if (showProgress) {
+                progressVC.model = model
+            }
         }
     }
 
@@ -91,9 +96,8 @@ class CountdownViewController: UIViewController {
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
                 secondaryLabel.text = "starts in \(outsideString)"
             case .running:
-                mainLabel.text = "Day \(model.currentDay!)"
-                let daysString = Utils.daysString(from: model.remainingDays!)
-                secondaryLabel.text = "\(daysString) left of \(model.totalDays!)"
+                mainLabel.text = "DAY\n\(model.currentDay!)"
+                secondaryLabel.text = "\(model.remainingDays!)/\(model.totalDays!) remaining"
             case .ended:
                 let daysString = Utils.daysString(from: model.totalDays!)
                 mainLabel.text = "\(daysString)\ndone"

@@ -29,19 +29,13 @@ class ProgressCell: UICollectionViewCell {
     
     var datum: ProgressCell.Datum?
 
-    private let barWidth: CGFloat = 6.0
-    private let horizontalMargin: CGFloat = 8.0
+    private let barWidth: CGFloat = 1.5
+    private let horizontalMargin: CGFloat = 5.0
 
     override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
 
         if (newSuperview == nil) { return }
-        
-//        print("view: \(self.frame)")
-//        print("superview: \(newSuperview!.frame)")
-
-        self.clipsToBounds = false // TODO - remove
-        self.layer.borderColor = UIColor.lightGray.cgColor
 
         let bars = [bar1, bar2, bar3, bar4, bar5]
         let verticalBarOrigin = CGPoint(x: 0, y: 0)
@@ -55,10 +49,10 @@ class ProgressCell: UICollectionViewCell {
 
             guard let bar = optionalBar else { return }
 
-            let layer = bar.layer
-            layer.cornerRadius = barWidth/2
-            layer.borderWidth = 1.0
-            layer.borderColor = UIColor.white.cgColor
+//            let layer = bar.layer
+//            layer.cornerRadius = barWidth/2
+//            layer.borderWidth = 1.0
+//            layer.borderColor = UIColor.white.cgColor
 
             bar.frame.size = barSize
 
@@ -70,7 +64,7 @@ class ProgressCell: UICollectionViewCell {
                     - barWidth/2
             }
             else { // diagonal
-                bar.frame.size.height = bar.frame.height * 1.2
+                bar.frame.size.height = bar.frame.height * 1.1
                 bar.center = CGPoint(x: self.bounds.width/2,
                                      y: self.bounds.height/2)
                 bar.transform = CGAffineTransform(rotationAngle: .pi * 0.7)

@@ -18,7 +18,7 @@ class TimerModel: NSObject, NSCoding {
     var startDate: Date?
     var targetDate: Date?
     var notificationDate: Date?
-    var isActive = false
+    var isActive = false // TODO - unused
     var title: String?
     
     var state: State {
@@ -174,7 +174,7 @@ class TimerModel: NSObject, NSCoding {
 
         guard let date = date else { return nil }
 
-        var components = Calendar.current.dateComponents(in: TimeZone.current, from: date)
+        var components = Calendar.current.dateComponents(in: .current, from: date)
         components.hour = 0
         components.minute = 0
         components.second = 0

@@ -11,13 +11,13 @@ import UIKit
 class ProgressViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     // TODO - enum with associated values?
-    let barColorExcluded = UIColor.white.withAlphaComponent(0.0)
-    let barColorPast = UIColor.darkGray
-    let barColorCurrent = UIColor.red
-    let barColorFuture = UIColor.lightGray.withAlphaComponent(0.4)
+    let excludedBarColor = UIColor.white.withAlphaComponent(0.0)
+    let pastBarColor = UIColor(named: "pastBarColor")
+    let presentBarColor = UIColor(named: "presentBarColor")
+    let futureBarColor = UIColor(named: "futureBarColor")
 
     let barsPerCell = ProgressCell.barsPerCell
-    let cellWidth: CGFloat = 50.0
+    let cellSize: CGFloat = 30.0
     let cellSpacing: CGFloat = 10.0
     let minTotalSpacing: CGFloat = 50.0
     var barViews: [UIView] = []
@@ -67,14 +67,14 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
 
         let viewWidth = collectionView.frame.width
 
-        var cellsPerRow = Int((viewWidth - minTotalSpacing) / cellWidth)
+        var cellsPerRow = Int((viewWidth - minTotalSpacing) / cellSize)
         cellsPerRow = min(cellsPerRow, cellData.count)
         let totalSpacing = CGFloat(cellsPerRow - 1) * cellSpacing
-        let totalCellsWidth = cellWidth * CGFloat(cellsPerRow)
+        let totalCellsWidth = cellSize * CGFloat(cellsPerRow)
         let inset = (viewWidth - totalSpacing - totalCellsWidth)/2
 
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: cellWidth, height: cellWidth)
+        layout.itemSize = CGSize(width: cellSize, height: cellSize)
         layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
         collectionView.collectionViewLayout = layout
     }
@@ -99,22 +99,22 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
 
             let i = index + 1
             if (i > datum.totalDays) { // invisible
-                bar?.backgroundColor = barColorExcluded
+                bar?.backgroundColor = excludedBarColor
             }
             else if (i == datum.currentDayRelative) { // current day
-                bar?.backgroundColor = barColorFuture
+                bar?.backgroundColor = futureBarColor
                 UIView.animate(withDuration: 1.3,
                                delay: 0.0,
                                options: [.repeat, .autoreverse],
                                animations: {
-                                    bar?.backgroundColor = self.barColorCurrent },
+                                    bar?.backgroundColor = self.presentBarColor },
                                completion: nil)
             }
             else if (i > datum.currentDayRelative) { // future day
-                bar?.backgroundColor = barColorFuture
+                bar?.backgroundColor = futureBarColor
             }
             else { // past day
-                bar?.backgroundColor = barColorPast
+                bar?.backgroundColor = pastBarColor
             }
         }
 

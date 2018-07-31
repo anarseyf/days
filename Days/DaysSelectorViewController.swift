@@ -42,17 +42,16 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Outlets
 
-    @IBOutlet weak var titleInput: UITextField!
     @IBOutlet weak var daysInput: UITextField!
     @IBOutlet weak var daysLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var circlesView: UIStackView!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var minusDayButton: UIButton!
     @IBOutlet weak var plusDayButton: UIButton!
     @IBOutlet weak var leftArrow: UIButton!
     @IBOutlet weak var rightArrow: UIButton!
     @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var startControlsView: UIView!
 
     // MARK: - User action handlers
 
@@ -72,8 +71,7 @@ class DaysSelectorViewController: UIViewController {
 
     @IBAction func doneButton(_ sender: UIButton) {
         daysInput.resignFirstResponder()
-        doneButton.isHidden = true
-        // TODO - show/hide plus/minus buttons here
+        setDoneButtonHidden(true)
     }
 
     @IBAction func previousStartOptionButton(_ sender: UIButton) {
@@ -115,13 +113,11 @@ class DaysSelectorViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
 
         daysInput.delegate = self
-        titleInput.delegate = self
         scrollView.delegate = self
         UNUserNotificationCenter.current().delegate = self
 
         createStartOptions()
         configureScrollView()
-        configureCirclesView()
 
         resetUI()
         restore()
@@ -153,7 +149,22 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
+    func setIncrementButtonsHidden(_ isHidden: Bool) {
+        minusDayButton.isHidden = isHidden
+        plusDayButton.isHidden = isHidden
+    }
+
+    func setDoneButtonHidden(_ isHidden: Bool) {
+        doneButton.isHidden = isHidden
+        startControlsView.isHidden = !isHidden
+        startButton.isHidden = !isHidden
+    }
+
     private func configureScrollView() {
+
+        // TODO - remove
+        scrollView.layer.borderColor = UIColor.gray.cgColor
+        scrollView.layer.borderWidth = 1.0
 
         let frameSize = CGSize(width: view.frame.size.width - 2 * arrowButtonWidth,
                                height: scrollView.frame.size.height)
@@ -164,6 +175,8 @@ class DaysSelectorViewController: UIViewController {
             label.text = element.title
             label.font = UIFont.systemFont(ofSize: 36.0)
             label.textAlignment = .center
+
+            label.backgroundColor = (index % 2 == 0 ? UIColor.green : UIColor.white) // TODO - remove
 
             scrollView.addSubview(label)
         }
@@ -179,35 +192,6 @@ class DaysSelectorViewController: UIViewController {
 
     @objc func scrollViewTap(_ sender: UITapGestureRecognizer) {
         setStartOptionToday()
-    }
-
-    func configureCirclesView() {
-
-        let radius: CGFloat = 4.0
-        let size: CGFloat = 2.0 * radius
-        let spacing = radius
-
-        circlesView.axis = .horizontal
-        circlesView.alignment = .center
-        circlesView.distribution = .equalSpacing
-        circlesView.spacing = spacing
-        circlesView.backgroundColor = UIColor.lightGray
-        circlesView.translatesAutoresizingMaskIntoConstraints = false
-
-        for (_, _) in startOptions.enumerated() {
-            let circle = UIView()
-            circle.layer.borderWidth = 1.0
-            circle.layer.borderColor = UIColor.darkGray.cgColor
-            circle.layer.cornerRadius = radius
-            let constraintW = circle.widthAnchor.constraint(equalToConstant: size)
-            constraintW.isActive = true
-            constraintW.priority = .defaultHigh
-            let constraintH = circle.heightAnchor.constraint(equalToConstant: size)
-            constraintH.isActive = true
-            constraintH.priority = .defaultHigh
-
-            circlesView.addArrangedSubview(circle)
-        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -236,7 +220,7 @@ class DaysSelectorViewController: UIViewController {
     func setNumDays(_ numDays: Int) {
         daysInput.text = String(numDays)
         daysLabel.text = Utils.daysString(from: numDays, withNumber: false)
-        minusDayButton.isHidden = (numDays <= Utils.minDays)
+        minusDayButton.isHidden = (numDays <= Utils.minDays) // TODO - use this in updateIncrementButtons(withHidden_:)
         plusDayButton.isHidden = (numDays >= Utils.maxDays)
         selectedInterval = Double(numDays * Utils.secondsPerDay)
     }
@@ -263,10 +247,6 @@ class DaysSelectorViewController: UIViewController {
         let offset = CGPoint(x: itemWidth * CGFloat(selectedStartOptionIndex), y: 0)
         scrollView.setContentOffset(offset, animated: true)
 
-        for (index, view) in circlesView.subviews.enumerated() {
-            view.backgroundColor = (index == selectedStartOptionIndex ? UIColor.darkGray : UIColor.white)
-        }
-
         leftArrow.isHidden = (selectedStartOptionIndex <= 0)
         rightArrow.isHidden = (selectedStartOptionIndex >= startOptions.count - 1)
     }
@@ -274,7 +254,6 @@ class DaysSelectorViewController: UIViewController {
     private func resetUI() {
         setStartOptionToday()
         setNumDays(1)
-        titleInput.text = "" // TODO - do this in view update methods / property observer or delegate on model?
         NotificationsHandler.reset()
     }
 
