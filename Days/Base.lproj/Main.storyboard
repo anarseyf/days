@@ -62,7 +62,7 @@
                                 <rect key="frame" x="0.0" y="296" width="320" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cDw-Ho-1km">
-                                        <rect key="frame" x="20" y="53" width="40" height="40"/>
+                                        <rect key="frame" x="15" y="53" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="GTq-da-Ljp"/>
                                             <constraint firstAttribute="height" constant="40" id="shR-12-aWi"/>
@@ -73,7 +73,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G9L-Mh-5TA">
-                                        <rect key="frame" x="260" y="53" width="40" height="40"/>
+                                        <rect key="frame" x="265" y="53" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="Vh4-UU-cLC"/>
                                             <constraint firstAttribute="width" constant="40" id="xhb-Op-rPO"/>
@@ -84,8 +84,7 @@
                                         </connections>
                                     </button>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hae-9n-wMS">
-                                        <rect key="frame" x="70" y="26" width="180" height="94"/>
-                                        <color key="backgroundColor" red="0.81984698830000002" green="0.81984698830000002" blue="0.81984698830000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <rect key="frame" x="60" y="26" width="200" height="94"/>
                                     </scrollView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="starting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IaM-88-s9t">
                                         <rect key="frame" x="111" y="0.0" width="98" height="36"/>
@@ -98,11 +97,11 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Hae-9n-wMS" secondAttribute="bottom" id="9C1-3y-MkM"/>
                                     <constraint firstAttribute="height" constant="120" id="CVZ-17-zbi"/>
-                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="trailing" secondItem="Hae-9n-wMS" secondAttribute="leading" constant="-10" id="G81-vx-dSQ"/>
-                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="leading" secondItem="Hae-9n-wMS" secondAttribute="trailing" constant="10" id="MKy-MD-6GZ"/>
-                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="leading" secondItem="Blu-zW-0B1" secondAttribute="leading" constant="20" id="SF7-yU-TKf"/>
+                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="trailing" secondItem="Hae-9n-wMS" secondAttribute="leading" constant="-5" id="G81-vx-dSQ"/>
+                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="leading" secondItem="Hae-9n-wMS" secondAttribute="trailing" constant="5" id="MKy-MD-6GZ"/>
+                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="leading" secondItem="Blu-zW-0B1" secondAttribute="leading" constant="15" id="SF7-yU-TKf"/>
                                     <constraint firstItem="Hae-9n-wMS" firstAttribute="top" secondItem="IaM-88-s9t" secondAttribute="bottom" constant="-10" id="hJC-ai-SHd"/>
-                                    <constraint firstAttribute="trailing" secondItem="G9L-Mh-5TA" secondAttribute="trailing" constant="20" id="j4W-dq-NGi"/>
+                                    <constraint firstAttribute="trailing" secondItem="G9L-Mh-5TA" secondAttribute="trailing" constant="15" id="j4W-dq-NGi"/>
                                     <constraint firstItem="G9L-Mh-5TA" firstAttribute="centerY" secondItem="Hae-9n-wMS" secondAttribute="centerY" id="oTo-Un-HvT"/>
                                     <constraint firstItem="cDw-Ho-1km" firstAttribute="centerY" secondItem="Hae-9n-wMS" secondAttribute="centerY" id="wnR-OZ-yGt"/>
                                     <constraint firstItem="IaM-88-s9t" firstAttribute="centerX" secondItem="Blu-zW-0B1" secondAttribute="centerX" id="xod-7l-MrR"/>

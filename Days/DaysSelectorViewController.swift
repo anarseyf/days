@@ -133,9 +133,9 @@ class DaysSelectorViewController: UIViewController {
 
         func replaceTitle(_ title: String, forOffset offset: Int) -> String {
             switch (offset) {
-            case -1: return "Yesterday"
-            case 0: return "Today"
-            case 1: return "Tomorrow"
+            case -1: return "YESTERDAY"
+            case 0: return "TODAY"
+            case 1: return "TOMORROW"
             default: return title
             }
         }
@@ -162,21 +162,15 @@ class DaysSelectorViewController: UIViewController {
 
     private func configureScrollView() {
 
-        // TODO - remove
-        scrollView.layer.borderColor = UIColor.gray.cgColor
-        scrollView.layer.borderWidth = 1.0
-
-        let frameSize = CGSize(width: view.frame.size.width - 2 * arrowButtonWidth,
+        let frameSize = CGSize(width: scrollView.frame.size.width,
                                height: scrollView.frame.size.height)
 
         for (index, element) in startOptions.enumerated() {
             let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
             let label = UILabel(frame: CGRect(origin: origin, size: frameSize))
             label.text = element.title
-            label.font = UIFont.systemFont(ofSize: 36.0)
+            label.font = UIFont.systemFont(ofSize: 30.0)
             label.textAlignment = .center
-
-            label.backgroundColor = (index % 2 == 0 ? UIColor.green : UIColor.white) // TODO - remove
 
             scrollView.addSubview(label)
         }
