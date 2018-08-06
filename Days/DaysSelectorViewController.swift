@@ -24,6 +24,7 @@ class DaysSelectorViewController: UIViewController {
     var startOptions: [StartOption] = []
     var selectedStartOptionIndex = 0
     var model = TimerModel()
+    var isScrollViewConfigured = false
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
@@ -117,10 +118,14 @@ class DaysSelectorViewController: UIViewController {
         UNUserNotificationCenter.current().delegate = self
 
         createStartOptions()
-        configureScrollView()
 
         resetUI()
         restore()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        configureScrollView()
     }
 
     func createStartOptions() {
@@ -151,26 +156,33 @@ class DaysSelectorViewController: UIViewController {
 
     private func configureScrollView() {
 
-        let frameSize = CGSize(width: scrollView.frame.size.width,
-                               height: scrollView.frame.size.height)
+        if (!isScrollViewConfigured) {
 
-        for (index, element) in startOptions.enumerated() {
-            let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
-            let label = UILabel(frame: CGRect(origin: origin, size: frameSize))
-            label.text = element.title
-            label.font = UIFont.systemFont(ofSize: 30.0)
-            label.textAlignment = .center
+            let frameSize = CGSize(width: scrollView.frame.size.width,
+                                   height: scrollView.frame.size.height)
 
-            scrollView.addSubview(label)
+            print(frameSize)
+
+            for (index, element) in startOptions.enumerated() {
+                let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
+                let label = UILabel(frame: CGRect(origin: origin, size: frameSize))
+                label.text = element.title
+                label.font = UIFont.systemFont(ofSize: 30.0)
+                label.textAlignment = .center
+
+                scrollView.addSubview(label)
+            }
+
+            scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count),
+                                            height: frameSize.height)
+            scrollView.isPagingEnabled = true
+
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollViewTap(_:)))
+            tapRecognizer.cancelsTouchesInView = false
+            scrollView.addGestureRecognizer(tapRecognizer)
+
+            isScrollViewConfigured = true
         }
-
-        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count),
-                                        height: frameSize.height)
-        scrollView.isPagingEnabled = true
-
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollViewTap(_:)))
-        tapRecognizer.cancelsTouchesInView = false
-        scrollView.addGestureRecognizer(tapRecognizer)
     }
 
     @objc func scrollViewTap(_ sender: UITapGestureRecognizer) {
