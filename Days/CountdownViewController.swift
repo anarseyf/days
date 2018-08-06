@@ -22,13 +22,9 @@ class CountdownViewController: UIViewController {
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
     @IBOutlet weak var settingsButton: UIButton!
+    @IBOutlet weak var bubbleView: UIView!
 
     // MARK: - User Actions
-
-    @IBAction func resetButton(_ sender: UIButton) {
-        loopTimer?.invalidate()
-        navigationController?.popViewController(animated: true)
-    }
     
     @IBAction func settingsButton(_ sender: UIButton) {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "settingsViewController")
@@ -37,6 +33,15 @@ class CountdownViewController: UIViewController {
             navigationController?.modalPresentationStyle = .overCurrentContext
             navigationController?.present(settingsViewController, animated: true)
         }
+    }
+
+    @IBAction func resetButton(_ sender: UIButton) {
+        loopTimer?.invalidate()
+        navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction func bubbleButton(_ sender: Any) {
+        bubbleView.isHidden = !bubbleView.isHidden
     }
 
     override func willMove(toParent parent: UIViewController?) {
@@ -96,7 +101,7 @@ class CountdownViewController: UIViewController {
                 let outsideString = formatter.string(from: model.outsideInterval!) ?? "-"
                 secondaryLabel.text = "starts in \(outsideString)"
             case .running:
-                mainLabel.text = "DAY\n\(model.currentDay!)"
+                mainLabel.text = "Day\n\(model.currentDay!)"
                 secondaryLabel.text = "\(model.remainingDays!)/\(model.totalDays!) remaining"
             case .ended:
                 let daysString = Utils.daysString(from: model.totalDays!)

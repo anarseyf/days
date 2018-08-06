@@ -149,17 +149,6 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    func setIncrementButtonsHidden(_ isHidden: Bool) {
-        minusDayButton.isHidden = isHidden
-        plusDayButton.isHidden = isHidden
-    }
-
-    func setDoneButtonHidden(_ isHidden: Bool) {
-        doneButton.isHidden = isHidden
-        startControlsView.isHidden = !isHidden
-        startButton.isHidden = !isHidden
-    }
-
     private func configureScrollView() {
 
         let frameSize = CGSize(width: scrollView.frame.size.width,
@@ -186,6 +175,17 @@ class DaysSelectorViewController: UIViewController {
 
     @objc func scrollViewTap(_ sender: UITapGestureRecognizer) {
         setStartOptionToday()
+    }
+
+    func setIncrementButtonsHidden(_ isHidden: Bool) {
+        minusDayButton.isHidden = isHidden
+        plusDayButton.isHidden = isHidden
+    }
+
+    func setDoneButtonHidden(_ isHidden: Bool) {
+        doneButton.isHidden = isHidden
+        startControlsView.isHidden = !isHidden
+        startButton.isHidden = !isHidden
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

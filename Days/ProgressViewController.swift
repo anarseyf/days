@@ -63,7 +63,7 @@ class ProgressViewController: UIViewController, UICollectionViewDataSource, UICo
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        collectionView.frame = self.view.bounds
+        collectionView.frame = view.bounds
 
         let viewWidth = collectionView.frame.width
 
