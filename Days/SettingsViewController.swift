@@ -10,15 +10,22 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
-    var model: TimerModel?
-    var loopTimer: Timer? = nil
+    // MARK: - Properties
 
-    @IBOutlet weak var remainingIntervalLabel: UILabel!
-    @IBOutlet weak var startLabel: UILabel!
-    @IBOutlet weak var targetLabel: UILabel!
+    var model: TimerModel?
+
+    // MARK: - IBOutlets
+
+    @IBOutlet weak var totalDaysLabel: UILabel!
+    @IBOutlet weak var startsOnLabel: UILabel!
+    @IBOutlet weak var startDateLabel: UILabel!
+    @IBOutlet weak var endsOnLabel: UILabel!
+    @IBOutlet weak var endDateLabel: UILabel!
     @IBOutlet weak var timePicker: UIDatePicker!
     @IBOutlet weak var notifyLabel: UILabel!
     @IBOutlet weak var notifySwitch: UISwitch!
+
+    // MARK: - IBActions
 
     @IBAction func doneButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -45,12 +52,7 @@ class SettingsViewController: UIViewController {
         updateNotifyUI()
     }
 
-    private func updateNotificationDate() {
-        guard let model = model else { return }
-
-        model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
-                                                        withTimeOverride: timePicker.date)
-    }
+    // MARK: - Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,19 +67,18 @@ class SettingsViewController: UIViewController {
 
         updateLabels()
         updateNotifyUI()
-
-        startLoopTimer()
     }
 
-    override func willMove(toParent parent: UIViewController?) {
-        if parent == nil {
-            loopTimer?.invalidate()
-        }
+    private func updateNotificationDate() {
+        guard let model = model else { return }
+
+        model.notificationDate = Utils.notificationDate(fromTarget: model.targetDate!,
+                                                        withTimeOverride: timePicker.date)
     }
 
-    func updateNotifyUI() {
+    private func updateNotifyUI() {
         if let date = model?.notificationDate {
-            let formatter = Utils.shared.dateOnlyFormatter
+            let formatter = Utils.shared.dateNoYearFormatter
             notifyLabel.text = "Notify on \(formatter.string(from: date)) at:"
             notifySwitch.isOn = true
             timePicker.isHidden = false
@@ -90,23 +91,42 @@ class SettingsViewController: UIViewController {
         }
     }
 
-    func updateLabels() {
+    private func updateLabels() {
         guard let model = model else { return }
 
-        let formatter = Utils.shared.dateOnlyFormatter
-
-        startLabel.text = formatter.string(from: model.startDate!)
+        startDateLabel.text = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
 
         var lastDayComponents = Calendar.current.dateComponents(in: .current, from: model.targetDate!)
         lastDayComponents.second = -1
-        targetLabel.text = formatter.string(from: lastDayComponents.date!)
+        endDateLabel.text = Utils.shared.dateNoYearFormatter.string(from: lastDayComponents.date!)
+
+        switch model.state {
+        case .invalid:
+            totalDaysLabel.text = ""
+        case .willRun, .running, .ended:
+            totalDaysLabel.text = Utils.daysString(from: model.totalDays!, withNumber: true)
+        }
+
+        switch model.state {
+        case .invalid:
+            break
+        case .willRun:
+            startsOnLabel.text = "Starts on:"
+            endsOnLabel.text = "Ends on:"
+        case .running:
+            startsOnLabel.text = "Started on:"
+            endsOnLabel.text = "Ends on:"
+        case .ended:
+            startsOnLabel.text = "Started on:"
+            endsOnLabel.text = "Ended on:"
+        }
     }
 
-    func unscheduleExisting() {
+    private func unscheduleExisting() {
         NotificationsHandler.reset()
     }
 
-    func scheduleNotification() {
+    private func scheduleNotification() {
         guard let model = model else { return }
 
         unscheduleExisting()
@@ -114,30 +134,5 @@ class SettingsViewController: UIViewController {
         if let date = model.notificationDate {
             NotificationsHandler.schedule(on: date, with: model)
         }
-    }
-
-    func startLoopTimer() {
-
-        func loopHandler(timer: Timer?) -> Void {
-//            print("Settings loop")
-
-            let formatter = Utils.shared.intervalFormatter
-
-            switch model!.state {
-            case .invalid:
-                remainingIntervalLabel.text = "(invalid)"
-            case .willRun:
-                remainingIntervalLabel.text = "(not started)"
-            case .running:
-                remainingIntervalLabel.text = formatter.string(from: model!.remainingInterval!)
-            case .ended:
-                remainingIntervalLabel.text = "(ended)"
-            }
-        }
-        loopTimer = Timer.scheduledTimer(withTimeInterval: 1,
-                                         repeats: true,
-                                         block: loopHandler)
-
-        loopHandler(timer: loopTimer)
     }
 }

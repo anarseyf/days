@@ -20,14 +20,16 @@ class Utils {
     static let shared = Utils()
 
     let dateOnlyFormatter = DateFormatter()
+    let dateNoYearFormatter = DateFormatter()
     let timeOnlyFormatter = DateFormatter()
     let dateTimeFormatter = DateFormatter()
     let intervalFormatter = DateComponentsFormatter()
 
     private init() {
         
-        dateOnlyFormatter.dateStyle = .medium
+        dateOnlyFormatter.dateStyle = .medium // Aug 5
         dateOnlyFormatter.timeStyle = .none
+        dateNoYearFormatter.dateFormat = "MMM d" // Aug 5
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium
