@@ -169,15 +169,4 @@ class TimerModel: NSObject, NSCoding {
 
     override init() {
     }
-
-    static func dateFloor(from date: Date?) -> Date? { // TODO - move to Utils?
-
-        guard let date = date else { return nil }
-
-        var components = Calendar.current.dateComponents(in: .current, from: date)
-        components.hour = 0
-        components.minute = 0
-        components.second = 0
-        return components.date
-    }
 }

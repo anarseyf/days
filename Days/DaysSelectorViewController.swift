@@ -142,9 +142,7 @@ class DaysSelectorViewController: UIViewController {
     func createStartOptions() {
         let formatter = DateFormatter()
         formatter.dateFormat = "EE, MMM d"
-        let now = Date()
-        let calendar = Calendar.current
-        let nowComponents = calendar.dateComponents(in: .current, from: now)
+        let nowComponents = Utils.componentsFromDate(Date())
         let day = nowComponents.day!
 
         func replaceTitle(_ title: String, forOffset offset: Int) -> String {
@@ -244,7 +242,7 @@ class DaysSelectorViewController: UIViewController {
         selectedStartOptionIndex = index
 
         let option = startOptions[index]
-        let adjusted = TimerModel.dateFloor(from: option.date)
+        let adjusted = Utils.dateFloor(from: option.date)
         model.startDate = adjusted
         updateTargetDate()
 

@@ -8,6 +8,18 @@
 
 import UIKit
 
+protocol CalendarDelegate {
+    func didSelectDate(_ date: Date?)
+}
+
+class CalendarTapGestureRecognizer : UITapGestureRecognizer {
+    var dayModel: CalendarDayModel?
+    init(_ dayModel: CalendarDayModel?, target: Any?, action: Selector?) {
+        self.dayModel = dayModel
+        super.init(target: target, action: action)
+    }
+}
+
 struct CalendarMonthModel : CustomStringConvertible {
     let matrix: [[CalendarDayModel?]]
     let startDate: Date
@@ -42,6 +54,7 @@ class MonthViewController: UIViewController {
     }
 
     var model: CalendarMonthModel?
+    var delegate: CalendarDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +90,11 @@ class MonthViewController: UIViewController {
                         let size = CGSize(width: cellWidth, height: cellHeight)
                         let dayView = CalendarDayView(model: dayModel,
                                                       frame: CGRect(origin: origin, size: size))
+
+                        let tapRecognizer = CalendarTapGestureRecognizer(dayModel, target: self, action: #selector(didSelectDate(_:)))
+                        tapRecognizer.cancelsTouchesInView = false
+                        dayView.addGestureRecognizer(tapRecognizer)
+
                         view.addSubview(dayView)
                     }
                 }
@@ -84,5 +102,9 @@ class MonthViewController: UIViewController {
                 didLayoutSubviews = true
             }
         }
+    }
+
+    @objc func didSelectDate(_ sender: CalendarTapGestureRecognizer) {
+        delegate?.didSelectDate(sender.dayModel?.date)
     }
 }

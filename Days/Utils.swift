@@ -47,7 +47,7 @@ class Utils {
 
     static func notificationDate(fromTarget targetDate: Date, withTimeOverride overrideDate: Date? = nil) -> Date {
 
-        var targetComponents = Calendar.current.dateComponents(in: .current, from: targetDate)
+        var targetComponents = Utils.componentsFromDate(targetDate)
         targetComponents.day = targetComponents.day! - 1
         targetComponents.second = 0
 
@@ -56,7 +56,7 @@ class Utils {
             targetComponents.minute = defaultNotificationMinute
         }
         else {
-            let overrideComponents = Calendar.current.dateComponents(in: .current, from: overrideDate!)
+            let overrideComponents = Utils.componentsFromDate(overrideDate!)
             targetComponents.hour = overrideComponents.hour
             targetComponents.minute = overrideComponents.minute
 
@@ -71,19 +71,22 @@ class Utils {
         var date = startDate
         var flatList: [CalendarDayModel?] = []
 
-        let month = Calendar.current.component(.month, from: date)
+        let calendar = Calendar.current
+        let month = calendar.component(.month, from: date)
         var currentMonth = month
         while currentMonth == month {
-            let weekday = Calendar.current.component(.weekday, from: date)
-            let dayOfMonth = Calendar.current.component(.day, from: date)
-            let dayModel = CalendarDayModel(date: date, weekday: weekday, dayOfMonth: dayOfMonth)
+            let weekday = calendar.component(.weekday, from: date)
+            let dayOfMonth = calendar.component(.day, from: date)
+            let dayModel = CalendarDayModel(date: date,
+                                            weekday: weekday,
+                                            dayOfMonth: dayOfMonth)
             flatList.append(dayModel)
 
-            var components = Calendar.current.dateComponents(in: .current, from: date)
+            var components = calendar.dateComponents(in: .current, from: date)
             components.day = components.day! + 1
             date = components.date!
 
-            currentMonth = Calendar.current.component(.month, from: date)
+            currentMonth = calendar.component(.month, from: date)
         }
 
         var row: [CalendarDayModel?] = []
@@ -116,5 +119,20 @@ class Utils {
         }
 
         return CalendarMonthModel(matrix: matrix, startDate: startDate)
+    }
+
+    static func componentsFromDate(_ date: Date) -> DateComponents {
+        return Calendar.current.dateComponents(in: .current, from: date)
+    }
+
+    static func dateFloor(from date: Date?) -> Date? {
+
+        guard let date = date else { return nil }
+
+        var components = componentsFromDate(date)
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+        return components.date
     }
 }

@@ -96,7 +96,7 @@ class SettingsViewController: UIViewController {
 
         startDateLabel.text = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
 
-        var lastDayComponents = Calendar.current.dateComponents(in: .current, from: model.targetDate!)
+        var lastDayComponents = Utils.componentsFromDate(model.targetDate!)
         lastDayComponents.second = -1
         endDateLabel.text = Utils.shared.dateNoYearFormatter.string(from: lastDayComponents.date!)
 

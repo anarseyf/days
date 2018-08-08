@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CalendarViewController: UIViewController, UIScrollViewDelegate {
+class CalendarViewController: UIViewController, UIScrollViewDelegate, CalendarDelegate {
 
     var startDates: [Date]?
     var selectedDate: Date?
@@ -25,13 +25,10 @@ class CalendarViewController: UIViewController, UIScrollViewDelegate {
 
         monthsView.delegate = self
 
-        var components = Calendar.current.dateComponents(in: .current, from: Date())
+        var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
         components.day = 1
-        components.hour = 0
-        components.minute = 0
-        components.second = 0
 
-        let startDates = [0,1,2,3].map { index -> Date in
+        let startDates = Array(-1...11).map { index -> Date in
             var currentComponents = components
             currentComponents.month = components.month! + index
             return currentComponents.date!
@@ -43,16 +40,16 @@ class CalendarViewController: UIViewController, UIScrollViewDelegate {
         monthsView.isPagingEnabled = true
 
         for (index, date) in startDates.enumerated() {
-            let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "monthViewController")
-            if let monthViewController = vc as? MonthViewController {
-                monthViewController.startDate = date
-                self.addChild(monthViewController)
+            let monthViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "monthViewController") as! MonthViewController
+            monthViewController.startDate = date
+            monthViewController.delegate = self
 
-                let origin = CGPoint(x: 0,
-                                     y: CGFloat(index) * size.height)
-                monthViewController.view.frame = CGRect(origin: origin, size: size)
-                monthsView.addSubview(monthViewController.view)
-            }
+            self.addChild(monthViewController)
+
+            let origin = CGPoint(x: 0,
+                                 y: CGFloat(index) * size.height)
+            monthViewController.view.frame = CGRect(origin: origin, size: size)
+            monthsView.addSubview(monthViewController.view)
         }
 
         self.startDates = startDates
@@ -73,5 +70,11 @@ class CalendarViewController: UIViewController, UIScrollViewDelegate {
 
         selectedDate = startDates![page]
         updateLabel()
+    }
+
+    // MARK: - CalendarDelegate
+
+    func didSelectDate(_ date: Date?) {
+        print(date)
     }
 }
