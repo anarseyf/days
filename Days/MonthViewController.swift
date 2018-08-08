@@ -30,6 +30,8 @@ struct CalendarMonthModel : CustomStringConvertible {
 
 class MonthViewController: UIViewController {
 
+    var didLayoutSubviews = false
+
     var startDate: Date? {
         didSet {
             if let date = startDate {
@@ -47,19 +49,39 @@ class MonthViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if !didLayoutSubviews {
+            if let monthModel = model {
 
-        let cellWidth = floor(view.frame.width / 7)
+                let cellWidth = floor(view.frame.width / CGFloat(monthModel.matrix.first!.count))
+                let cellHeight = floor(view.frame.height / CGFloat(monthModel.matrix.count + 1))
 
-        if let monthModel = model {
-            for (rowIndex, row) in monthModel.matrix.enumerated() {
-                let originY = CGFloat(rowIndex) * cellWidth
-                for (colIndex, dayModel) in row.enumerated() {
-                    let originX = CGFloat(colIndex) * cellWidth
-                    let origin = CGPoint(x: originX, y: originY)
-                    let size = CGSize(width: cellWidth, height: cellWidth)
-                    let dayView = CalendarDayView(model: dayModel, frame: CGRect(origin: origin, size: size))
-                    view.addSubview(dayView)
+                let formatter = DateFormatter()
+                formatter.dateFormat = "E"
+                let weekdaysRow = monthModel.matrix[1].map { model in
+                    return formatter.string(from: model!.date)
                 }
+
+                for (rowIndex, weekday) in weekdaysRow.enumerated() {
+                    let origin = CGPoint(x: CGFloat(rowIndex) * cellWidth, y: 0.0)
+                    let size = CGSize(width: cellWidth, height: cellHeight)
+                    let headerView = CalendarHeaderView(weekday: weekday,
+                                                        frame: CGRect(origin: origin, size: size))
+                    view.addSubview(headerView)
+                }
+
+                for (rowIndex, row) in monthModel.matrix.enumerated() {
+                    let originY = CGFloat(rowIndex + 1) * cellHeight
+                    for (colIndex, dayModel) in row.enumerated() {
+                        let originX = CGFloat(colIndex) * cellWidth
+                        let origin = CGPoint(x: originX, y: originY)
+                        let size = CGSize(width: cellWidth, height: cellHeight)
+                        let dayView = CalendarDayView(model: dayModel,
+                                                      frame: CGRect(origin: origin, size: size))
+                        view.addSubview(dayView)
+                    }
+                }
+
+                didLayoutSubviews = true
             }
         }
     }

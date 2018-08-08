@@ -169,10 +169,7 @@ class DaysSelectorViewController: UIViewController {
 
         if (!isScrollViewConfigured) {
 
-            let frameSize = CGSize(width: scrollView.frame.size.width,
-                                   height: scrollView.frame.size.height)
-
-            print(frameSize)
+            let frameSize = scrollView.frame.size
 
             for (index, element) in startOptions.enumerated() {
                 let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)

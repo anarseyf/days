@@ -20,7 +20,59 @@ struct CalendarDayModel : CustomStringConvertible {
     }
 }
 
-class CalendarDayView: UIView {
+class CalendarCellView: UIView {
+
+    var background: UIView?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        if (newSuperview == nil) { return }
+
+        let frame = CGRect(origin: .zero, size: CGSize(width: self.frame.width, height: self.frame.height))
+        let background = UIView(frame: frame)
+        background.backgroundColor = .white
+        self.addSubview(background)
+        self.background = background
+    }
+}
+
+class CalendarHeaderView: CalendarCellView {
+    var weekday: String?
+
+    init(weekday: String, frame: CGRect) {
+        self.weekday = weekday
+        super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override func willMove(toSuperview newSuperview: UIView?) {
+        super.willMove(toSuperview: newSuperview)
+        if (newSuperview == nil) { return }
+
+        if let weekday = weekday {
+            background?.backgroundColor = UIColor(named: "linkColor")
+
+            let label = UILabel(frame: self.bounds)
+            label.text = String(weekday)
+            label.textColor = .white
+            label.textAlignment = .center
+            self.addSubview(label)
+        }
+    }
+}
+
+class CalendarDayView: CalendarCellView {
 
     var model: CalendarDayModel?
 
@@ -37,16 +89,10 @@ class CalendarDayView: UIView {
         super.willMove(toSuperview: newSuperview)
         if (newSuperview == nil) { return }
 
-        layer.borderColor = UIColor.green.cgColor
-        layer.borderWidth = 1.0
-
-        let frame = CGRect(origin: .zero, size: CGSize(width: self.frame.width, height: self.frame.height))
-        let square = UIView(frame: frame)
-        square.backgroundColor = (model == nil ? .white : .darkGray)
-        self.addSubview(square)
-
         if let model = model {
-            let label = UILabel(frame: frame)
+            background?.backgroundColor = .lightGray
+
+            let label = UILabel(frame: self.bounds)
             label.text = String(model.dayOfMonth)
             label.textColor = .white
             label.textAlignment = .center
