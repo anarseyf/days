@@ -29,7 +29,7 @@ class Utils {
         
         dateOnlyFormatter.dateStyle = .medium // Aug 5
         dateOnlyFormatter.timeStyle = .none
-        dateNoYearFormatter.dateFormat = "MMM d" // Aug 5
+        dateNoYearFormatter.dateFormat = "MMM d" // see http://nsdateformatter.com
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium

@@ -53,6 +53,7 @@ class DaysSelectorViewController: UIViewController {
     @IBOutlet weak var rightArrow: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var startControlsView: UIView!
+    @IBOutlet weak var calendarButton: UIButton!
 
     // MARK: - User action handlers
 
@@ -105,6 +106,14 @@ class DaysSelectorViewController: UIViewController {
         model.save()
     }
 
+    @IBAction func calendarButton(_ sender: UIButton) {
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarViewController")
+        if let calendarViewController = viewController as? CalendarViewController {
+            navigationController?.modalPresentationStyle = .overCurrentContext
+            navigationController?.present(calendarViewController, animated: true)
+        }
+    }
+
     // MARK: - Methods
 
     override func viewDidLoad() {
@@ -121,6 +130,8 @@ class DaysSelectorViewController: UIViewController {
 
         resetUI()
         restore()
+
+        calendarButton(UIButton()) // TODO - remove
     }
 
     override func viewDidLayoutSubviews() {
