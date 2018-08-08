@@ -63,4 +63,58 @@ class Utils {
         }
         return targetComponents.date ?? targetDate
     }
+
+    static func calendarModel(forStartDate startDate: Date) -> CalendarMonthModel {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE, MMM d, HH:mm"
+
+        var date = startDate
+        var flatList: [CalendarDayModel?] = []
+
+        let month = Calendar.current.component(.month, from: date)
+        var currentMonth = month
+        while currentMonth == month {
+            let weekday = Calendar.current.component(.weekday, from: date)
+            let dayOfMonth = Calendar.current.component(.day, from: date)
+            let dayModel = CalendarDayModel(date: date, weekday: weekday, dayOfMonth: dayOfMonth)
+            flatList.append(dayModel)
+
+            var components = Calendar.current.dateComponents(in: .current, from: date)
+            components.day = components.day! + 1
+            date = components.date!
+
+            currentMonth = Calendar.current.component(.month, from: date)
+        }
+
+        var row: [CalendarDayModel?] = []
+
+        let firstDayModel = flatList.first!!
+        let lastDayModel = flatList.last!!
+        for i in 1...7 {
+            if i < firstDayModel.weekday {
+                row.append(nil)
+            }
+        }
+
+        var matrix: [[CalendarDayModel?]] = []
+
+        for (_, dayModel) in flatList.enumerated() {
+            row.append(dayModel)
+            if dayModel?.weekday == 7 {
+                matrix.append(row)
+                row = []
+            }
+        }
+
+        if row.count > 0 { // incomplete row
+            for i in 1...7 {
+                if i > lastDayModel.weekday {
+                    row.append(nil)
+                }
+            }
+            matrix.append(row)
+        }
+
+        return CalendarMonthModel(matrix: matrix, startDate: startDate)
+    }
 }
