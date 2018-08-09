@@ -67,17 +67,6 @@ extension DaysSelectorViewController : UITextFieldDelegate {
     }
 }
 
-// MARK: - UIScrollViewDelegate
-
-extension DaysSelectorViewController: UIScrollViewDelegate {
-
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = Int(Double(startOptions.count) * Double(scrollView.contentOffset.x / scrollView.contentSize.width))
-        
-        selectStartOption(page, animated: true)
-    }
-}
-
 // MARK: - CalendarDelegate
 
 extension DaysSelectorViewController: CalendarDelegate {

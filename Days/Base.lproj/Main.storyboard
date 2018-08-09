@@ -115,48 +115,54 @@
                                 <rect key="frame" x="0.0" y="296" width="375" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cDw-Ho-1km">
-                                        <rect key="frame" x="15" y="53" width="40" height="40"/>
+                                        <rect key="frame" x="15" y="60" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="GTq-da-Ljp"/>
                                             <constraint firstAttribute="height" constant="40" id="shR-12-aWi"/>
                                         </constraints>
                                         <state key="normal" image="leftButtonImage"/>
                                         <connections>
-                                            <action selector="previousStartOptionButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n1Q-Fg-e7o"/>
+                                            <action selector="leftArrow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n1Q-Fg-e7o"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G9L-Mh-5TA">
-                                        <rect key="frame" x="320" y="53" width="40" height="40"/>
+                                        <rect key="frame" x="320" y="60" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="Vh4-UU-cLC"/>
                                             <constraint firstAttribute="width" constant="40" id="xhb-Op-rPO"/>
                                         </constraints>
                                         <state key="normal" title="⟩" image="rightButtonImage"/>
                                         <connections>
-                                            <action selector="nextStartOptionButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6qm-Ug-rm5"/>
+                                            <action selector="rightArrow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6qm-Ug-rm5"/>
                                         </connections>
                                     </button>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hae-9n-wMS">
-                                        <rect key="frame" x="60" y="26" width="255" height="94"/>
-                                    </scrollView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="starting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IaM-88-s9t">
                                         <rect key="frame" x="138.5" y="0.0" width="98" height="36"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <color key="textColor" name="secondaryTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93H-8x-SPX">
+                                        <rect key="frame" x="65" y="56" width="245" height="48"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="Calendar">
+                                            <color key="titleColor" name="linkColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="calendarButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RUV-hc-LG5"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Hae-9n-wMS" secondAttribute="bottom" id="9C1-3y-MkM"/>
+                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="centerY" secondItem="93H-8x-SPX" secondAttribute="centerY" id="C9c-go-M9c"/>
                                     <constraint firstAttribute="height" constant="120" id="CVZ-17-zbi"/>
-                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="trailing" secondItem="Hae-9n-wMS" secondAttribute="leading" constant="-5" id="G81-vx-dSQ"/>
-                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="leading" secondItem="Hae-9n-wMS" secondAttribute="trailing" constant="5" id="MKy-MD-6GZ"/>
+                                    <constraint firstItem="93H-8x-SPX" firstAttribute="trailing" secondItem="G9L-Mh-5TA" secondAttribute="leading" constant="-10" id="S4H-J2-Yy0"/>
                                     <constraint firstItem="cDw-Ho-1km" firstAttribute="leading" secondItem="Blu-zW-0B1" secondAttribute="leading" constant="15" id="SF7-yU-TKf"/>
-                                    <constraint firstItem="Hae-9n-wMS" firstAttribute="top" secondItem="IaM-88-s9t" secondAttribute="bottom" constant="-10" id="hJC-ai-SHd"/>
+                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="centerY" secondItem="93H-8x-SPX" secondAttribute="centerY" id="U1c-Nf-stY"/>
+                                    <constraint firstItem="93H-8x-SPX" firstAttribute="leading" secondItem="cDw-Ho-1km" secondAttribute="trailing" constant="10" id="eZL-FB-r6d"/>
                                     <constraint firstAttribute="trailing" secondItem="G9L-Mh-5TA" secondAttribute="trailing" constant="15" id="j4W-dq-NGi"/>
-                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="centerY" secondItem="Hae-9n-wMS" secondAttribute="centerY" id="oTo-Un-HvT"/>
-                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="centerY" secondItem="Hae-9n-wMS" secondAttribute="centerY" id="wnR-OZ-yGt"/>
+                                    <constraint firstItem="93H-8x-SPX" firstAttribute="top" secondItem="IaM-88-s9t" secondAttribute="bottom" constant="20" id="qhf-2j-SYG"/>
                                     <constraint firstItem="IaM-88-s9t" firstAttribute="centerX" secondItem="Blu-zW-0B1" secondAttribute="centerX" id="xod-7l-MrR"/>
                                     <constraint firstItem="IaM-88-s9t" firstAttribute="top" secondItem="Blu-zW-0B1" secondAttribute="top" id="y6C-8B-NTX"/>
                                 </constraints>
@@ -183,14 +189,6 @@
                                     <action selector="plusDayButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9fc-4W-vDn"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3M-K3-YVg">
-                                <rect key="frame" x="30" y="446" width="315" height="41"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Calendar"/>
-                                <connections>
-                                    <action selector="calendarButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UuA-Jg-6fo"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -202,12 +200,9 @@
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bdd-Ue-MGK"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="50" id="dsv-CP-oHf"/>
                             <constraint firstItem="2dv-XX-XSs" firstAttribute="centerY" secondItem="6yR-3e-nS4" secondAttribute="centerY" id="e5R-ge-9Sr"/>
-                            <constraint firstItem="A3M-K3-YVg" firstAttribute="top" secondItem="Blu-zW-0B1" secondAttribute="bottom" constant="30" id="eVZ-0y-QIy"/>
                             <constraint firstItem="6yR-3e-nS4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="edk-2R-Z3J"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="A3M-K3-YVg" secondAttribute="trailing" constant="30" id="i3U-2f-Hyx"/>
                             <constraint firstItem="Blu-zW-0B1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="pRa-Qq-Xw7"/>
                             <constraint firstItem="4ya-mL-LK9" firstAttribute="leading" secondItem="6yR-3e-nS4" secondAttribute="trailing" constant="10" id="tH1-mh-Rnc"/>
-                            <constraint firstItem="A3M-K3-YVg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="w38-ov-AE5"/>
                             <constraint firstItem="6yR-3e-nS4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="xA7-8V-qAQ"/>
                             <constraint firstItem="Qvx-g3-JTp" firstAttribute="top" secondItem="hjJ-yK-pHs" secondAttribute="bottom" constant="40" id="xR4-ca-Emb"/>
                             <constraint firstItem="Qvx-g3-JTp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xRl-jt-edK"/>
@@ -226,7 +221,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="calendarButton" destination="A3M-K3-YVg" id="nSD-pg-9cN"/>
+                        <outlet property="calendarButton" destination="93H-8x-SPX" id="ZeX-5H-pcN"/>
                         <outlet property="daysInput" destination="6yR-3e-nS4" id="qmM-jP-czV"/>
                         <outlet property="daysLabel" destination="hjJ-yK-pHs" id="BZ2-Ca-8Aj"/>
                         <outlet property="doneButton" destination="Qvx-g3-JTp" id="jbY-IM-n96"/>
@@ -235,7 +230,6 @@
                         <outlet property="plusDayButton" destination="4ya-mL-LK9" id="Fqr-0G-KE2"/>
                         <outlet property="resetButton" destination="uu3-T4-93A" id="bVy-yT-iKU"/>
                         <outlet property="rightArrow" destination="G9L-Mh-5TA" id="SoS-Lb-kZ9"/>
-                        <outlet property="scrollView" destination="Hae-9n-wMS" id="4yJ-eb-caH"/>
                         <outlet property="startButton" destination="sT0-n0-lZx" id="tMN-7F-b7e"/>
                         <outlet property="startControlsView" destination="Blu-zW-0B1" id="hzp-iv-ZFW"/>
                     </connections>

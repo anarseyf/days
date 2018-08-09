@@ -144,6 +144,12 @@ class Utils {
         return components.date
     }
 
+    static func adjustedDate(_ date: Date, by numDays: Int) -> Date {
+        var components = componentsFromDate(date)
+        components.day = components.day! + numDays
+        return components.date!
+    }
+
     static func blurifyView(_ view: UIView) {
         view.backgroundColor = UIColor.clear
 
