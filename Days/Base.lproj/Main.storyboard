@@ -15,12 +15,15 @@
         <scene sceneID="Ucl-18-4aF">
             <objects>
                 <viewController storyboardIdentifier="calendarViewController" id="hcH-kg-hTk" customClass="CalendarViewController" customModule="Days" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="4CK-pa-6OQ">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="4CK-pa-6OQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5CS-Sv-hug">
-                                <rect key="frame" x="30" y="601" width="47" height="36"/>
+                                <rect key="frame" x="30" y="601" width="50" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="RNv-fU-UMK"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Done"/>
                                 <connections>
@@ -29,7 +32,6 @@
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLM-to-vSp">
                                 <rect key="frame" x="30" y="213.5" width="315" height="240"/>
-                                <color key="backgroundColor" red="0.61315762490000003" green="0.97413641210000002" blue="0.47364893190000001" alpha="0.3394586268" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="240" id="hUo-Jb-AH0"/>
                                 </constraints>
@@ -181,9 +183,9 @@
                                     <action selector="plusDayButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9fc-4W-vDn"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3M-K3-YVg">
-                                <rect key="frame" x="129" y="412" width="62" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3M-K3-YVg">
+                                <rect key="frame" x="30" y="446" width="315" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Calendar"/>
                                 <connections>
                                     <action selector="calendarButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UuA-Jg-6fo"/>
@@ -200,9 +202,12 @@
                             <constraint firstItem="sT0-n0-lZx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bdd-Ue-MGK"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="sT0-n0-lZx" secondAttribute="bottom" constant="50" id="dsv-CP-oHf"/>
                             <constraint firstItem="2dv-XX-XSs" firstAttribute="centerY" secondItem="6yR-3e-nS4" secondAttribute="centerY" id="e5R-ge-9Sr"/>
+                            <constraint firstItem="A3M-K3-YVg" firstAttribute="top" secondItem="Blu-zW-0B1" secondAttribute="bottom" constant="30" id="eVZ-0y-QIy"/>
                             <constraint firstItem="6yR-3e-nS4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="edk-2R-Z3J"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="A3M-K3-YVg" secondAttribute="trailing" constant="30" id="i3U-2f-Hyx"/>
                             <constraint firstItem="Blu-zW-0B1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="pRa-Qq-Xw7"/>
                             <constraint firstItem="4ya-mL-LK9" firstAttribute="leading" secondItem="6yR-3e-nS4" secondAttribute="trailing" constant="10" id="tH1-mh-Rnc"/>
+                            <constraint firstItem="A3M-K3-YVg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="w38-ov-AE5"/>
                             <constraint firstItem="6yR-3e-nS4" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="xA7-8V-qAQ"/>
                             <constraint firstItem="Qvx-g3-JTp" firstAttribute="top" secondItem="hjJ-yK-pHs" secondAttribute="bottom" constant="40" id="xR4-ca-Emb"/>
                             <constraint firstItem="Qvx-g3-JTp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xRl-jt-edK"/>
@@ -588,7 +593,6 @@
                     <view key="view" contentMode="scaleToFill" id="2F7-cE-NFA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.61315762489357761" green="0.97413641214370728" blue="0.47364893194493385" alpha="0.33945862676056338" colorSpace="custom" customColorSpace="displayP3"/>
                         <viewLayoutGuide key="safeArea" id="T68-Ql-Ops"/>
                     </view>
                 </viewController>

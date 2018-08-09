@@ -21,9 +21,10 @@ class CalendarTapGestureRecognizer : UITapGestureRecognizer {
 }
 
 struct CalendarMonthModel : CustomStringConvertible {
+    
     let matrix: [[CalendarDayModel?]]
     let startDate: Date
-
+    
     var description: String {
 
         let formatter = DateFormatter()
@@ -32,7 +33,10 @@ struct CalendarMonthModel : CustomStringConvertible {
 
         for row in matrix {
             for (index, day) in row.enumerated() {
-                result += (day?.description ?? "--      ") + (index == row.count - 1 ? "" : ", ")
+                let description = (day?.description ?? "--      ")
+                let markers = "[" + (day?.isToday ?? false ? "T" : " ") + (day?.isSelected ?? false ? "*" : " ") + "]"
+                let separator = (index == row.count - 1 ? "" : ", ")
+                result += "\(description)\(markers)\(separator)"
             }
             result += "\n"
         }
@@ -43,15 +47,6 @@ struct CalendarMonthModel : CustomStringConvertible {
 class MonthViewController: UIViewController {
 
     var didLayoutSubviews = false
-
-    var startDate: Date? {
-        didSet {
-            if let date = startDate {
-                model = Utils.calendarModel(forStartDate: date)
-                print(model)
-            }
-        }
-    }
 
     var model: CalendarMonthModel?
     var delegate: CalendarDelegate?

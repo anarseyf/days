@@ -8,10 +8,15 @@
 
 import UIKit
 
+struct CalendarModel {
+    let startDates: [Date]
+    var selectedDate: Date?
+}
+
 class CalendarViewController: UIViewController, UIScrollViewDelegate, CalendarDelegate {
 
-    var startDates: [Date]?
-    var selectedDate: Date?
+    var model: CalendarModel?
+    var calendarDelegate: CalendarDelegate?
 
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var monthsView: UIScrollView!
@@ -23,25 +28,25 @@ class CalendarViewController: UIViewController, UIScrollViewDelegate, CalendarDe
     override func viewDidLoad() {
         super.viewDidLoad()
 
+//        Utils.blurifyView(self.view)
+
         monthsView.delegate = self
 
-        var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
-        components.day = 1
-
-        let startDates = Array(-1...11).map { index -> Date in
-            var currentComponents = components
-            currentComponents.month = components.month! + index
-            return currentComponents.date!
-        }
+        guard let model = model else { return }
 
         let size = monthsView.frame.size
         monthsView.contentSize = CGSize(width: size.width,
-                                        height: CGFloat(startDates.count) * size.height)
+                                        height: CGFloat(model.startDates.count) * size.height)
         monthsView.isPagingEnabled = true
 
-        for (index, date) in startDates.enumerated() {
+        for (index, date) in model.startDates.enumerated() {
             let monthViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "monthViewController") as! MonthViewController
-            monthViewController.startDate = date
+
+            let monthModel = Utils.calendarModel(forStartDate: date,
+                                                 selectedDate: model.selectedDate)
+            print(monthModel)
+
+            monthViewController.model = monthModel
             monthViewController.delegate = self
 
             self.addChild(monthViewController)
@@ -52,29 +57,30 @@ class CalendarViewController: UIViewController, UIScrollViewDelegate, CalendarDe
             monthsView.addSubview(monthViewController.view)
         }
 
-        self.startDates = startDates
-        self.selectedDate = startDates[0]
         updateLabel()
     }
 
     func updateLabel() {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM yyyy"
-        monthLabel.text = formatter.string(from: selectedDate!)
+        monthLabel.text = formatter.string(from: model!.selectedDate!)
     }
 
     // MARK: - UIScrollViewDelegate
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = Int(Double(startDates!.count) * Double(scrollView.contentOffset.y / scrollView.contentSize.height))
+        guard var model = model else { return }
 
-        selectedDate = startDates![page]
+        let offsetFraction = Double(scrollView.contentOffset.y / scrollView.contentSize.height)
+        let page = Int(Double(model.startDates.count) * offsetFraction)
+        model.selectedDate = model.startDates[page]
         updateLabel()
     }
 
     // MARK: - CalendarDelegate
 
     func didSelectDate(_ date: Date?) {
-        print(date)
+        calendarDelegate?.didSelectDate(date)
+        dismiss(animated: true, completion: nil)
     }
 }

@@ -57,13 +57,7 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = UIColor.clear
-
-        let blurEffect = UIBlurEffect(style: .regular)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = self.view.frame
-
-        self.view.insertSubview(blurEffectView, at: 0)
+        Utils.blurifyView(self.view)
 
         updateLabels()
         updateNotifyUI()

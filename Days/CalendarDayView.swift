@@ -12,6 +12,8 @@ struct CalendarDayModel : CustomStringConvertible {
     let date: Date
     let weekday: Int
     let dayOfMonth: Int
+    var isToday: Bool
+    var isSelected: Bool
 
     var description: String {
         let formatter = DateFormatter()
@@ -90,7 +92,10 @@ class CalendarDayView: CalendarCellView {
         if (newSuperview == nil) { return }
 
         if let model = model {
-            background?.backgroundColor = .lightGray
+            let colorName = model.isSelected
+                ? "calendarColorSelected"
+                : (model.isToday ? "calendarColorToday" : "calendarColorDefault")
+            background?.backgroundColor = UIColor(named: colorName)
 
             let label = UILabel(frame: self.bounds)
             label.text = String(model.dayOfMonth)

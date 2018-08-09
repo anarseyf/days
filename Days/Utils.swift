@@ -64,9 +64,12 @@ class Utils {
         return targetComponents.date ?? targetDate
     }
 
-    static func calendarModel(forStartDate startDate: Date) -> CalendarMonthModel {
+    static func calendarModel(forStartDate startDate: Date, selectedDate: Date?) -> CalendarMonthModel {
+
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE, MMM d, HH:mm"
+
+        let today = Utils.dateFloor(from: Date())!
 
         var date = startDate
         var flatList: [CalendarDayModel?] = []
@@ -77,9 +80,13 @@ class Utils {
         while currentMonth == month {
             let weekday = calendar.component(.weekday, from: date)
             let dayOfMonth = calendar.component(.day, from: date)
+            let isToday = (date == today)
+            let isSelected = (date == selectedDate)
             let dayModel = CalendarDayModel(date: date,
                                             weekday: weekday,
-                                            dayOfMonth: dayOfMonth)
+                                            dayOfMonth: dayOfMonth,
+                                            isToday: isToday,
+                                            isSelected: isSelected)
             flatList.append(dayModel)
 
             var components = calendar.dateComponents(in: .current, from: date)
@@ -133,6 +140,17 @@ class Utils {
         components.hour = 0
         components.minute = 0
         components.second = 0
+        components.nanosecond = 0
         return components.date
+    }
+
+    static func blurifyView(_ view: UIView) {
+        view.backgroundColor = UIColor.clear
+
+        let blurEffect = UIBlurEffect(style: .regular)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.frame
+
+        view.insertSubview(blurEffectView, at: 0)
     }
 }

@@ -77,3 +77,12 @@ extension DaysSelectorViewController: UIScrollViewDelegate {
         selectStartOption(page, animated: true)
     }
 }
+
+// MARK: - CalendarDelegate
+
+extension DaysSelectorViewController: CalendarDelegate {
+    func didSelectDate(_ date: Date?) {
+        print(date)
+        setStartDate(date)
+    }
+}

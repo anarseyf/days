@@ -109,6 +109,20 @@ class DaysSelectorViewController: UIViewController {
     @IBAction func calendarButton(_ sender: UIButton) {
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarViewController")
         if let calendarViewController = viewController as? CalendarViewController {
+
+            // TODO - move to a better place
+            var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
+            components.day = 1
+            let startDates = Array(0...1).map { index -> Date in // TODO -1...11
+                var currentComponents = components
+                currentComponents.month = components.month! + index
+                return currentComponents.date!
+            }
+
+            calendarViewController.model = CalendarModel(startDates: startDates,
+                                                         selectedDate: model.startDate)
+
+            calendarViewController.calendarDelegate = self
             navigationController?.modalPresentationStyle = .overCurrentContext
             navigationController?.present(calendarViewController, animated: true)
         }
@@ -243,14 +257,22 @@ class DaysSelectorViewController: UIViewController {
 
         let option = startOptions[index]
         let adjusted = Utils.dateFloor(from: option.date)
-        model.startDate = adjusted
-        updateTargetDate()
+        setStartDate(adjusted)
+    }
 
+    func setStartDate(_ date: Date?) {
+        model.startDate = date
+        updateTargetDate()
         updateScrollView()
+        updateStartDateLabel()
     }
 
     private func updateTargetDate() {
         model.targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
+    }
+
+    func updateStartDateLabel() {
+        calendarButton.titleLabel?.text = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
     }
 
     func updateScrollView() {
@@ -281,4 +303,3 @@ class DaysSelectorViewController: UIViewController {
         selectStartOption(-startOffsetPast)
     }
 }
-
