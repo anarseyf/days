@@ -19,6 +19,7 @@ class DaysSelectorViewController: UIViewController {
     // MARK: - Properties
 
     var model = TimerModel()
+    var isCalendarShown = false
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
@@ -47,6 +48,7 @@ class DaysSelectorViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var startControlsView: UIView!
     @IBOutlet weak var calendarButton: UIButton!
+    @IBOutlet weak var startControlsTopMargin: NSLayoutConstraint!
 
     // MARK: - User action handlers
 
@@ -96,24 +98,19 @@ class DaysSelectorViewController: UIViewController {
     }
 
     @IBAction func calendarButton(_ sender: UIButton) {
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "calendarViewController")
-        if let calendarViewController = viewController as? CalendarViewController {
+        if !isCalendarShown {
+            isCalendarShown = true
 
-            // TODO - move to a better place
-            var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
-            components.day = 1
-            let startDates = Array(0...1).map { index -> Date in // TODO -1...11
-                var currentComponents = components
-                currentComponents.month = components.month! + index
-                return currentComponents.date!
-            }
-
-            calendarViewController.model = CalendarModel(startDates: startDates,
-                                                         selectedDate: model.startDate)
-
-            calendarViewController.calendarDelegate = self
-            navigationController?.modalPresentationStyle = .overCurrentContext
-            navigationController?.present(calendarViewController, animated: true)
+            UIView.animate(withDuration: 0.5,
+                           animations: {
+                self.startControlsTopMargin.constant = 0.0
+                self.view.layoutIfNeeded() },
+                           completion: { finished in
+                self.configureCalendar()
+            })
+        }
+        else {
+            // TODO - select or go to today
         }
     }
 
@@ -132,31 +129,25 @@ class DaysSelectorViewController: UIViewController {
         restore()
     }
 
-    /* TODO - remove
-    func createStartOptions() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EE, MMM d"
-        let nowComponents = Utils.componentsFromDate(Date())
-        let day = nowComponents.day!
+    func configureCalendar() {
+        if let calendarViewController = children.first as? CalendarViewController {
 
-        func replaceTitle(_ title: String, forOffset offset: Int) -> String {
-            switch (offset) {
-            case -1: return "YESTERDAY"
-            case 0: return "TODAY"
-            case 1: return "TOMORROW"
-            default: return title
+            calendarViewController.calendarDelegate = self
+            
+            // TODO - move to a better place
+            var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
+            components.day = 1
+            let startDates = Array(0...1).map { index -> Date in // TODO -1...11
+                var currentComponents = components
+                currentComponents.month = components.month! + index
+                return currentComponents.date!
             }
-        }
 
-        startOptions = Array(startOffsetPast...startOffsetFuture).map { i in
-            var components = nowComponents
-            components.day = day + i
-            let date = components.date!
-            let title = replaceTitle(formatter.string(from: date), forOffset: i)
-            return StartOption(date: date, title: title)
+            calendarViewController.model = CalendarModel(startDates: startDates,
+                                              currentMonthStartDate: startDates[0],
+                                              selectedDate: model.startDate)
         }
     }
- */
 
     func setIncrementButtonsHidden(_ isHidden: Bool) {
         minusDayButton.isHidden = isHidden
@@ -212,6 +203,31 @@ class DaysSelectorViewController: UIViewController {
 
     func updateCalendarButton() {
         let title = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
+
+        // TODO - Today/Tomorrow/Yesterday
+        /*
+         let formatter = DateFormatter()
+         formatter.dateFormat = "EE, MMM d"
+         let nowComponents = Utils.componentsFromDate(Date())
+         let day = nowComponents.day!
+
+         func replaceTitle(_ title: String, forOffset offset: Int) -> String {
+         switch (offset) {
+             case -1: return "YESTERDAY"
+             case 0: return "TODAY"
+             case 1: return "TOMORROW"
+             default: return title
+             }
+         }
+
+         startOptions = Array(startOffsetPast...startOffsetFuture).map { i in
+             var components = nowComponents
+             components.day = day + i
+             let date = components.date!
+             let title = replaceTitle(formatter.string(from: date), forOffset: i)
+             return StartOption(date: date, title: title)
+         }
+         */
         calendarButton.setTitle(title, for: .normal)
     }
 

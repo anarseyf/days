@@ -8,8 +8,9 @@
 
 import UIKit
 
-protocol CalendarDelegate {
-    func didSelectDate(_ date: Date?)
+@objc protocol CalendarDelegate {
+    @objc optional func didSelectDate(_ date: Date?)
+    @objc optional func didShowMonth(startingOn startDate: Date)
 }
 
 class CalendarTapGestureRecognizer : UITapGestureRecognizer {
@@ -20,36 +21,12 @@ class CalendarTapGestureRecognizer : UITapGestureRecognizer {
     }
 }
 
-struct CalendarMonthModel : CustomStringConvertible {
-    
-    let matrix: [[CalendarDayModel?]]
-    let startDate: Date
-    
-    var description: String {
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy\n"
-        var result = formatter.string(from: startDate)
-
-        for row in matrix {
-            for (index, day) in row.enumerated() {
-                let description = (day?.description ?? "--      ")
-                let markers = "[" + (day?.isToday ?? false ? "T" : " ") + (day?.isSelected ?? false ? "*" : " ") + "]"
-                let separator = (index == row.count - 1 ? "" : ", ")
-                result += "\(description)\(markers)\(separator)"
-            }
-            result += "\n"
-        }
-        return result
-    }
-}
-
 class MonthViewController: UIViewController {
-
-    var didLayoutSubviews = false
 
     var model: CalendarMonthModel?
     var delegate: CalendarDelegate?
+    var didLayoutSubviews = false
+    let labelHeight: CGFloat = 30.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +38,7 @@ class MonthViewController: UIViewController {
             if let monthModel = model {
 
                 let cellWidth = floor(view.frame.width / CGFloat(monthModel.matrix.first!.count))
-                let cellHeight = floor(view.frame.height / CGFloat(monthModel.matrix.count + 1))
+                let cellHeight = floor(view.frame.height / CGFloat(monthModel.matrix.count + 1)) // TODO - always 6 rows
 
                 let formatter = DateFormatter()
                 formatter.dateFormat = "E"
@@ -100,6 +77,6 @@ class MonthViewController: UIViewController {
     }
 
     @objc func didSelectDate(_ sender: CalendarTapGestureRecognizer) {
-        delegate?.didSelectDate(sender.dayModel?.date)
+        delegate?.didSelectDate?(sender.dayModel?.date)
     }
 }
