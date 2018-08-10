@@ -31,8 +31,8 @@ class DaysSelectorViewController: UIViewController {
     var calendarStartDates: [Date]?
     var namedDates: [Date: String]?
 
-    let numMonthsBack = 1 // TODO -1...11
-    let numMonthsForward = 1
+    let numMonthsBack = 1
+    let numMonthsForward = 11
     let startControlsTopMarginDefault: CGFloat = 50.0
     let startControlsTopMarginCompact: CGFloat = 0.0
     let daysInputTopMarginDefault: CGFloat = 50.0
@@ -120,15 +120,18 @@ class DaysSelectorViewController: UIViewController {
     @objc func calendarLabelTapped(_ sender: UITapGestureRecognizer) {
 
         if !isCalendarShown {
-            UIView.animate(withDuration: 0.4,
-                           animations: {
-                            self.daysInputTopMargin.constant = self.daysInputTopMarginCompact
-                            self.startControlsTopMargin.constant = self.startControlsTopMarginCompact
-//                            self.daysInput.font = self.daysInputFontCompact
-                            self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
-                completion: { finished in
+            UIView.animate(withDuration: 0.2, animations: {
+                    self.daysInputTopMargin.constant = self.daysInputTopMarginCompact
+                    self.startControlsTopMargin.constant = self.startControlsTopMarginCompact
+                    self.daysInput.font = self.daysInputFontCompact
+                    self.view.layoutIfNeeded() // TODO - setNeedsLayout?
+                }, completion: { finished in
                     self.configureCalendar()
+                    self.calendar?.view.alpha = 0.0
                     self.isCalendarShown = true
+                    UIView.animate(withDuration: 0.2) {
+                        self.calendar?.view.alpha = 1.0
+                    }
             })
         }
         else {
@@ -256,7 +259,7 @@ class DaysSelectorViewController: UIViewController {
     private func resetConstraints() {
         startControlsTopMargin.constant = startControlsTopMarginDefault
         daysInputTopMargin.constant = daysInputTopMarginDefault
-//        daysInput.font = self.daysInputFontDefault
+        daysInput.font = self.daysInputFontDefault
     }
 
     private func restore() {

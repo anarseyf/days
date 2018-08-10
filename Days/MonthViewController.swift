@@ -48,6 +48,14 @@ class MonthViewController: UIViewController {
                 label.font = UIFont.systemFont(ofSize: fontSize)
                 view.addSubview(label)
 
+                let separatorHeight: CGFloat = 1.0
+                let origin = CGPoint(x: 0.0, y: labelHeight - 2 * separatorHeight)
+                let size = CGSize(width: label.frame.width, height: separatorHeight)
+                let separator = UIView(frame: CGRect(origin: origin, size: size))
+                separator.layer.borderWidth = 1.0
+                separator.layer.borderColor = UIColor(named: "calendarSeparatorColor")!.cgColor
+                view.addSubview(separator)
+
                 formatter.dateFormat = "E"
                 let weekdaysRow: [String] = monthModel.matrix[1].map { dayModel in
                     let str = formatter.string(from: dayModel!.date)
