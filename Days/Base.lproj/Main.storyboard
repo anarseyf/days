@@ -163,6 +163,10 @@
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Dy-JH-1k3">
                                 <rect key="frame" x="30" y="348" width="260" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" priority="995" constant="250" id="9jO-go-GZJ"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="994" constant="100" id="v3x-Xg-n2a"/>
+                                </constraints>
                                 <connections>
                                     <segue destination="hcH-kg-hTk" kind="embed" id="Quv-EQ-8x6"/>
                                 </connections>
@@ -172,7 +176,7 @@
                         <constraints>
                             <constraint firstItem="4ya-mL-LK9" firstAttribute="centerY" secondItem="6yR-3e-nS4" secondAttribute="centerY" id="EBx-XO-VZp"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="3Dy-JH-1k3" secondAttribute="trailing" constant="30" id="FaA-7x-M5T"/>
-                            <constraint firstItem="sT0-n0-lZx" firstAttribute="top" secondItem="3Dy-JH-1k3" secondAttribute="bottom" constant="20" id="NpS-Vl-4Wt"/>
+                            <constraint firstItem="sT0-n0-lZx" firstAttribute="top" relation="greaterThanOrEqual" secondItem="3Dy-JH-1k3" secondAttribute="bottom" priority="995" constant="20" id="NpS-Vl-4Wt"/>
                             <constraint firstItem="Blu-zW-0B1" firstAttribute="top" secondItem="hjJ-yK-pHs" secondAttribute="bottom" constant="50" id="OlU-qM-nlh"/>
                             <constraint firstItem="hjJ-yK-pHs" firstAttribute="top" secondItem="6yR-3e-nS4" secondAttribute="bottom" id="QCG-dQ-R8R"/>
                             <constraint firstItem="hjJ-yK-pHs" firstAttribute="top" secondItem="6yR-3e-nS4" secondAttribute="bottom" constant="10" id="Sk5-a9-Fp7"/>
@@ -205,6 +209,7 @@
                     <connections>
                         <outlet property="calendarLabel" destination="1Ip-Fx-1Ek" id="yWm-e0-4lJ"/>
                         <outlet property="daysInput" destination="6yR-3e-nS4" id="qmM-jP-czV"/>
+                        <outlet property="daysInputTopMargin" destination="xA7-8V-qAQ" id="xmb-jy-86X"/>
                         <outlet property="daysLabel" destination="hjJ-yK-pHs" id="BZ2-Ca-8Aj"/>
                         <outlet property="doneButton" destination="Qvx-g3-JTp" id="jbY-IM-n96"/>
                         <outlet property="leftArrow" destination="cDw-Ho-1km" id="3LV-f7-f0D"/>

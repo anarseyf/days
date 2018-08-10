@@ -20,10 +20,21 @@ class DaysSelectorViewController: UIViewController {
 
     var model = TimerModel()
     var calendar: CalendarViewController?
-    var isCalendarShown = false
+    var isCalendarShown: Bool {
+        get {
+            return (calendar == nil ? false : !calendar!.view.isHidden)
+        }
+        set(newValue) {
+            calendar?.view.isHidden = !newValue
+        }
+    }
     var calendarStartDates: [Date]?
     let numMonthsBack = 1 // TODO -1...11
     let numMonthsForward = 1
+    let startControlsTopMarginDefault: CGFloat = 50.0
+    let startControlsTopMarginCompact: CGFloat = 0.0
+    let daysInputTopMarginDefault: CGFloat = 50.0
+    let daysInputTopMarginCompact: CGFloat = 20.0
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
@@ -53,6 +64,7 @@ class DaysSelectorViewController: UIViewController {
     @IBOutlet weak var startControlsView: UIView!
     @IBOutlet weak var calendarLabel: UILabel!
     @IBOutlet weak var startControlsTopMargin: NSLayoutConstraint!
+    @IBOutlet weak var daysInputTopMargin: NSLayoutConstraint!
 
     // MARK: - User action handlers
 
@@ -102,19 +114,17 @@ class DaysSelectorViewController: UIViewController {
     }
 
     @objc func calendarLabelTapped(_ sender: UITapGestureRecognizer) {
-        if !isCalendarShown {
-            isCalendarShown = true
 
+        if !isCalendarShown {
             UIView.animate(withDuration: 0.4,
                 animations: {
-                    self.startControlsTopMargin.constant = 0.0
+                    self.daysInputTopMargin.constant = self.daysInputTopMarginCompact
+                    self.startControlsTopMargin.constant = self.startControlsTopMarginCompact
                     self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
                 completion: { finished in
                     self.configureCalendar()
+                    self.isCalendarShown = true
             })
-        }
-        else {
-            // TODO - select or go to today?
         }
     }
 
@@ -149,11 +159,11 @@ class DaysSelectorViewController: UIViewController {
             }
 
             calendar = calendarViewController
-            updateCalendar()
+            updateCalendarModel()
         }
     }
 
-    func updateCalendar() {
+    func updateCalendarModel() {
         guard let dates = calendarStartDates else { return }
         calendar?.model = CalendarModel(monthStartDates: dates,
                                         currentMonthStartDate: dates[numMonthsBack],
@@ -205,7 +215,7 @@ class DaysSelectorViewController: UIViewController {
     func setStartDate(_ date: Date?) {
         model.startDate = date
         updateTargetDate()
-        updateCalendar()
+        updateCalendarModel()
         updateCalendarLabel()
     }
 
@@ -246,12 +256,14 @@ class DaysSelectorViewController: UIViewController {
     private func resetUI() {
         startToday()
         setNumDays(1)
-        resetCalendarUI()
+        isCalendarShown = false
+        resetConstraints()
         NotificationsHandler.reset()
     }
 
-    private func resetCalendarUI() {
-        // TODO
+    func resetConstraints() {
+        startControlsTopMargin.constant = startControlsTopMarginDefault
+        daysInputTopMargin.constant = daysInputTopMarginDefault
     }
 
     private func restore() {

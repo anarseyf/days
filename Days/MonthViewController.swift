@@ -41,11 +41,11 @@ class MonthViewController: UIViewController {
                                                   size: CGSize(width: view.frame.width,
                                                                height: labelHeight)))
                 let formatter = DateFormatter()
-                formatter.dateFormat = "MMM"
+                formatter.dateFormat = "MMMM"
                 label.text = formatter.string(from: monthModel.startDate)
                 label.textColor = UIColor(named: "secondaryTextColor")
                 label.textAlignment = .right
-                label.font = UIFont.boldSystemFont(ofSize: fontSize)
+                label.font = UIFont.systemFont(ofSize: fontSize)
                 view.addSubview(label)
 
                 formatter.dateFormat = "E"
