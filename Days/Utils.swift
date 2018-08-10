@@ -20,6 +20,7 @@ class Utils {
     static let shared = Utils()
 
     let dateOnlyFormatter = DateFormatter()
+    let dateWithWeekdayFormatter = DateFormatter()
     let dateNoYearFormatter = DateFormatter()
     let timeOnlyFormatter = DateFormatter()
     let dateTimeFormatter = DateFormatter()
@@ -27,9 +28,10 @@ class Utils {
 
     private init() {
         
+        dateWithWeekdayFormatter.dateFormat = "E, MMM d"
+        dateNoYearFormatter.dateFormat = "MMM d" // see http://nsdateformatter.com
         dateOnlyFormatter.dateStyle = .medium // Aug 5
         dateOnlyFormatter.timeStyle = .none
-        dateNoYearFormatter.dateFormat = "MMM d" // see http://nsdateformatter.com
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium

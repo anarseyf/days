@@ -45,7 +45,7 @@ class CalendarViewController: UIViewController {
         updateMonths()
     }
 
-    func configureMonthsView() {
+    private func configureMonthsView() {
         guard let model = model else {
             print("Calendar VC: No model")
             return
@@ -57,7 +57,7 @@ class CalendarViewController: UIViewController {
         monthsView.isPagingEnabled = true
     }
 
-    func createMonths() {
+    private func createMonths() {
         guard let model = model else { return }
 
         let size = monthsView.frame.size
@@ -76,7 +76,7 @@ class CalendarViewController: UIViewController {
         }
     }
 
-    func updateMonths() {
+    private func updateMonths() {
         guard let model = model else { return }
         if self.children.isEmpty { return }
 

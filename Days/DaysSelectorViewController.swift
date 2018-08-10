@@ -30,12 +30,15 @@ class DaysSelectorViewController: UIViewController {
     }
     var calendarStartDates: [Date]?
     var namedDates: [Date: String]?
+
     let numMonthsBack = 1 // TODO -1...11
     let numMonthsForward = 1
     let startControlsTopMarginDefault: CGFloat = 50.0
     let startControlsTopMarginCompact: CGFloat = 0.0
     let daysInputTopMarginDefault: CGFloat = 50.0
     let daysInputTopMarginCompact: CGFloat = 20.0
+    let daysInputFontDefault = UIFont.systemFont(ofSize: 60.0)
+    let daysInputFontCompact = UIFont.boldSystemFont(ofSize: 36.0)
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
@@ -121,11 +124,15 @@ class DaysSelectorViewController: UIViewController {
                            animations: {
                             self.daysInputTopMargin.constant = self.daysInputTopMarginCompact
                             self.startControlsTopMargin.constant = self.startControlsTopMarginCompact
+//                            self.daysInput.font = self.daysInputFontCompact
                             self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
                 completion: { finished in
                     self.configureCalendar()
                     self.isCalendarShown = true
             })
+        }
+        else {
+            calendar?.scrollToSelectedMonth(animated: true)
         }
     }
 
@@ -235,7 +242,7 @@ class DaysSelectorViewController: UIViewController {
 
     private func updateCalendarLabel() {
         guard let date = model.startDate else { return }
-        calendarLabel.text = namedDates?[date] ?? Utils.shared.dateOnlyFormatter.string(from: date)
+        calendarLabel.text = namedDates?[date] ?? Utils.shared.dateWithWeekdayFormatter.string(from: date)
     }
 
     private func resetUI() {
@@ -249,6 +256,7 @@ class DaysSelectorViewController: UIViewController {
     private func resetConstraints() {
         startControlsTopMargin.constant = startControlsTopMarginDefault
         daysInputTopMargin.constant = daysInputTopMarginDefault
+//        daysInput.font = self.daysInputFontDefault
     }
 
     private func restore() {
