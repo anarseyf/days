@@ -29,7 +29,7 @@ class Utils {
         
         dateOnlyFormatter.dateStyle = .medium // Aug 5
         dateOnlyFormatter.timeStyle = .none
-        dateNoYearFormatter.dateFormat = "MMM d" // Aug 5
+        dateNoYearFormatter.dateFormat = "MMM d" // see http://nsdateformatter.com
         timeOnlyFormatter.dateStyle = .none
         timeOnlyFormatter.timeStyle = .medium
         dateTimeFormatter.dateStyle = .medium
@@ -47,7 +47,7 @@ class Utils {
 
     static func notificationDate(fromTarget targetDate: Date, withTimeOverride overrideDate: Date? = nil) -> Date {
 
-        var targetComponents = Calendar.current.dateComponents(in: .current, from: targetDate)
+        var targetComponents = Utils.componentsFromDate(targetDate)
         targetComponents.day = targetComponents.day! - 1
         targetComponents.second = 0
 
@@ -56,11 +56,43 @@ class Utils {
             targetComponents.minute = defaultNotificationMinute
         }
         else {
-            let overrideComponents = Calendar.current.dateComponents(in: .current, from: overrideDate!)
+            let overrideComponents = Utils.componentsFromDate(overrideDate!)
             targetComponents.hour = overrideComponents.hour
             targetComponents.minute = overrideComponents.minute
 
         }
         return targetComponents.date ?? targetDate
+    }
+
+    static func componentsFromDate(_ date: Date) -> DateComponents {
+        return Calendar.current.dateComponents(in: .current, from: date)
+    }
+
+    static func dateFloor(from date: Date?) -> Date? {
+
+        guard let date = date else { return nil }
+
+        var components = componentsFromDate(date)
+        components.hour = 0
+        components.minute = 0
+        components.second = 0
+        components.nanosecond = 0
+        return components.date
+    }
+
+    static func adjustedDate(_ date: Date, by numDays: Int) -> Date {
+        var components = componentsFromDate(date)
+        components.day = components.day! + numDays
+        return components.date!
+    }
+
+    static func blurifyView(_ view: UIView) {
+        view.backgroundColor = UIColor.clear
+
+        let blurEffect = UIBlurEffect(style: .regular)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.frame
+
+        view.insertSubview(blurEffectView, at: 0)
     }
 }

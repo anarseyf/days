@@ -17,12 +17,17 @@
 		5E55F98720EAB26D00A47C33 /* CountdownViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */; };
 		5E55F98920EAB9F700A47C33 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55F98820EAB9F700A47C33 /* Utils.swift */; };
 		5E66C44221177B3600719A9A /* BubbleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E66C44121177B3600719A9A /* BubbleViewController.swift */; };
+		5E9706A72119064B00ADF617 /* CalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9706A62119064B00ADF617 /* CalendarDayView.swift */; };
+		5E9B62192118F40000658A75 /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9B62182118F40000658A75 /* CalendarViewController.swift */; };
+		5E9B621B2118F9AC00658A75 /* MonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E9B621A2118F9AC00658A75 /* MonthViewController.swift */; };
 		5EB81A3E20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */; };
 		5EBA5F0E20F6BC8F0078827A /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA5F0D20F6BC8F0078827A /* ProgressViewController.swift */; };
 		5EBA5F1020F6CCDE0078827A /* ProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA5F0F20F6CCDE0078827A /* ProgressCell.swift */; };
 		5EBA5F1220F6F90E0078827A /* ProgressCellBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA5F1120F6F90E0078827A /* ProgressCellBar.swift */; };
 		5ED7F25220FD409B002A74AB /* NotificationsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ED7F25120FD409B002A74AB /* NotificationsHandler.swift */; };
 		5EE195E620E843C10076D761 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE195E520E843C10076D761 /* TimerModel.swift */; };
+		5EFA91DE211D0C3D00F01DF1 /* CalendarMonthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFA91DD211D0C3D00F01DF1 /* CalendarMonthModel.swift */; };
+		5EFA91E0211D0CD400F01DF1 /* CalendarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFA91DF211D0CD400F01DF1 /* CalendarModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,12 +55,17 @@
 		5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownViewController.swift; sourceTree = "<group>"; };
 		5E55F98820EAB9F700A47C33 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		5E66C44121177B3600719A9A /* BubbleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleViewController.swift; sourceTree = "<group>"; };
+		5E9706A62119064B00ADF617 /* CalendarDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDayView.swift; sourceTree = "<group>"; };
+		5E9B62182118F40000658A75 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		5E9B621A2118F9AC00658A75 /* MonthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthViewController.swift; sourceTree = "<group>"; };
 		5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DaysSelectorViewController+Extensions.swift"; sourceTree = "<group>"; };
 		5EBA5F0D20F6BC8F0078827A /* ProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
 		5EBA5F0F20F6CCDE0078827A /* ProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCell.swift; sourceTree = "<group>"; };
 		5EBA5F1120F6F90E0078827A /* ProgressCellBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCellBar.swift; sourceTree = "<group>"; };
 		5ED7F25120FD409B002A74AB /* NotificationsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsHandler.swift; sourceTree = "<group>"; };
 		5EE195E520E843C10076D761 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
+		5EFA91DD211D0C3D00F01DF1 /* CalendarMonthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarMonthModel.swift; sourceTree = "<group>"; };
+		5EFA91DF211D0CD400F01DF1 /* CalendarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,11 +114,16 @@
 				5ED7F25120FD409B002A74AB /* NotificationsHandler.swift */,
 				5E0ECCFB20E564C0004BEEDA /* DaysSelectorViewController.swift */,
 				5EB81A3D20F3DFE1000173D4 /* DaysSelectorViewController+Extensions.swift */,
+				5E9B62182118F40000658A75 /* CalendarViewController.swift */,
+				5EFA91DF211D0CD400F01DF1 /* CalendarModel.swift */,
+				5E9B621A2118F9AC00658A75 /* MonthViewController.swift */,
+				5EFA91DD211D0C3D00F01DF1 /* CalendarMonthModel.swift */,
+				5E9706A62119064B00ADF617 /* CalendarDayView.swift */,
 				5E55F98620EAB26D00A47C33 /* CountdownViewController.swift */,
 				5EBA5F0D20F6BC8F0078827A /* ProgressViewController.swift */,
-				5E66C44121177B3600719A9A /* BubbleViewController.swift */,
 				5EBA5F0F20F6CCDE0078827A /* ProgressCell.swift */,
 				5EBA5F1120F6F90E0078827A /* ProgressCellBar.swift */,
+				5E66C44121177B3600719A9A /* BubbleViewController.swift */,
 				5E55F98420EA9A5200A47C33 /* SettingsViewController.swift */,
 				5EE195E520E843C10076D761 /* TimerModel.swift */,
 				5E55F98820EAB9F700A47C33 /* Utils.swift */,
@@ -231,10 +246,15 @@
 				5EE195E620E843C10076D761 /* TimerModel.swift in Sources */,
 				5E55F98720EAB26D00A47C33 /* CountdownViewController.swift in Sources */,
 				5EBA5F0E20F6BC8F0078827A /* ProgressViewController.swift in Sources */,
+				5EFA91DE211D0C3D00F01DF1 /* CalendarMonthModel.swift in Sources */,
+				5EFA91E0211D0CD400F01DF1 /* CalendarModel.swift in Sources */,
 				5E66C44221177B3600719A9A /* BubbleViewController.swift in Sources */,
 				5ED7F25220FD409B002A74AB /* NotificationsHandler.swift in Sources */,
 				5EBA5F1220F6F90E0078827A /* ProgressCellBar.swift in Sources */,
+				5E9B621B2118F9AC00658A75 /* MonthViewController.swift in Sources */,
 				5E0ECCFC20E564C0004BEEDA /* DaysSelectorViewController.swift in Sources */,
+				5E9706A72119064B00ADF617 /* CalendarDayView.swift in Sources */,
+				5E9B62192118F40000658A75 /* CalendarViewController.swift in Sources */,
 				5E0ECCFA20E564C0004BEEDA /* AppDelegate.swift in Sources */,
 				5E55F98520EA9A5200A47C33 /* SettingsViewController.swift in Sources */,
 				5EBA5F1020F6CCDE0078827A /* ProgressCell.swift in Sources */,
@@ -331,7 +351,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -385,7 +405,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

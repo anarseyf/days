@@ -48,7 +48,7 @@ class BubbleViewController: UIViewController {
         circleView.backgroundColor = .white
         circleView.clipsToBounds = true
 
-        let imageWidth = diameter / sqrt(2)
+        let imageWidth = diameter / 2 // sqrt(2)
         let imageOffset = (diameter - imageWidth)/2
         let imageFrame = CGRect(x: imageOffset,
                                 y: imageOffset,

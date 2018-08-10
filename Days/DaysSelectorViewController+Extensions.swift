@@ -67,13 +67,15 @@ extension DaysSelectorViewController : UITextFieldDelegate {
     }
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: - CalendarDelegate
 
-extension DaysSelectorViewController: UIScrollViewDelegate {
+extension DaysSelectorViewController: CalendarDelegate {
+    func didSelectDate(_ date: Date) {
+        print("DAYS: didSelect \(date)")
+        setStartDate(date)
+    }
 
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let page = Int(Double(startOptions.count) * Double(scrollView.contentOffset.x / scrollView.contentSize.width))
-        
-        selectStartOption(page, animated: true)
+    func didShowMonth(startingOn startDate: Date) {
+        print("DAYS: didShowMonth \(startDate)")
     }
 }

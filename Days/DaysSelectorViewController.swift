@@ -18,12 +18,8 @@ class DaysSelectorViewController: UIViewController {
 
     // MARK: - Properties
 
-    let startOffsetPast = -7
-    let startOffsetFuture = 7
-    let arrowButtonWidth: CGFloat = 50.0
-    var startOptions: [StartOption] = []
-    var selectedStartOptionIndex = 0
     var model = TimerModel()
+    var isCalendarShown = false
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
@@ -44,7 +40,6 @@ class DaysSelectorViewController: UIViewController {
 
     @IBOutlet weak var daysInput: UITextField!
     @IBOutlet weak var daysLabel: UILabel!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var minusDayButton: UIButton!
     @IBOutlet weak var plusDayButton: UIButton!
@@ -52,6 +47,8 @@ class DaysSelectorViewController: UIViewController {
     @IBOutlet weak var rightArrow: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var startControlsView: UIView!
+    @IBOutlet weak var calendarButton: UIButton!
+    @IBOutlet weak var startControlsTopMargin: NSLayoutConstraint!
 
     // MARK: - User action handlers
 
@@ -74,16 +71,12 @@ class DaysSelectorViewController: UIViewController {
         setDoneButtonHidden(true)
     }
 
-    @IBAction func previousStartOptionButton(_ sender: UIButton) {
-        if (selectedStartOptionIndex > 0) {
-            selectStartOption(selectedStartOptionIndex - 1)
-        }
+    @IBAction func leftArrow(_ sender: UIButton) {
+        setStartDate(Utils.adjustedDate(model.startDate!, by: -1))
     }
 
-    @IBAction func nextStartOptionButton(_ sender: UIButton) {
-        if (selectedStartOptionIndex < startOptions.count - 1) {
-            selectStartOption(selectedStartOptionIndex + 1)
-        }
+    @IBAction func rightArrow(_ sender: UIButton) {
+        setStartDate(Utils.adjustedDate(model.startDate!, by: 1))
     }
 
     @IBAction func startButton(_ sender: UIButton) {
@@ -104,6 +97,23 @@ class DaysSelectorViewController: UIViewController {
         model.save()
     }
 
+    @IBAction func calendarButton(_ sender: UIButton) {
+        if !isCalendarShown {
+            isCalendarShown = true
+
+            UIView.animate(withDuration: 0.5,
+                           animations: {
+                self.startControlsTopMargin.constant = 0.0
+                self.view.layoutIfNeeded() },
+                           completion: { finished in
+                self.configureCalendar()
+            })
+        }
+        else {
+            // TODO - select or go to today
+        }
+    }
+
     // MARK: - Methods
 
     override func viewDidLoad() {
@@ -113,68 +123,30 @@ class DaysSelectorViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
 
         daysInput.delegate = self
-        scrollView.delegate = self
         UNUserNotificationCenter.current().delegate = self
-
-        createStartOptions()
-        configureScrollView()
 
         resetUI()
         restore()
     }
 
-    func createStartOptions() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EE, MMM d"
-        let now = Date()
-        let calendar = Calendar.current
-        let nowComponents = calendar.dateComponents(in: .current, from: now)
-        let day = nowComponents.day!
+    func configureCalendar() {
+        if let calendarViewController = children.first as? CalendarViewController {
 
-        func replaceTitle(_ title: String, forOffset offset: Int) -> String {
-            switch (offset) {
-            case -1: return "YESTERDAY"
-            case 0: return "TODAY"
-            case 1: return "TOMORROW"
-            default: return title
+            calendarViewController.calendarDelegate = self
+            
+            // TODO - move to a better place
+            var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
+            components.day = 1
+            let startDates = Array(0...1).map { index -> Date in // TODO -1...11
+                var currentComponents = components
+                currentComponents.month = components.month! + index
+                return currentComponents.date!
             }
+
+            calendarViewController.model = CalendarModel(startDates: startDates,
+                                              currentMonthStartDate: startDates[0],
+                                              selectedDate: model.startDate)
         }
-
-        startOptions = Array(startOffsetPast...startOffsetFuture).map { i in
-            var components = nowComponents
-            components.day = day + i
-            let date = components.date!
-            let title = replaceTitle(formatter.string(from: date), forOffset: i)
-            return StartOption(date: date, title: title)
-        }
-    }
-
-    private func configureScrollView() {
-
-        let frameSize = CGSize(width: scrollView.frame.size.width,
-                               height: scrollView.frame.size.height)
-
-        for (index, element) in startOptions.enumerated() {
-            let origin = CGPoint(x: frameSize.width * CGFloat(index), y: 0)
-            let label = UILabel(frame: CGRect(origin: origin, size: frameSize))
-            label.text = element.title
-            label.font = UIFont.systemFont(ofSize: 30.0)
-            label.textAlignment = .center
-
-            scrollView.addSubview(label)
-        }
-
-        scrollView.contentSize = CGSize(width: frameSize.width * CGFloat(startOptions.count),
-                                        height: frameSize.height)
-        scrollView.isPagingEnabled = true
-
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(scrollViewTap(_:)))
-        tapRecognizer.cancelsTouchesInView = false
-        scrollView.addGestureRecognizer(tapRecognizer)
-    }
-
-    @objc func scrollViewTap(_ sender: UITapGestureRecognizer) {
-        setStartOptionToday()
     }
 
     func setIncrementButtonsHidden(_ isHidden: Bool) {
@@ -219,34 +191,48 @@ class DaysSelectorViewController: UIViewController {
         selectedInterval = Double(numDays * Utils.secondsPerDay)
     }
 
-    func selectStartOption(_ index: Int, animated: Bool = false) {
-
-        selectedStartOptionIndex = index
-
-        let option = startOptions[index]
-        let adjusted = TimerModel.dateFloor(from: option.date)
-        model.startDate = adjusted
+    func setStartDate(_ date: Date?) {
+        model.startDate = date
         updateTargetDate()
-
-        updateScrollView()
+        updateCalendarButton()
     }
 
     private func updateTargetDate() {
         model.targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
     }
 
-    func updateScrollView() {
-        let size = scrollView.contentSize
-        let itemWidth = CGFloat(size.width) / CGFloat(startOptions.count)
-        let offset = CGPoint(x: itemWidth * CGFloat(selectedStartOptionIndex), y: 0)
-        scrollView.setContentOffset(offset, animated: true)
+    func updateCalendarButton() {
+        let title = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
 
-        leftArrow.isHidden = (selectedStartOptionIndex <= 0)
-        rightArrow.isHidden = (selectedStartOptionIndex >= startOptions.count - 1)
+        // TODO - Today/Tomorrow/Yesterday
+        /*
+         let formatter = DateFormatter()
+         formatter.dateFormat = "EE, MMM d"
+         let nowComponents = Utils.componentsFromDate(Date())
+         let day = nowComponents.day!
+
+         func replaceTitle(_ title: String, forOffset offset: Int) -> String {
+         switch (offset) {
+             case -1: return "YESTERDAY"
+             case 0: return "TODAY"
+             case 1: return "TOMORROW"
+             default: return title
+             }
+         }
+
+         startOptions = Array(startOffsetPast...startOffsetFuture).map { i in
+             var components = nowComponents
+             components.day = day + i
+             let date = components.date!
+             let title = replaceTitle(formatter.string(from: date), forOffset: i)
+             return StartOption(date: date, title: title)
+         }
+         */
+        calendarButton.setTitle(title, for: .normal)
     }
 
     private func resetUI() {
-        setStartOptionToday()
+        startToday()
         setNumDays(1)
         NotificationsHandler.reset()
     }
@@ -259,8 +245,8 @@ class DaysSelectorViewController: UIViewController {
         }
     }
 
-    private func setStartOptionToday() {
-        selectStartOption(-startOffsetPast)
+    private func startToday() {
+        let today = Utils.dateFloor(from: Date())
+        setStartDate(today)
     }
 }
-
