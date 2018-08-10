@@ -51,7 +51,7 @@ class DaysSelectorViewController: UIViewController {
     @IBOutlet weak var rightArrow: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var startControlsView: UIView!
-    @IBOutlet weak var calendarButton: UIButton!
+    @IBOutlet weak var calendarLabel: UILabel!
     @IBOutlet weak var startControlsTopMargin: NSLayoutConstraint!
 
     // MARK: - User action handlers
@@ -101,7 +101,7 @@ class DaysSelectorViewController: UIViewController {
         model.save()
     }
 
-    @IBAction func calendarButton(_ sender: UIButton) {
+    @objc func calendarLabelTapped(_ sender: UITapGestureRecognizer) {
         if !isCalendarShown {
             isCalendarShown = true
 
@@ -128,6 +128,9 @@ class DaysSelectorViewController: UIViewController {
 
         daysInput.delegate = self
         UNUserNotificationCenter.current().delegate = self
+
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(calendarLabelTapped(_:)))
+        calendarLabel.addGestureRecognizer(recognizer)
 
         resetUI()
         restore()
@@ -205,14 +208,14 @@ class DaysSelectorViewController: UIViewController {
         model.startDate = date
         updateTargetDate()
         updateCalendar()
-        updateCalendarButton()
+        updateCalendarLabel()
     }
 
     private func updateTargetDate() {
         model.targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
     }
 
-    func updateCalendarButton() {
+    func updateCalendarLabel() {
         let title = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
 
         // TODO - Today/Tomorrow/Yesterday
@@ -239,7 +242,7 @@ class DaysSelectorViewController: UIViewController {
              return StartOption(date: date, title: title)
          }
          */
-        calendarButton.setTitle(title, for: .normal)
+        calendarLabel.text = title
     }
 
     private func resetUI() {

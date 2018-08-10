@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="calendarViewController" id="hcH-kg-hTk" customClass="CalendarViewController" customModule="Days" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="4CK-pa-6OQ">
-                        <rect key="frame" x="0.0" y="0.0" width="260" height="90"/>
+                        <rect key="frame" x="0.0" y="0.0" width="260" height="110"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cLM-to-vSp">
-                                <rect key="frame" x="0.0" y="0.0" width="260" height="90"/>
+                                <rect key="frame" x="0.0" y="0.0" width="260" height="110"/>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -88,10 +88,10 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Blu-zW-0B1">
-                                <rect key="frame" x="0.0" y="246" width="320" height="92"/>
+                                <rect key="frame" x="0.0" y="246" width="320" height="72"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cDw-Ho-1km">
-                                        <rect key="frame" x="15" y="48" width="40" height="40"/>
+                                        <rect key="frame" x="15" y="34" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="GTq-da-Ljp"/>
                                             <constraint firstAttribute="height" constant="40" id="shR-12-aWi"/>
@@ -102,7 +102,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G9L-Mh-5TA">
-                                        <rect key="frame" x="265" y="48" width="40" height="40"/>
+                                        <rect key="frame" x="265" y="34" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="Vh4-UU-cLC"/>
                                             <constraint firstAttribute="width" constant="40" id="xhb-Op-rPO"/>
@@ -118,27 +118,23 @@
                                         <color key="textColor" name="secondaryTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93H-8x-SPX">
-                                        <rect key="frame" x="65" y="44" width="190" height="48"/>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calendar" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Ip-Fx-1Ek">
+                                        <rect key="frame" x="65" y="36" width="190" height="36"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                        <state key="normal" title="Calendar">
-                                            <color key="titleColor" name="linkColor"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="calendarButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RUV-hc-LG5"/>
-                                        </connections>
-                                    </button>
+                                        <color key="textColor" name="linkColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="centerY" secondItem="93H-8x-SPX" secondAttribute="centerY" id="C9c-go-M9c"/>
-                                    <constraint firstItem="93H-8x-SPX" firstAttribute="trailing" secondItem="G9L-Mh-5TA" secondAttribute="leading" constant="-10" id="S4H-J2-Yy0"/>
+                                    <constraint firstItem="1Ip-Fx-1Ek" firstAttribute="leading" secondItem="cDw-Ho-1km" secondAttribute="trailing" constant="10" id="7xy-ME-pUk"/>
+                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="leading" secondItem="1Ip-Fx-1Ek" secondAttribute="trailing" constant="10" id="FuU-7A-BP4"/>
                                     <constraint firstItem="cDw-Ho-1km" firstAttribute="leading" secondItem="Blu-zW-0B1" secondAttribute="leading" constant="15" id="SF7-yU-TKf"/>
-                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="centerY" secondItem="93H-8x-SPX" secondAttribute="centerY" id="U1c-Nf-stY"/>
-                                    <constraint firstItem="93H-8x-SPX" firstAttribute="leading" secondItem="cDw-Ho-1km" secondAttribute="trailing" constant="10" id="eZL-FB-r6d"/>
+                                    <constraint firstItem="1Ip-Fx-1Ek" firstAttribute="top" secondItem="IaM-88-s9t" secondAttribute="bottom" id="Vjt-mc-CZC"/>
+                                    <constraint firstItem="G9L-Mh-5TA" firstAttribute="centerY" secondItem="1Ip-Fx-1Ek" secondAttribute="centerY" id="Vyl-jk-luv"/>
                                     <constraint firstAttribute="trailing" secondItem="G9L-Mh-5TA" secondAttribute="trailing" constant="15" id="j4W-dq-NGi"/>
-                                    <constraint firstAttribute="bottom" secondItem="93H-8x-SPX" secondAttribute="bottom" id="lgc-Im-Cm9"/>
-                                    <constraint firstItem="93H-8x-SPX" firstAttribute="top" secondItem="IaM-88-s9t" secondAttribute="bottom" constant="8" symbolic="YES" id="qhf-2j-SYG"/>
+                                    <constraint firstItem="cDw-Ho-1km" firstAttribute="centerY" secondItem="1Ip-Fx-1Ek" secondAttribute="centerY" id="kjW-42-knQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="1Ip-Fx-1Ek" secondAttribute="bottom" id="qbA-YK-ZMI"/>
                                     <constraint firstItem="IaM-88-s9t" firstAttribute="centerX" secondItem="Blu-zW-0B1" secondAttribute="centerX" id="xod-7l-MrR"/>
                                     <constraint firstItem="IaM-88-s9t" firstAttribute="top" secondItem="Blu-zW-0B1" secondAttribute="top" id="y6C-8B-NTX"/>
                                 </constraints>
@@ -166,7 +162,7 @@
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Dy-JH-1k3">
-                                <rect key="frame" x="30" y="358" width="260" height="90"/>
+                                <rect key="frame" x="30" y="338" width="260" height="110"/>
                                 <connections>
                                     <segue destination="hcH-kg-hTk" kind="embed" id="Quv-EQ-8x6"/>
                                 </connections>
@@ -207,7 +203,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="calendarButton" destination="93H-8x-SPX" id="ZeX-5H-pcN"/>
+                        <outlet property="calendarLabel" destination="1Ip-Fx-1Ek" id="yWm-e0-4lJ"/>
                         <outlet property="daysInput" destination="6yR-3e-nS4" id="qmM-jP-czV"/>
                         <outlet property="daysLabel" destination="hjJ-yK-pHs" id="BZ2-Ca-8Aj"/>
                         <outlet property="doneButton" destination="Qvx-g3-JTp" id="jbY-IM-n96"/>
