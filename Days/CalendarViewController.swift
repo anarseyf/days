@@ -18,6 +18,7 @@ class CalendarViewController: UIViewController {
     var model: CalendarModel? {
         didSet {
             updateMonths()
+            scrollToSelectedMonth()
             view.setNeedsLayout()
         }
     }
@@ -33,11 +34,12 @@ class CalendarViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard let model = model else { return }
+        if model == nil { return }
 
         if !didConfigureViews {
             configureMonthsView()
             createMonths()
+            scrollToSelectedMonth(animated: false)
             didConfigureViews = true
         }
         updateMonths()
@@ -81,10 +83,24 @@ class CalendarViewController: UIViewController {
         for (index, date) in model.monthStartDates.enumerated() {
 
             let monthViewController = self.children[index] as! MonthViewController
-            let monthModel = CalendarMonthModel.build(forStartDate: date,
-                                                      selectedDate: model.selectedDate)
+            let monthModel = MonthModel.build(forStartDate: date,
+                                              selectedDate: model.selectedDate)
             print(monthModel)
             monthViewController.model = monthModel
+        }
+    }
+
+    func scrollToSelectedMonth(animated: Bool = true) {
+        guard let model = model,
+              let date = model.selectedDate else { return }
+        let monthStart = Utils.monthStart(from: date)
+        let index = model.monthStartDates.firstIndex(of: monthStart)
+
+        if let index = index {
+            let fraction = CGFloat(index) / CGFloat(model.monthStartDates.count)
+            let offsetY = fraction * monthsView.contentSize.height
+            let offset = CGPoint(x: 0, y: offsetY)
+            monthsView.setContentOffset(offset, animated: animated)
         }
     }
 }

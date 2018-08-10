@@ -8,24 +8,6 @@
 
 import UIKit
 
-struct CalendarDayModel : CustomStringConvertible {
-    let date: Date
-    let weekday: Int
-    let dayOfMonth: Int
-    var isToday: Bool
-    var isSelected: Bool
-
-    var description: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd (E)"
-        return formatter.string(from: date)
-    }
-
-    var isOnWeekend: Bool {
-        return weekday == 1 || weekday == 7
-    }
-}
-
 class CalendarCellView: UIView {
     var background: UIView?
     let fontSize: CGFloat = 18.0
@@ -61,7 +43,7 @@ class CalendarHeaderView: CalendarCellView {
 
 class CalendarDayView: CalendarCellView {
 
-    var model: CalendarDayModel? {
+    var model: DayModel? {
         didSet {
             setNeedsLayout()
         }
@@ -69,7 +51,7 @@ class CalendarDayView: CalendarCellView {
     var label: UILabel?
     let borderWidth: CGFloat = 3.0
 
-    init(model: CalendarDayModel?, frame: CGRect) {
+    init(model: DayModel?, frame: CGRect) {
         self.model = model
         super.init(frame: frame)
     }

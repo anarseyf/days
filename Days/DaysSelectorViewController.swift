@@ -106,11 +106,11 @@ class DaysSelectorViewController: UIViewController {
             isCalendarShown = true
 
             UIView.animate(withDuration: 0.4,
-                           animations: {
-                self.startControlsTopMargin.constant = 0.0
-                self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
-                           completion: { finished in
-                self.configureCalendar()
+                animations: {
+                    self.startControlsTopMargin.constant = 0.0
+                    self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
+                completion: { finished in
+                    self.configureCalendar()
             })
         }
         else {
@@ -140,10 +140,8 @@ class DaysSelectorViewController: UIViewController {
         if let calendarViewController = children.first as? CalendarViewController {
 
             calendarViewController.calendarDelegate = self
-            
-            // TODO - move to a better place
-            var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
-            components.day = 1
+
+            var components = Utils.componentsFromDate(Utils.monthStart(from: Date()))
             calendarStartDates = Array(-numMonthsBack...numMonthsForward).map { index -> Date in
                 var currentComponents = components
                 currentComponents.month = components.month! + index

@@ -8,9 +8,9 @@
 
 import UIKit
 
-struct CalendarMonthModel : CustomStringConvertible {
+struct MonthModel : CustomStringConvertible {
 
-    let matrix: [[CalendarDayModel?]]
+    let matrix: [[DayModel?]]
     let startDate: Date
     
     var description: String {
@@ -31,7 +31,7 @@ struct CalendarMonthModel : CustomStringConvertible {
         return result
     }
 
-    static func build(forStartDate startDate: Date, selectedDate: Date?) -> CalendarMonthModel {
+    static func build(forStartDate startDate: Date, selectedDate: Date?) -> MonthModel {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "EEE, MMM d, HH:mm"
@@ -39,7 +39,7 @@ struct CalendarMonthModel : CustomStringConvertible {
         let today = Utils.dateFloor(from: Date())!
 
         var date = startDate
-        var flatList: [CalendarDayModel?] = []
+        var flatList: [DayModel?] = []
 
         let calendar = Calendar.current
         let month = calendar.component(.month, from: date)
@@ -49,7 +49,7 @@ struct CalendarMonthModel : CustomStringConvertible {
             let dayOfMonth = calendar.component(.day, from: date)
             let isToday = (date == today)
             let isSelected = (date == selectedDate)
-            let dayModel = CalendarDayModel(date: date,
+            let dayModel = DayModel(date: date,
                                             weekday: weekday,
                                             dayOfMonth: dayOfMonth,
                                             isToday: isToday,
@@ -63,7 +63,7 @@ struct CalendarMonthModel : CustomStringConvertible {
             currentMonth = calendar.component(.month, from: date)
         }
 
-        var row: [CalendarDayModel?] = []
+        var row: [DayModel?] = []
 
         let firstDayModel = flatList.first!!
         let lastDayModel = flatList.last!!
@@ -73,7 +73,7 @@ struct CalendarMonthModel : CustomStringConvertible {
             }
         }
 
-        var matrix: [[CalendarDayModel?]] = []
+        var matrix: [[DayModel?]] = []
 
         for (_, dayModel) in flatList.enumerated() {
             row.append(dayModel)
@@ -92,6 +92,6 @@ struct CalendarMonthModel : CustomStringConvertible {
             matrix.append(row)
         }
 
-        return CalendarMonthModel(matrix: matrix, startDate: startDate)
+        return MonthModel(matrix: matrix, startDate: startDate)
     }
 }

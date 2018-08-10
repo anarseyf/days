@@ -11,14 +11,14 @@ import UIKit
 class MonthViewController: UIViewController {
 
     private class CalendarTapGestureRecognizer : UITapGestureRecognizer {
-        var dayModel: CalendarDayModel?
-        init(_ dayModel: CalendarDayModel?, target: Any?, action: Selector?) {
+        var dayModel: DayModel?
+        init(_ dayModel: DayModel?, target: Any?, action: Selector?) {
             self.dayModel = dayModel
             super.init(target: target, action: action)
         }
     }
 
-    var model: CalendarMonthModel? {
+    var model: MonthModel? {
         didSet {
             updateDayModels()
         }

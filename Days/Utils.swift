@@ -80,6 +80,12 @@ class Utils {
         return components.date
     }
 
+    static func monthStart(from date: Date) -> Date {
+        var components = componentsFromDate(dateFloor(from: date)!)
+        components.day = 1
+        return components.date!
+    }
+
     static func adjustedDate(_ date: Date, by numDays: Int) -> Date {
         var components = componentsFromDate(date)
         components.day = components.day! + numDays
