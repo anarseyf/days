@@ -20,30 +20,15 @@ struct CalendarDayModel : CustomStringConvertible {
         formatter.dateFormat = "dd (E)"
         return formatter.string(from: date)
     }
+
+    var isOnWeekend: Bool {
+        return weekday == 1 || weekday == 7
+    }
 }
 
 class CalendarCellView: UIView {
-
     var background: UIView?
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
-    override func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: newSuperview)
-        if (newSuperview == nil) { return }
-
-        let frame = CGRect(origin: .zero, size: CGSize(width: self.frame.width, height: self.frame.height))
-        let background = UIView(frame: frame)
-        background.backgroundColor = .white
-        self.addSubview(background)
-        self.background = background
-    }
+    let fontSize: CGFloat = 18.0
 }
 
 class CalendarHeaderView: CalendarCellView {
@@ -63,12 +48,12 @@ class CalendarHeaderView: CalendarCellView {
         if (newSuperview == nil) { return }
 
         if let weekday = weekday {
-            background?.backgroundColor = UIColor(named: "linkColor")
 
             let label = UILabel(frame: self.bounds)
             label.text = String(weekday)
-            label.textColor = .white
+            label.textColor = UIColor(named: "calendarWeekdayNameColor")
             label.textAlignment = .center
+            label.font = UIFont.boldSystemFont(ofSize: fontSize)
             self.addSubview(label)
         }
     }
@@ -77,6 +62,7 @@ class CalendarHeaderView: CalendarCellView {
 class CalendarDayView: CalendarCellView {
 
     var model: CalendarDayModel?
+    let borderWidth: CGFloat = 3.0
 
     init(model: CalendarDayModel?, frame: CGRect) {
         self.model = model
@@ -87,21 +73,45 @@ class CalendarDayView: CalendarCellView {
         super.init(coder: aDecoder)
     }
 
+    private func addBackgroundIfNeeded() {
+        guard let model = model else { return }
+        if model.isToday || model.isSelected {
+            let diameter = min(frame.size.width, frame.size.height)
+            let origin = CGPoint(x: (frame.size.width - diameter)/2,
+                                 y: (frame.size.height - diameter)/2)
+            let size = CGSize(width: diameter, height: diameter)
+            let background = UIView(frame: CGRect(origin: origin, size: size))
+            background.layer.cornerRadius = diameter/2
+            if model.isToday {
+                background.layer.borderWidth = borderWidth
+                background.layer.borderColor = UIColor(named: "calendarTodayColor")?.cgColor
+            }
+            if model.isSelected {
+                background.backgroundColor = UIColor(named: "calendarSelectedDayColor")
+            }
+            addSubview(background)
+            self.background = background
+        }
+    }
+
     override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
         if (newSuperview == nil) { return }
+        guard let model = model else { return }
 
-        if let model = model {
-            let colorName = model.isSelected
-                ? "calendarColorSelected"
-                : (model.isToday ? "calendarColorToday" : "calendarColorDefault")
-            background?.backgroundColor = UIColor(named: colorName)
+        addBackgroundIfNeeded()
 
-            let label = UILabel(frame: self.bounds)
-            label.text = String(model.dayOfMonth)
+        let label = UILabel(frame: self.bounds)
+        label.text = String(model.dayOfMonth)
+        if model.isSelected {
             label.textColor = .white
-            label.textAlignment = .center
-            self.addSubview(label)
+            label.font = UIFont.boldSystemFont(ofSize: fontSize)
         }
+        else {
+            label.textColor = UIColor(named: model.isOnWeekend ? "secondaryTextColor" : "mainTextColor")
+            label.font = UIFont.systemFont(ofSize: fontSize)
+        }
+        label.textAlignment = .center
+        self.addSubview(label)
     }
 }

@@ -70,8 +70,12 @@ extension DaysSelectorViewController : UITextFieldDelegate {
 // MARK: - CalendarDelegate
 
 extension DaysSelectorViewController: CalendarDelegate {
-    func didSelectDate(_ date: Date?) {
-        print(date)
+    func didSelectDate(_ date: Date) {
+        print("DAYS: didSelect \(date)")
         setStartDate(date)
+    }
+
+    func didShowMonth(startingOn startDate: Date) {
+        print("DAYS: didShowMonth \(startDate)")
     }
 }

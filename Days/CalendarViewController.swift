@@ -8,6 +8,11 @@
 
 import UIKit
 
+@objc protocol CalendarDelegate {
+    @objc optional func didSelectDate(_ date: Date)
+    @objc optional func didShowMonth(startingOn startDate: Date)
+}
+
 class CalendarViewController: UIViewController {
 
     var model: CalendarModel? {
@@ -75,7 +80,7 @@ extension CalendarViewController : UIScrollViewDelegate {
 
 extension CalendarViewController : CalendarDelegate {
 
-    func didSelectDate(_ date: Date?) {
+    func didSelectDate(_ date: Date) {
         calendarDelegate?.didSelectDate?(date)
         dismiss(animated: true, completion: nil)
     }
