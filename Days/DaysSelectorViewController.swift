@@ -29,6 +29,7 @@ class DaysSelectorViewController: UIViewController {
         }
     }
     var calendarStartDates: [Date]?
+    var namedDates: [Date: String]?
     let numMonthsBack = 1 // TODO -1...11
     let numMonthsForward = 1
     let startControlsTopMarginDefault: CGFloat = 50.0
@@ -117,10 +118,10 @@ class DaysSelectorViewController: UIViewController {
 
         if !isCalendarShown {
             UIView.animate(withDuration: 0.4,
-                animations: {
-                    self.daysInputTopMargin.constant = self.daysInputTopMarginCompact
-                    self.startControlsTopMargin.constant = self.startControlsTopMarginCompact
-                    self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
+                           animations: {
+                            self.daysInputTopMargin.constant = self.daysInputTopMarginCompact
+                            self.startControlsTopMargin.constant = self.startControlsTopMarginCompact
+                            self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
                 completion: { finished in
                     self.configureCalendar()
                     self.isCalendarShown = true
@@ -142,8 +143,17 @@ class DaysSelectorViewController: UIViewController {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(calendarLabelTapped(_:)))
         calendarLabel.addGestureRecognizer(recognizer)
 
+        createNamedDates()
+
         resetUI()
         restore()
+    }
+
+    func createNamedDates() {
+        let today = Utils.dateFloor(from: Date())!
+        let yesterday = Utils.adjustedDate(today, by: -1)
+        let tomorrow = Utils.adjustedDate(today, by: 1)
+        namedDates = [ yesterday: "YESTERDAY", today: "TODAY", tomorrow: "TOMORROW" ]
     }
 
     func configureCalendar() {
@@ -223,34 +233,9 @@ class DaysSelectorViewController: UIViewController {
         model.targetDate = Date(timeInterval: selectedInterval, since: model.startDate!)
     }
 
-    func updateCalendarLabel() {
-        let title = Utils.shared.dateOnlyFormatter.string(from: model.startDate!)
-
-        // TODO - Today/Tomorrow/Yesterday
-        /*
-         let formatter = DateFormatter()
-         formatter.dateFormat = "EE, MMM d"
-         let nowComponents = Utils.componentsFromDate(Date())
-         let day = nowComponents.day!
-
-         func replaceTitle(_ title: String, forOffset offset: Int) -> String {
-         switch (offset) {
-             case -1: return "YESTERDAY"
-             case 0: return "TODAY"
-             case 1: return "TOMORROW"
-             default: return title
-             }
-         }
-
-         startOptions = Array(startOffsetPast...startOffsetFuture).map { i in
-             var components = nowComponents
-             components.day = day + i
-             let date = components.date!
-             let title = replaceTitle(formatter.string(from: date), forOffset: i)
-             return StartOption(date: date, title: title)
-         }
-         */
-        calendarLabel.text = title
+    private func updateCalendarLabel() {
+        guard let date = model.startDate else { return }
+        calendarLabel.text = namedDates?[date] ?? Utils.shared.dateOnlyFormatter.string(from: date)
     }
 
     private func resetUI() {
@@ -261,7 +246,7 @@ class DaysSelectorViewController: UIViewController {
         NotificationsHandler.reset()
     }
 
-    func resetConstraints() {
+    private func resetConstraints() {
         startControlsTopMargin.constant = startControlsTopMarginDefault
         daysInputTopMargin.constant = daysInputTopMarginDefault
     }
