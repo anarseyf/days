@@ -56,7 +56,6 @@ class BubbleViewController: UIViewController {
                                 height: imageWidth)
         let imageView = UIImageView(frame: imageFrame)
         imageView.image = UIImage(named: "owl")
-//        imageView.center = circleView.center
         circleView.addSubview(imageView)
 
         contentView.addSubview(circleView)

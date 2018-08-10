@@ -143,7 +143,7 @@ class DaysSelectorViewController: UIViewController {
                 return currentComponents.date!
             }
 
-            calendarViewController.model = CalendarModel(startDates: startDates,
+            calendarViewController.model = CalendarModel(monthStartDates: startDates,
                                               currentMonthStartDate: startDates[0],
                                               selectedDate: model.startDate)
         }

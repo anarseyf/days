@@ -61,7 +61,12 @@ class CalendarHeaderView: CalendarCellView {
 
 class CalendarDayView: CalendarCellView {
 
-    var model: CalendarDayModel?
+    var model: CalendarDayModel? {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    var label: UILabel?
     let borderWidth: CGFloat = 3.0
 
     init(model: CalendarDayModel?, frame: CGRect) {
@@ -73,8 +78,35 @@ class CalendarDayView: CalendarCellView {
         super.init(coder: aDecoder)
     }
 
-    private func addBackgroundIfNeeded() {
+    override func layoutSubviews() {
+        if label == nil {
+            label = UILabel(frame: self.bounds)
+            label!.textAlignment = .center
+            self.addSubview(label!)
+        }
+        updateLabel()
+        updateBackground()
+    }
+
+    private func updateLabel() {
         guard let model = model else { return }
+
+        label?.text = String(model.dayOfMonth)
+        if model.isSelected {
+            label?.textColor = .white
+            label?.font = UIFont.boldSystemFont(ofSize: fontSize)
+        }
+        else {
+            label?.textColor = UIColor(named: model.isOnWeekend ? "secondaryTextColor" : "mainTextColor")
+            label?.font = UIFont.systemFont(ofSize: fontSize)
+        }
+    }
+
+    private func updateBackground() {
+        guard let model = model else { return }
+
+        self.background?.removeFromSuperview()
+
         if model.isToday || model.isSelected {
             let diameter = min(frame.size.width, frame.size.height)
             let origin = CGPoint(x: (frame.size.width - diameter)/2,
@@ -89,29 +121,8 @@ class CalendarDayView: CalendarCellView {
             if model.isSelected {
                 background.backgroundColor = UIColor(named: "calendarSelectedDayColor")
             }
-            addSubview(background)
+            insertSubview(background, at: 0)
             self.background = background
         }
-    }
-
-    override func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: newSuperview)
-        if (newSuperview == nil) { return }
-        guard let model = model else { return }
-
-        addBackgroundIfNeeded()
-
-        let label = UILabel(frame: self.bounds)
-        label.text = String(model.dayOfMonth)
-        if model.isSelected {
-            label.textColor = .white
-            label.font = UIFont.boldSystemFont(ofSize: fontSize)
-        }
-        else {
-            label.textColor = UIColor(named: model.isOnWeekend ? "secondaryTextColor" : "mainTextColor")
-            label.font = UIFont.systemFont(ofSize: fontSize)
-        }
-        label.textAlignment = .center
-        self.addSubview(label)
     }
 }

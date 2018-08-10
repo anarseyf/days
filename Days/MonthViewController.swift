@@ -18,19 +18,22 @@ class MonthViewController: UIViewController {
         }
     }
 
-    var model: CalendarMonthModel?
+    var model: CalendarMonthModel? {
+        didSet {
+            updateDayModels()
+        }
+    }
+    var dayViews: [CalendarDayView] = []
     var delegate: CalendarDelegate?
     var didLayoutSubviews = false
 
     let labelHeight: CGFloat = 30.0
+    let fontSize: CGFloat = 21.0
     let calendarRows = 6
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
         if !didLayoutSubviews {
             if let monthModel = model {
 
@@ -42,7 +45,7 @@ class MonthViewController: UIViewController {
                 label.text = formatter.string(from: monthModel.startDate)
                 label.textColor = UIColor(named: "secondaryTextColor")
                 label.textAlignment = .right
-                label.font = UIFont.boldSystemFont(ofSize: 21.0)
+                label.font = UIFont.boldSystemFont(ofSize: fontSize)
                 view.addSubview(label)
 
                 formatter.dateFormat = "E"
@@ -81,11 +84,24 @@ class MonthViewController: UIViewController {
                         dayView.addGestureRecognizer(tapRecognizer)
 
                         view.addSubview(dayView)
+                        dayViews.append(dayView)
                     }
                 }
 
                 didLayoutSubviews = true
+
+                updateDayModels()
             }
+        }
+    }
+
+    func updateDayModels() {
+        if !didLayoutSubviews { return }
+        guard let model = model else { return }
+        assert(dayViews.count == model.matrix.count * model.matrix[0].count)
+
+        for (index, dayModel) in (model.matrix.flatMap{ $0 }).enumerated() {
+            dayViews[index].model = dayModel
         }
     }
 
