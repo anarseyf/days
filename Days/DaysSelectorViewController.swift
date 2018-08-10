@@ -19,7 +19,11 @@ class DaysSelectorViewController: UIViewController {
     // MARK: - Properties
 
     var model = TimerModel()
+    var calendar: CalendarViewController?
     var isCalendarShown = false
+    var calendarStartDates: [Date]?
+    let numMonthsBack = 1 // TODO -1...11
+    let numMonthsForward = 1
 
     var selectedInterval: TimeInterval = 0.0 {
         didSet {
@@ -101,16 +105,16 @@ class DaysSelectorViewController: UIViewController {
         if !isCalendarShown {
             isCalendarShown = true
 
-            UIView.animate(withDuration: 0.5,
+            UIView.animate(withDuration: 0.4,
                            animations: {
                 self.startControlsTopMargin.constant = 0.0
-                self.view.layoutIfNeeded() },
+                self.view.layoutIfNeeded() }, // TODO - setNeedsLayout?
                            completion: { finished in
                 self.configureCalendar()
             })
         }
         else {
-            // TODO - select or go to today
+            // TODO - select or go to today?
         }
     }
 
@@ -137,16 +141,22 @@ class DaysSelectorViewController: UIViewController {
             // TODO - move to a better place
             var components = Utils.componentsFromDate(Utils.dateFloor(from: Date())!)
             components.day = 1
-            let startDates = Array(0...1).map { index -> Date in // TODO -1...11
+            calendarStartDates = Array(-numMonthsBack...numMonthsForward).map { index -> Date in
                 var currentComponents = components
                 currentComponents.month = components.month! + index
                 return currentComponents.date!
             }
 
-            calendarViewController.model = CalendarModel(monthStartDates: startDates,
-                                              currentMonthStartDate: startDates[0],
-                                              selectedDate: model.startDate)
+            calendar = calendarViewController
+            updateCalendar()
         }
+    }
+
+    func updateCalendar() {
+        guard let dates = calendarStartDates else { return }
+        calendar?.model = CalendarModel(monthStartDates: dates,
+                                        currentMonthStartDate: dates[numMonthsBack],
+                                        selectedDate: model.startDate)
     }
 
     func setIncrementButtonsHidden(_ isHidden: Bool) {
@@ -194,6 +204,7 @@ class DaysSelectorViewController: UIViewController {
     func setStartDate(_ date: Date?) {
         model.startDate = date
         updateTargetDate()
+        updateCalendar()
         updateCalendarButton()
     }
 
@@ -234,7 +245,12 @@ class DaysSelectorViewController: UIViewController {
     private func resetUI() {
         startToday()
         setNumDays(1)
+        resetCalendarUI()
         NotificationsHandler.reset()
+    }
+
+    private func resetCalendarUI() {
+        // TODO
     }
 
     private func restore() {
