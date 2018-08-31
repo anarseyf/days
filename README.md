@@ -12,7 +12,7 @@ The app is in development.
 
 #### View Controllers
 
-* [DaysSelectorViewController.swift](Days/DaysSelectorViewController.swift) - Initial screen
+* [DaysSelectorViewController.swift](Days/DaysSelectorViewController.swift), [+Extensions.swift](Days/DaysSelectorViewController+Extensions.swift) - Initial screen
 * [CalendarViewController.swift](Days/CalendarViewController.swift) - Start date calendar
 * [MonthViewController.swift](Days/MonthViewController.swift) - Single month within the calendar
 * [CountdownViewController.swift](Days/CountdownViewController.swift) - Active countdown screen
@@ -24,6 +24,10 @@ The app is in development.
 * [MonthModel.swift](Days/MonthModel.swift)
 * [DayModel.swift](Days/DayModel.swift)
 * [TimerModel.swift](Days/TimerModel.swift)
+
+#### Notifications
+
+* [NotificationsHandler.swift](Days/NotificationsHandler.swift)
 
 ### Screenshots
 
