@@ -8,3 +8,4 @@ This app lets you count down a number of days, up to one year. Optionally select
 
 ### Screenshots
 
+<img src="/documentation/screenshots/screenshot-1.jpg">
